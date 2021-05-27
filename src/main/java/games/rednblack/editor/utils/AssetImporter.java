@@ -3,6 +3,7 @@ package games.rednblack.editor.utils;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.SettingsManager;
 import games.rednblack.editor.utils.asset.Asset;
@@ -30,6 +31,7 @@ public class AssetImporter {
             sInstance.assetDescriptors.add(new ParticleEffectAsset());
             sInstance.assetDescriptors.add(new TalosVFXAsset());
             sInstance.assetDescriptors.add(new SpineAsset());
+            sInstance.assetDescriptors.add(new SpriterAsset());
             sInstance.assetDescriptors.add(new SpriteAnimationAtlasAsset());
             sInstance.assetDescriptors.add(new SpriteAnimationSequenceAsset());
             sInstance.assetDescriptors.add(new ShaderAsset());
@@ -66,12 +68,12 @@ public class AssetImporter {
                             new String[]{"Overwrite", "Cancel"}, new Integer[]{0, 1}, result -> {
                                 if (result == 0) {
                                     initImportUI(type, files);
-                                    asset.asyncImport(files, progressHandler,false);
+                                    asset.asyncImport(files, progressHandler, false);
                                 }
                             }).padBottom(20).pack();
                 } else {
                     initImportUI(fileType, files);
-                    asset.asyncImport(files, progressHandler,false);
+                    asset.asyncImport(files, progressHandler, false);
                 }
                 break;
             }
@@ -105,7 +107,7 @@ public class AssetImporter {
         }
     }
 
-    private  Array<FileHandle> getFilesFromPaths(String[] paths) {
+    private Array<FileHandle> getFilesFromPaths(String[] paths) {
         Array<FileHandle> files = new Array<>();
         for (String path : paths) {
             files.add(new FileHandle(new File(path)));

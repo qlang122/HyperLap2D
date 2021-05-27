@@ -40,11 +40,11 @@ task packTextures {
     settings.duplicatePadding = true
     if (project.ext.has('packMain')) {
         logger.info "Calling TexturePacker: " + packMain
-        TexturePacker.processIfModified(settings, file(packMain[0]).absolutePath, file(packMain[1]).absolutePath, (String)packMain[2])
+        TexturePacker.processIfModified(settings, file(packMain[0]).absolutePath, file(packMain[1]).absolutePath, (String) packMain[2])
     }
     if (project.ext.has('packSplash')) {
         logger.info "Calling TexturePacker: " + packSplash
-        TexturePacker.processIfModified(settings, file(packSplash[0]).absolutePath, file(packSplash[1]).absolutePath, (String)packSplash[2])
+        TexturePacker.processIfModified(settings, file(packSplash[0]).absolutePath, file(packSplash[1]).absolutePath, (String) packSplash[2])
     }
 }
 
@@ -79,7 +79,7 @@ jpackage.dependsOn dist
 dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-    implementation ("com.badlogicgames.gdx:gdx-tools:$gdxVersion") {
+    implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion") {
         exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'
     }
     implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
@@ -102,6 +102,7 @@ dependencies {
     implementation project(":hyperlap2d-runtime-libgdx")
     implementation project(":h2d-libgdx-spine-extension")
     implementation project(":h2d-libgdx-talos-extension")
+    implementation project(":h2d-libgdx-spriter-extension")
 
     implementation "com.talosvfx:talos-libgdx:$talosVersion"
     implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
@@ -151,7 +152,7 @@ runtime {
             imageOptions += ["--icon", file("icons/icon.ico")]
             installerType = 'msi'
             installerOptions += ['--win-dir-chooser', '--win-menu',
-                                 '--win-shortcut',  '--vendor', 'Red & Black Games',
+                                 '--win-shortcut', '--vendor', 'Red & Black Games',
                                  '--description', 'HyperLap2D Editor',
                                  '--win-upgrade-uuid', 'e5f64fb6-111f-41f3-8f33-03b90e1a3a32']
             resourceDir = file("resources-windows")
@@ -167,7 +168,7 @@ runtime {
             imageOptions += ['--copyright', '(c) 2020, Red &amp; Black Games', "--icon", file("icons/icon.icns")
                              , '--resource-dir', "${projectDir}/resources-macos"]
             jvmArgs = ['-XstartOnFirstThread', '-Djava.awt.headless=true']
-            installerOptions += ['--verbose','--app-version', getBuildVersion(), '--vendor', 'Red & Black Games', '--resource-dir', "${projectDir}/resources-macos" ]
+            installerOptions += ['--verbose', '--app-version', getBuildVersion(), '--vendor', 'Red & Black Games', '--resource-dir', "${projectDir}/resources-macos"]
             installerType = 'dmg'
             resourceDir = file("resources-macos")
         }

@@ -19,8 +19,11 @@
 package games.rednblack.editor.view.ui;
 
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.h2d.common.MsgAPI;
+
 import com.kotcrab.vis.ui.widget.MenuItem;
+
 import games.rednblack.editor.event.MenuItemListener;
 import games.rednblack.h2d.common.view.ui.widget.H2DPopupMenu;
 
@@ -58,7 +61,7 @@ public class UIDropDownMenu extends H2DPopupMenu {
         actionNames.put(MsgAPI.ACTION_DELETE_TALOS_VFX, "Delete");
         actionNames.put(MsgAPI.ACTION_DELETE_SPRITE_ANIMATION_RESOURCE, "Delete");
         actionNames.put(MsgAPI.ACTION_DELETE_SPINE_ANIMATION_RESOURCE, "Delete");
-
+        actionNames.put(MsgAPI.ACTION_DELETE_SPRITER_ANIMATION_RESOURCE, "Delete");
         actionNames.put(MsgAPI.ACTION_UPDATE_RULER_POSITION, "Change Ruler Position");
 
         actionNames.put(MsgAPI.ACTION_CHANGE_POLYGON_VERTEX_POSITION, "Change Vertex Position");

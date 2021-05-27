@@ -22,6 +22,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.PasteItemsCommand;
@@ -41,7 +42,6 @@ import java.util.HashMap;
 
 /**
  * Created by azakhary on 6/5/2015.
- *
  */
 public class ItemFactory implements IFactory {
 
@@ -59,7 +59,7 @@ public class ItemFactory implements IFactory {
     }
 
     public static ItemFactory get() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ItemFactory(Sandbox.getInstance().sceneControl.sceneLoader);
         }
 
@@ -70,7 +70,7 @@ public class ItemFactory implements IFactory {
         UILayerBoxMediator layerBoxMediator = HyperLap2DFacade.getInstance().retrieveMediator(UILayerBoxMediator.NAME);
         String layerName = layerBoxMediator.getCurrentSelectedLayerName();
 
-        if(layerName == null) return false;
+        if (layerName == null) return false;
 
         vo.layerName = layerName;
 
@@ -89,7 +89,7 @@ public class ItemFactory implements IFactory {
         SimpleImageVO vo = new SimpleImageVO();
         vo.imageName = regionName;
 
-        if(!setEssentialData(vo, position)) return false;
+        if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
 
@@ -105,7 +105,7 @@ public class ItemFactory implements IFactory {
         Image9patchVO vo = new Image9patchVO();
         vo.imageName = regionName;
 
-        if(!setEssentialData(vo, position)) return false;
+        if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
 
@@ -118,7 +118,7 @@ public class ItemFactory implements IFactory {
         vo.animationName = animationName;
         vo.playMode = 2;
 
-        if(!setEssentialData(vo, position)) return false;
+        if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
 
@@ -130,9 +130,21 @@ public class ItemFactory implements IFactory {
         SpineVO vo = new SpineVO();
         vo.animationName = animationName;
 
-        if(!setEssentialData(vo, position)) return false;
+        if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
+
+        return true;
+    }
+
+    @Override
+    public boolean createSpriterAnimation(String animationName, Vector2 position) {
+        SpriterVO vo = new SpriterVO();
+        vo.animationName = animationName;
+
+        if (!setEssentialData(vo, position)) return false;
+        Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
+        HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, entity);
 
         return true;
     }
@@ -143,7 +155,7 @@ public class ItemFactory implements IFactory {
         vo.originX = vo.shape.polygons[0][2].x / 2;
         vo.originY = vo.shape.polygons[0][2].y / 2;
 
-        if(!setEssentialData(vo, position)) return false;
+        if (!setEssentialData(vo, position)) return false;
         Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, entity);
@@ -173,7 +185,7 @@ public class ItemFactory implements IFactory {
     }
 
     public Entity createCompositeItem(CompositeItemVO vo, Vector2 position) {
-        if(!setEssentialData(vo, position)) return null;
+        if (!setEssentialData(vo, position)) return null;
 
         Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         Engine engine = sceneLoader.getEngine();
@@ -190,7 +202,7 @@ public class ItemFactory implements IFactory {
     }
 
     public Entity createLightItem(LightVO vo, Vector2 position) {
-        if(!setEssentialData(vo, position)) return null;
+        if (!setEssentialData(vo, position)) return null;
         Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, entity);
@@ -210,7 +222,7 @@ public class ItemFactory implements IFactory {
         float boundBoxSize = 10f;
         dimensionsComponent.boundBox = new Rectangle(-boundBoxSize / 2f, -boundBoxSize / 2f, boundBoxSize, boundBoxSize);*/
 
-        if(entity == null) return false;
+        if (entity == null) return false;
 
         return true;
     }
@@ -219,7 +231,7 @@ public class ItemFactory implements IFactory {
         ParticleEffectVO vo = new ParticleEffectVO();
         vo.particleName = particleName;
 
-        if(!setEssentialData(vo, position)) return null;
+        if (!setEssentialData(vo, position)) return null;
         Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, entity);
 
@@ -233,7 +245,7 @@ public class ItemFactory implements IFactory {
         float boundBoxSize = 10f;
         dimensionsComponent.boundBox = new Rectangle(-boundBoxSize / 2f, -boundBoxSize / 2f, boundBoxSize, boundBoxSize);*/
 
-        if(entity == null) return false;
+        if (entity == null) return false;
 
         return true;
     }
@@ -242,7 +254,7 @@ public class ItemFactory implements IFactory {
         TalosVO vo = new TalosVO();
         vo.particleName = particleName;
 
-        if(!setEssentialData(vo, position)) return null;
+        if (!setEssentialData(vo, position)) return null;
         Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, entity);
 
@@ -251,7 +263,7 @@ public class ItemFactory implements IFactory {
 
     public Entity createLabel(TextTool textSettings, Vector2 position) {
         LabelVO vo = new LabelVO();
-        if(!setEssentialData(vo, position)) return null;
+        if (!setEssentialData(vo, position)) return null;
 
         HyperLap2DFacade facade = HyperLap2DFacade.getInstance();
         ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
@@ -264,8 +276,8 @@ public class ItemFactory implements IFactory {
         vo.size = textSettings.getFontSize();
 
         // need to calculate minimum bounds size here
-        vo.width = 120f/Sandbox.getInstance().getPixelPerWU();
-        vo.height = 50f/Sandbox.getInstance().getPixelPerWU();
+        vo.width = 120f / Sandbox.getInstance().getPixelPerWU();
+        vo.height = 50f / Sandbox.getInstance().getPixelPerWU();
 
         Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, entity);

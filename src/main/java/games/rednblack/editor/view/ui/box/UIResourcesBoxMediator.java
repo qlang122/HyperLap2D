@@ -20,11 +20,13 @@ package games.rednblack.editor.view.ui.box;
 
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.view.ui.box.resourcespanel.*;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.h2d.common.view.ui.widget.imagetabbedpane.ImageTab;
+
 import org.puremvc.java.interfaces.INotification;
 
 import java.util.stream.Stream;
@@ -42,6 +44,7 @@ public class UIResourcesBoxMediator extends PanelMediator<UIResourcesBox> {
     public static final String IMAGE_RIGHT_CLICK = PREFIX + ".IMAGE_RIGHT_CLICK";
     public static final String SPINE_ANIMATION_RIGHT_CLICK = PREFIX + ".SPINE_ANIMATION_RIGHT_CLICK";
     public static final String SPRITE_ANIMATION_RIGHT_CLICK = PREFIX + ".SPRITE_ANIMATION_RIGHT_CLICK";
+    public static final String SPRITER_ANIMATION_RIGHT_CLICK = "SPRITER_ANIMATION_RIGHT_CLICK";
     public static final String LIBRARY_ITEM_RIGHT_CLICK = PREFIX + ".LIBRARY_ITEM_RIGHT_CLICK";
     public static final String PARTICLE_EFFECT_RIGHT_CLICK = PREFIX + ".PARTICLE_EFFECT_RIGHT_CLICK";
     public static final String TALOS_VFX_RIGHT_CLICK = PREFIX + ".TALOS_VFX_RIGHT_CLICK";
@@ -69,7 +72,7 @@ public class UIResourcesBoxMediator extends PanelMediator<UIResourcesBox> {
                 ProjectManager.PROJECT_DATA_UPDATED,
                 MsgAPI.ADD_TARGET,
                 MsgAPI.REMOVE_TARGET
-            }).flatMap(Stream::of).toArray(String[]::new);
+        }).flatMap(Stream::of).toArray(String[]::new);
     }
 
     @Override

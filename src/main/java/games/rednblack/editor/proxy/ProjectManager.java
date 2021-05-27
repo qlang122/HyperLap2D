@@ -24,6 +24,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.data.manager.PreferencesManager;
 import games.rednblack.editor.data.migrations.ProjectVersionMigrator;
@@ -37,6 +38,7 @@ import games.rednblack.editor.view.ui.settings.ProjectExportSettings;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.h2d.common.ProgressHandler;
 import games.rednblack.h2d.common.vo.*;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.monitor.FileAlterationListener;
@@ -47,6 +49,7 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import org.puremvc.java.patterns.proxy.Proxy;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +67,7 @@ public class ProjectManager extends Proxy {
 
     public static final String IMAGE_DIR_PATH = "assets/orig/images";
     public static final String SPINE_DIR_PATH = "assets/orig/spine-animations";
+    public static final String SPITER_DIR_PATH = "assets/orig/spriter-animations";
     public static final String SPRITE_DIR_PATH = "assets/orig/sprite-animations";
     public static final String PARTICLE_DIR_PATH = "assets/orig/particles";
     public static final String TALOS_VFX_DIR_PATH = "assets/orig/talos-vfx";
@@ -690,7 +694,7 @@ public class ProjectManager extends Proxy {
 
     public boolean deleteSingleImageForAllResolutions(String imageName) {
         for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
-            if(!deleteSingleImage(resolutionEntryVO.name, imageName))
+            if (!deleteSingleImage(resolutionEntryVO.name, imageName))
                 return false;
         }
         return deleteSingleImage("orig", imageName);
@@ -716,7 +720,7 @@ public class ProjectManager extends Proxy {
 
     public boolean deleteSpineForAllResolutions(String spineName) {
         for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
-            if(!deleteSpineAnimation(resolutionEntryVO.name, spineName))
+            if (!deleteSpineAnimation(resolutionEntryVO.name, spineName))
                 return false;
         }
         return deleteSpineAnimation("orig", spineName);
@@ -728,9 +732,23 @@ public class ProjectManager extends Proxy {
         return deleteDirectory(filePath);
     }
 
+    public boolean deleteSpriterAnimation(String resolutionName, String spineName) {
+        String spriterPath = currentProjectPath + "/assets/" + resolutionName + "/spriter-animations" + File.separator;
+        String filePath = spriterPath + spineName;
+        return deleteDirectory(filePath);
+    }
+
+    public boolean deleteSpriterForAllResolutions(String spriterName) {
+        for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
+            if (!deleteSpriterAnimation(resolutionEntryVO.name, spriterName))
+                return false;
+        }
+        return deleteSpriterAnimation("orig", spriterName);
+    }
+
     public boolean deleteSpriteAnimationForAllResolutions(String spineName) {
         for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
-            if(!deleteSpriteAnimation(resolutionEntryVO.name, spineName))
+            if (!deleteSpriteAnimation(resolutionEntryVO.name, spineName))
                 return false;
         }
         return deleteSpriteAnimation("orig", spineName);

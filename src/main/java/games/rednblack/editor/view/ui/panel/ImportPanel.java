@@ -98,6 +98,7 @@ public class ImportPanel extends UIDraggablePanel {
         typeNames.put(ImportUtils.TYPE_TEXTURE_ATLAS, "Texture Atlas");
         typeNames.put(ImportUtils.TYPE_PARTICLE_EFFECT, "Particle Effect");
         typeNames.put(ImportUtils.TYPE_SPINE_ANIMATION, "Spine Animation");
+        typeNames.put(ImportUtils.TYPE_SPRITER_ANIMATION, "Spriter Animation");
         typeNames.put(ImportUtils.TYPE_SPRITE_ANIMATION_ATLAS, "Animation Atlas Pack");
         typeNames.put(ImportUtils.TYPE_TTF_FONT, "TTF Font");
         typeNames.put(ImportUtils.TYPE_HYPERLAP2D_LIBRARY, "HyperLap2D Library");
@@ -139,7 +140,7 @@ public class ImportPanel extends UIDraggablePanel {
     public void setDroppingView() {
         mainTable.clear();
 
-        VisLabel helpLbl = new VisLabel("Supported file types: images, sprite animations (atlas or img sequence), spine animations, particle effects");
+        VisLabel helpLbl = new VisLabel("Supported file types: images, sprite animations (atlas or img sequence), spine animations, spriter scml, particle effects");
         helpLbl.setWidth(260);
         helpLbl.setWrap(true);
         mainTable.add(helpLbl).width(260).padLeft(5);

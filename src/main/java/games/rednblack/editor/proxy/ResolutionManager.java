@@ -30,7 +30,9 @@ import javax.imageio.ImageIO;
 
 import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
+
 import games.rednblack.h2d.common.MsgAPI;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -40,6 +42,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TextureUnpacker;
 import com.badlogic.gdx.utils.Array;
 import com.mortennobel.imagescaling.ResampleOp;
+
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.ProgressHandler;
 import games.rednblack.editor.HyperLap2DFacade;
@@ -47,6 +50,7 @@ import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.data.ResolutionEntryVO;
 import games.rednblack.editor.utils.NinePatchUtils;
 import games.rednblack.editor.utils.HyperLap2DUtils;
+
 import org.puremvc.java.patterns.proxy.Proxy;
 
 public class ResolutionManager extends Proxy {
@@ -309,6 +313,29 @@ public class ResolutionManager extends Proxy {
         }
     }
 
+    public void resizeSpriterAnimationForAllResolutions(File atlasFile, ProjectInfoVO currentProjectInfoVO) {
+        String fileNameWithOutExt = FilenameUtils.removeExtension(atlasFile.getName());
+        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+        String tmpDir = projectManager.getCurrentProjectPath() + "/assets/orig/spriter-animations" + File.separator + fileNameWithOutExt + File.separator + "tmp";
+        File sourceFolder = new File(tmpDir);
+
+        unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
+        try {
+            for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
+                FileUtils.forceMkdir(new File(projectManager.getCurrentProjectPath() + File.separator +
+                        "assets" + File.separator + resolutionEntryVO.name + File.separator + "spriter-animations"));
+                String targetPath = projectManager.getCurrentProjectPath() + File.separator + "assets" +
+                        File.separator + resolutionEntryVO.name + File.separator + "spriter-animations" + File.separator + fileNameWithOutExt;
+                FileUtils.forceMkdir(new File(targetPath));
+                File targetFolder = new File(targetPath);
+                resizeImagesTmpDirToResolution(atlasFile.getName(), sourceFolder, resolutionEntryVO, targetFolder);
+            }
+            FileUtils.deleteDirectory(sourceFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void rePackProjectImages(ResolutionEntryVO resEntry) {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         TexturePacker.Settings settings = projectManager.getTexturePackerSettings();
@@ -507,7 +534,7 @@ public class ResolutionManager extends Proxy {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         for (ResolutionEntryVO res : projectManager.getCurrentProjectInfoVO().resolutions) {
             if (res.name.equals(currentResolutionName)) {
-                return  res;
+                return res;
             }
         }
         return getOriginalResolution();

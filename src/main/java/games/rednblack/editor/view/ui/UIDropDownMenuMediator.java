@@ -20,6 +20,7 @@ package games.rednblack.editor.view.ui;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.view.stage.UIStage;
 import games.rednblack.editor.view.stage.tools.PolygonTool;
 import games.rednblack.editor.view.stage.tools.TransformTool;
@@ -28,6 +29,7 @@ import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.PluginManager;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.ui.box.UIResourcesBoxMediator;
+
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.mediator.Mediator;
 
@@ -47,6 +49,7 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
     public static final Integer RULER_RESOURCE_ACTION_SET = 4;
     public static final Integer SPINE_ANIMATION_ACTION_SET = 5;
     public static final Integer SPRITE_ANIMATION_ACTION_SET = 7;
+    public static final Integer SPRITER_ANIMATION_ACTION_SET = 8;
     public static final Integer PARTICLE_ACTION_SET = 9;
     public static final Integer POLYGON_VERTEX_ACTION_SET = 10;
     public static final Integer ORIGIN_POINT_ACTION_SET = 11;
@@ -89,6 +92,9 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
         actionSets.put(SPINE_ANIMATION_ACTION_SET, new Array<>());
         actionSets.get(SPINE_ANIMATION_ACTION_SET).add(MsgAPI.ACTION_DELETE_SPINE_ANIMATION_RESOURCE);
 
+        actionSets.put(SPRITER_ANIMATION_ACTION_SET, new Array<>());
+        actionSets.get(SPRITER_ANIMATION_ACTION_SET).add(MsgAPI.ACTION_DELETE_SPRITER_ANIMATION_RESOURCE);
+
         actionSets.put(SPRITE_ANIMATION_ACTION_SET, new Array<>());
         actionSets.get(SPRITE_ANIMATION_ACTION_SET).add(MsgAPI.ACTION_DELETE_SPRITE_ANIMATION_RESOURCE);
 
@@ -105,7 +111,7 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
         actionSets.get(ITEMS_ACTIONS_SET).add(MsgAPI.ACTION_DELETE);
         actionSets.get(ITEMS_ACTIONS_SET).add(MsgAPI.ACTION_GROUP_ITEMS);
         actionSets.get(ITEMS_ACTIONS_SET).add(MsgAPI.ACTION_CONVERT_TO_BUTTON);
-        
+
         actionSets.put(RULER_RESOURCE_ACTION_SET, new Array<>());
         actionSets.get(RULER_RESOURCE_ACTION_SET).add(MsgAPI.ACTION_UPDATE_RULER_POSITION);
 
@@ -128,6 +134,7 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
                 UIResourcesBoxMediator.IMAGE_RIGHT_CLICK,
                 UIResourcesBoxMediator.SPINE_ANIMATION_RIGHT_CLICK,
                 UIResourcesBoxMediator.SPRITE_ANIMATION_RIGHT_CLICK,
+                UIResourcesBoxMediator.SPRITER_ANIMATION_RIGHT_CLICK,
                 UIResourcesBoxMediator.LIBRARY_ITEM_RIGHT_CLICK,
                 UIResourcesBoxMediator.PARTICLE_EFFECT_RIGHT_CLICK,
                 UIResourcesBoxMediator.TALOS_VFX_RIGHT_CLICK,
@@ -141,7 +148,7 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
     private void applyItemTypeMutators(Array<String> actionsSet) {
         // generic mutators
         if (sandbox.getSelector().getCurrentSelection().size() == 1) {
-            if(sandbox.getSelector().selectionIsComposite()) {
+            if (sandbox.getSelector().selectionIsComposite()) {
                 actionsSet.add(MsgAPI.SHOW_ADD_LIBRARY_DIALOG);
                 actionsSet.add(MsgAPI.ACTION_CAMERA_CHANGE_COMPOSITE);
             }
@@ -180,6 +187,9 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
             case UIResourcesBoxMediator.SPRITE_ANIMATION_RIGHT_CLICK:
                 showPopup(SPRITE_ANIMATION_ACTION_SET, notification.getBody());
                 break;
+            case UIResourcesBoxMediator.SPRITER_ANIMATION_RIGHT_CLICK:
+                showPopup(SPRITER_ANIMATION_ACTION_SET, notification.getBody());
+                break;
             case UIResourcesBoxMediator.LIBRARY_ITEM_RIGHT_CLICK:
                 showPopup(LIBRARY_ITEM_ACTION_SET, notification.getBody());
                 break;
@@ -193,8 +203,8 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
                 showPopup(TALOS_ACTION_SET, notification.getBody());
                 break;
             case RulersUI.RIGHT_CLICK_RULER:
-            	showPopup(RULER_RESOURCE_ACTION_SET, notification.getBody());
-            	break;
+                showPopup(RULER_RESOURCE_ACTION_SET, notification.getBody());
+                break;
             case PolygonTool.MANUAL_VERTEX_POSITION:
                 showPopup(POLYGON_VERTEX_ACTION_SET, notification.getBody());
                 break;

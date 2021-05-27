@@ -24,11 +24,13 @@ import com.talosvfx.talos.runtime.ParticleEffectDescriptor;
 import com.talosvfx.talos.runtime.assets.AtlasAssetProvider;
 import com.talosvfx.talos.runtime.utils.ShaderDescriptor;
 import com.talosvfx.talos.runtime.utils.VectorField;
+
 import games.rednblack.editor.renderer.data.*;
 
 import games.rednblack.editor.renderer.utils.H2DSkinLoader;
 import games.rednblack.editor.renderer.utils.ShadedDistanceFieldFont;
 import games.rednblack.editor.view.ui.widget.actors.basic.WhitePixel;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -38,10 +40,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Json;
+
 import games.rednblack.editor.data.SpineAnimData;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.renderer.resources.FontSizePair;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
+
 import org.puremvc.java.patterns.proxy.Proxy;
 
 /**
@@ -61,6 +65,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     private final HashMap<String, SpineAnimData> spineAnimAtlases = new HashMap<>();
     private final HashMap<String, TextureAtlas> spriteAnimAtlases = new HashMap<>();
+    private HashMap<String, FileHandle> spriterAnimFiles = new HashMap<String, FileHandle>();
     private final HashMap<FontSizePair, BitmapFont> bitmapFonts = new HashMap<>();
     private final HashMap<String, ShaderProgram> shaderPrograms = new HashMap<>(1);
 
@@ -146,7 +151,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     public TextureRegion getTextureRegion(String name) {
         TextureRegion reg = currentProjectAtlas.findRegion(name);
 
-        if(reg == null) {
+        if (reg == null) {
             reg = defaultRegion;
         }
 
@@ -175,15 +180,15 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     /**
      * Sets working resolution, please set before doing any loading
+     *
      * @param resolution String resolution name, default is "orig" later use resolution names created in editor
      */
     public void setWorkingResolution(String resolution) {
         ResolutionEntryVO resolutionObject = getProjectVO().getResolution("resolutionName");
-        if(resolutionObject != null) {
+        if (resolutionObject != null) {
             packResolutionName = resolution;
         }
     }
-
 
     @Override
     public FileHandle getSkeletonJSON(String animationName) {
@@ -192,17 +197,20 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     @Override
+    public FileHandle getSCMLFile(String name) {
+        return spriterAnimFiles.get(name);
+    }
+
+    @Override
     public TextureAtlas getSpriteAnimation(String animationName) {
         return spriteAnimAtlases.get(animationName);
     }
-
 
     @Override
     public BitmapFont getBitmapFont(String fontName, int fontSize) {
         FontSizePair pair = new FontSizePair(fontName, fontSize);
         return bitmapFonts.get(pair);
     }
-
 
     @Override
     public boolean hasTextureRegion(String regionName) {
@@ -214,7 +222,6 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         return projectManager.getCurrentProjectInfoVO();
     }
-
 
     @Override
     public SceneVO getSceneVO(String name) {
@@ -259,7 +266,8 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         for (FileHandle entry : sourceDir.list()) {
             File file = entry.file();
             String filename = file.getName();
-            if (file.isDirectory() || filename.endsWith(".DS_Store") || filename.endsWith("shdr") || filename.endsWith(".fga")) continue;
+            if (file.isDirectory() || filename.endsWith(".DS_Store") || filename.endsWith("shdr") || filename.endsWith(".fga"))
+                continue;
 
             AtlasAssetProvider assetProvider = new AtlasAssetProvider(currentProjectAtlas);
             assetProvider.setAssetHandler(ShaderDescriptor.class, this::findShaderDescriptorOnLoad);
@@ -274,7 +282,8 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     private ObjectMap<String, ShaderDescriptor> shaderDescriptorObjectMap = new ObjectMap<>();
     private String talosResPath;
-    private ShaderDescriptor findShaderDescriptorOnLoad (String assetName) {
+
+    private ShaderDescriptor findShaderDescriptorOnLoad(String assetName) {
         ShaderDescriptor asset = shaderDescriptorObjectMap.get(assetName);
         if (asset == null) {
             //Look in all paths, and hopefully load the requested asset, or fail (crash)
@@ -289,7 +298,8 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     private ObjectMap<String, VectorField> vectorFieldDescriptorObjectMap = new ObjectMap<>();
-    private VectorField findVectorFieldDescriptorOnLoad (String assetName) {
+
+    private VectorField findVectorFieldDescriptorOnLoad(String assetName) {
         VectorField asset = vectorFieldDescriptorObjectMap.get(assetName);
         if (asset == null) {
             final FileHandle file = new FileHandle(talosResPath + File.separator + assetName + ".fga");
@@ -390,22 +400,23 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
             }
         }
     }
-    
+
     private void loadCurrentProjectShaders(String path) {
-    	Iterator<Entry<String, ShaderProgram>> it = shaderPrograms.entrySet().iterator();
-    	while (it.hasNext()) {
-    		Entry<String, ShaderProgram> pair = it.next();
-    		pair.getValue().dispose();
-    		it.remove(); 
-    	}
+        Iterator<Entry<String, ShaderProgram>> it = shaderPrograms.entrySet().iterator();
+        while (it.hasNext()) {
+            Entry<String, ShaderProgram> pair = it.next();
+            pair.getValue().dispose();
+            it.remove();
+        }
         shaderPrograms.clear();
         FileHandle sourceDir = new FileHandle(path);
         for (FileHandle entry : sourceDir.list()) {
             File file = entry.file();
             String filename = file.getName().replace(".vert", "").replace(".frag", "");
-            if (file.isDirectory() || filename.endsWith(".DS_Store") || shaderPrograms.containsKey(filename)) continue;
+            if (file.isDirectory() || filename.endsWith(".DS_Store") || shaderPrograms.containsKey(filename))
+                continue;
             // check if pair exists.
-            if(Gdx.files.internal(path + filename + ".vert").exists() && Gdx.files.internal(path + filename + ".frag").exists()) {
+            if (Gdx.files.internal(path + filename + ".vert").exists() && Gdx.files.internal(path + filename + ".frag").exists()) {
                 ShaderProgram shaderProgram = new ShaderProgram(Gdx.files.internal(path + filename + ".vert"), Gdx.files.internal(path + filename + ".frag"));
                 if (!shaderProgram.isCompiled()) {
                     System.out.println("Error compiling shader: " + shaderProgram.getLog());
@@ -421,7 +432,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         String shader = projectManager.getCurrentProjectPath() + File.separator
                 + ProjectManager.SHADER_DIR_PATH + File.separator + shaderName;
 
-        if(Gdx.files.internal(shader + ".vert").exists() && Gdx.files.internal(shader + ".frag").exists()) {
+        if (Gdx.files.internal(shader + ".vert").exists() && Gdx.files.internal(shader + ".frag").exists()) {
             ShaderProgram shaderProgram = new ShaderProgram(Gdx.files.internal(shader + ".vert"), Gdx.files.internal(shader + ".frag"));
             if (shaderProgram.isCompiled()) {
                 shaderPrograms.remove(shaderName);
@@ -433,8 +444,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     /**
-     * @param fontPath
-     * TODO currently useless, but could be reworked to include stuff from Skin Composer
+     * @param fontPath TODO currently useless, but could be reworked to include stuff from Skin Composer
      * @deprecated
      */
     @Deprecated
@@ -535,16 +545,16 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     @Override
     public ResolutionEntryVO getLoadedResolution() {
-        if(packResolutionName.equals("orig")) {
+        if (packResolutionName.equals("orig")) {
             return getProjectVO().originalResolution;
         }
         return getProjectVO().getResolution(packResolutionName);
     }
 
-	@Override
-	public ShaderProgram getShaderProgram(String shaderName) {
-		return shaderPrograms.get(shaderName);
-	}
+    @Override
+    public ShaderProgram getShaderProgram(String shaderName) {
+        return shaderPrograms.get(shaderName);
+    }
 
     public HashMap<String, ShaderProgram> getShaders() {
         return shaderPrograms;

@@ -20,17 +20,18 @@ package games.rednblack.editor.view.ui.box.resourcespanel;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import games.rednblack.h2d.extention.spine.SpineItemType;
+
+import games.rednblack.editor.controller.commands.resource.DeleteSpriterAnimation;
+import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.SpriterResource;
 import games.rednblack.editor.controller.commands.resource.DeleteSpineAnimation;
 import games.rednblack.editor.controller.commands.resource.DeleteSpriteAnimation;
 import games.rednblack.editor.factory.ItemFactory;
 import games.rednblack.editor.proxy.ResourceManager;
-import games.rednblack.editor.renderer.factory.EntityFactory;
-import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResource;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResourceView;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.SpineResource;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.SpriteResource;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.puremvc.java.interfaces.INotification;
 
@@ -58,6 +59,7 @@ public class UIAnimationsTabMediator extends UIResourcesTabMediator<UIAnimations
         String[] listNotification = super.listNotificationInterests();
         listNotification = ArrayUtils.add(listNotification, DeleteSpineAnimation.DONE);
         listNotification = ArrayUtils.add(listNotification, DeleteSpriteAnimation.DONE);
+        listNotification = ArrayUtils.add(listNotification, DeleteSpriterAnimation.DONE);
         return listNotification;
     }
 
@@ -67,6 +69,7 @@ public class UIAnimationsTabMediator extends UIResourcesTabMediator<UIAnimations
         switch (notification.getName()) {
             case DeleteSpineAnimation.DONE:
             case DeleteSpriteAnimation.DONE:
+            case DeleteSpriterAnimation.DONE:
                 initList(viewComponent.searchString);
                 break;
             default:
@@ -79,10 +82,9 @@ public class UIAnimationsTabMediator extends UIResourcesTabMediator<UIAnimations
         animationBoxes.clear();
         ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
 
-        if (new SpineItemType().getTypeId() == EntityFactory.SPINE_TYPE) {
-            createAnimationResources(resourceManager.getProjectSpineAnimationsList().keySet(), SpineResource.class, ItemFactory.get()::createSpineAnimation, searchText);
-        }
+        createAnimationResources(resourceManager.getProjectSpineAnimationsList().keySet(), SpineResource.class, ItemFactory.get()::createSpineAnimation, searchText);
         createAnimationResources(resourceManager.getProjectSpriteAnimationsList().keySet(), SpriteResource.class, ItemFactory.get()::createSpriteAnimation, searchText);
+        createAnimationResources(resourceManager.getProjectSpineAnimationsList().keySet(), SpriterResource.class, ItemFactory.get()::createSpriterAnimation, searchText);
         animationBoxes.sort();
         viewComponent.setThumbnailBoxes(animationBoxes);
     }

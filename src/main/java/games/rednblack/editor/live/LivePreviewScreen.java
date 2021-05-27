@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.qlang122.h2d.extention.spriter.SpriterItemType;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.proxy.ResolutionManager;
@@ -20,6 +22,7 @@ import games.rednblack.editor.renderer.components.additional.ButtonComponent;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.extension.talos.TalosItemType;
 import games.rednblack.h2d.extention.spine.SpineItemType;
+
 import org.puremvc.java.interfaces.IFacade;
 
 public class LivePreviewScreen extends ScreenAdapter implements GestureDetector.GestureListener {
@@ -34,7 +37,7 @@ public class LivePreviewScreen extends ScreenAdapter implements GestureDetector.
     private final Box2DDebugRenderer mBox2DDebugRenderer;
     private final IFacade facade = HyperLap2DFacade.getInstance();
     private final Color bgColor;
-    
+
     private final OrthographicCamera mCamera;
 
     public LivePreviewScreen() {
@@ -53,6 +56,7 @@ public class LivePreviewScreen extends ScreenAdapter implements GestureDetector.
         mCamera = (OrthographicCamera) viewport.getCamera();
         sceneLoader = new SceneLoader(resourceManager);
         sceneLoader.injectExternalItemType(new SpineItemType());
+        sceneLoader.injectExternalItemType(new SpriterItemType());
         sceneLoader.injectExternalItemType(new TalosItemType());
         sceneLoader.loadScene(projectManager.getCurrentSceneConfigVO().sceneName, viewport);
 
@@ -68,7 +72,7 @@ public class LivePreviewScreen extends ScreenAdapter implements GestureDetector.
     @Override
     public void render(float delta) {
         super.render(delta);
-        Gdx.gl.glClearColor(bgColor.r,bgColor.g,bgColor.b,bgColor.a);
+        Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         mCamera.position.lerp(cameraTargetPos, 0.5f);
@@ -133,7 +137,7 @@ public class LivePreviewScreen extends ScreenAdapter implements GestureDetector.
     }
 
     @Override
-    public boolean pinch (Vector2 initialFirstPointer, Vector2 initialSecondPointer, Vector2 firstPointer, Vector2 secondPointer){
+    public boolean pinch(Vector2 initialFirstPointer, Vector2 initialSecondPointer, Vector2 firstPointer, Vector2 secondPointer) {
         return true;
     }
 

@@ -22,6 +22,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.renderer.components.TransformComponent;
@@ -51,17 +52,17 @@ public class PasteItemsCommand extends EntityModifyRevertibleCommand {
         Object[] payload = (Object[]) Sandbox.retrieveFromClipboard();
 
         UILayerBoxMediator layerBoxMediator = facade.retrieveMediator(UILayerBoxMediator.NAME);
-        if(layerBoxMediator.getCurrentSelectedLayerName() == null || payload == null) {
+        if (layerBoxMediator.getCurrentSelectedLayerName() == null || payload == null) {
             cancel();
             return;
         }
 
         Vector2 cameraPrevPosition = (Vector2) payload[0];
-        Vector2 cameraCurrPosition = new Vector2(Sandbox.getInstance().getCamera().position.x,Sandbox.getInstance().getCamera().position.y);
+        Vector2 cameraCurrPosition = new Vector2(Sandbox.getInstance().getCamera().position.x, Sandbox.getInstance().getCamera().position.y);
 
         Vector2 diff = cameraCurrPosition.sub(cameraPrevPosition);
 
-        Json json =  new Json();
+        Json json = new Json();
         CompositeVO compositeVO = json.fromJson(CompositeVO.class, (String) payload[1]);
         forceIdChange(compositeVO);
         Set<Entity> newEntitiesList = createEntitiesFromVO(compositeVO);
@@ -92,7 +93,7 @@ public class PasteItemsCommand extends EntityModifyRevertibleCommand {
 
     public static void forceIdChange(CompositeVO compositeVO) {
         ArrayList<MainItemVO> items = compositeVO.getAllItems();
-        for(MainItemVO item: items) {
+        for (MainItemVO item : items) {
             item.uniqueId = -1;
         }
     }
@@ -136,6 +137,11 @@ public class PasteItemsCommand extends EntityModifyRevertibleCommand {
         }
         for (int i = 0; i < compositeVO.sSpineAnimations.size(); i++) {
             Entity child = factory.createEntity(parentEntity, compositeVO.sSpineAnimations.get(i));
+            Sandbox.getInstance().getEngine().addEntity(child);
+            entities.add(child);
+        }
+        for (int i = 0; i < compositeVO.sSpriterAnimations.size(); i++) {
+            Entity child = factory.createEntity(parentEntity, compositeVO.sSpriterAnimations.get(i));
             Sandbox.getInstance().getEngine().addEntity(child);
             entities.add(child);
         }

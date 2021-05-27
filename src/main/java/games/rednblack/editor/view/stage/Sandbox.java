@@ -33,6 +33,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.ui.util.ToastManager;
+import com.qlang122.h2d.extention.spriter.SpriterItemType;
+
 import games.rednblack.editor.proxy.*;
 import games.rednblack.editor.renderer.systems.LightSystem;
 import games.rednblack.editor.renderer.systems.ParticleSystem;
@@ -131,6 +133,7 @@ public class Sandbox {
         sceneLoader = new SceneLoader(resourceManager);
         // adding spine as external component
         sceneLoader.injectExternalItemType(new SpineItemType());
+        sceneLoader.injectExternalItemType(new SpriterItemType());
         sceneLoader.injectExternalItemType(new TalosItemType());
 
         //Remove Physics System and add Adjusting System for box2d objects to follow items and stop world tick
@@ -292,7 +295,7 @@ public class Sandbox {
     /**
      * When an entity is modified their respective VO in memory are not touched, so to save a scene we have to
      * recreate all current SceneVO from root entity state
-     *
+     * <p>
      * TODO This does not seems to be much smart
      *
      * @return SceneVO
@@ -489,7 +492,7 @@ public class Sandbox {
 
     public static void copyToClipboard(Object data) {
         Object[] payload = new Object[2];
-        payload[0] = new Vector2(Sandbox.getInstance().getCamera().position.x,Sandbox.getInstance().getCamera().position.y);
+        payload[0] = new Vector2(Sandbox.getInstance().getCamera().position.x, Sandbox.getInstance().getCamera().position.y);
         payload[1] = data;
 
         Lwjgl3Application app = (Lwjgl3Application) Gdx.app;

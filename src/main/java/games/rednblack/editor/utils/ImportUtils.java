@@ -22,6 +22,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.file.FileTypeFilter;
+
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.BufferedReader;
@@ -43,6 +44,7 @@ public class ImportUtils {
     public static final int TYPE_ANIMATION_PNG_SEQUENCE = 2;
     public static final int TYPE_SPRITE_ANIMATION_ATLAS = 3;
     public static final int TYPE_SPINE_ANIMATION = 4;
+    public static final int TYPE_SPRITER_ANIMATION = 5;
     public static final int TYPE_TTF_FONT = 6;
     public static final int TYPE_BITMAP_FONT = 7;
     public static final int TYPE_PARTICLE_EFFECT = 8;
@@ -61,6 +63,7 @@ public class ImportUtils {
         supportedTypes.add(TYPE_ANIMATION_PNG_SEQUENCE);
         supportedTypes.add(TYPE_SPRITE_ANIMATION_ATLAS);
         supportedTypes.add(TYPE_SPINE_ANIMATION);
+        supportedTypes.add(TYPE_SPRITER_ANIMATION);
         supportedTypes.add(TYPE_PARTICLE_EFFECT);
         supportedTypes.add(TYPE_TALOS_VFX);
         supportedTypes.add(TYPE_SHADER);
@@ -71,11 +74,13 @@ public class ImportUtils {
 
         fileTypeFilter = new FileTypeFilter(false);
 
-        fileTypeFilter.addRule("All Supported (*.png, *.atlas, *.p, *.json, *.vert, *.frag, *.h2dlib, *.h2daction)", "png", "atlas", "p", "json", "vert", "frag", "h2dlib", "h2daction");
+        fileTypeFilter.addRule("All Supported (*.png, *.atlas, *.p, *.json, *.scml, *.vert, *.frag, *.h2dlib, *.h2daction)",
+                "png", "atlas", "p", "json", "scml", "vert", "frag", "h2dlib", "h2daction");
         fileTypeFilter.addRule("PNG File (*.png)", "png");
         fileTypeFilter.addRule("Sprite Animation Atlas File (*.atlas)", "atlas");
         fileTypeFilter.addRule("libGDX/Talos Particle Effect (*.p)", "p");
         fileTypeFilter.addRule("Spine Animation (*.json)", "json");
+        fileTypeFilter.addRule("Spriter Animation (*.scml)", "scml");
         fileTypeFilter.addRule("Shader (*.vert, *.frag)", "vert", "frag");
         fileTypeFilter.addRule("HyperLap2D Library (*.h2dlib)", "h2dlib");
         fileTypeFilter.addRule("HyperLap2D Action (*.h2daction)", "h2daction");
