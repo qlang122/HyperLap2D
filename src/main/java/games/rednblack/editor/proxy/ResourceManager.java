@@ -25,6 +25,7 @@ import com.talosvfx.talos.runtime.assets.AtlasAssetProvider;
 import com.talosvfx.talos.runtime.utils.ShaderDescriptor;
 import com.talosvfx.talos.runtime.utils.VectorField;
 
+import games.rednblack.editor.data.SpriterAnimData;
 import games.rednblack.editor.renderer.data.*;
 
 import games.rednblack.editor.renderer.utils.H2DSkinLoader;
@@ -65,7 +66,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     private final HashMap<String, SpineAnimData> spineAnimAtlases = new HashMap<>();
     private final HashMap<String, TextureAtlas> spriteAnimAtlases = new HashMap<>();
-    private HashMap<String, FileHandle> spriterAnimFiles = new HashMap<String, FileHandle>();
+    private HashMap<String, SpriterAnimData> spriterAnimAtlases = new HashMap<>();
     private final HashMap<FontSizePair, BitmapFont> bitmapFonts = new HashMap<>();
     private final HashMap<String, ShaderProgram> shaderPrograms = new HashMap<>(1);
 
@@ -197,8 +198,15 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     @Override
-    public FileHandle getSCMLFile(String name) {
-        return spriterAnimFiles.get(name);
+    public FileHandle getSpriterSCML(String name) {
+        SpriterAnimData animData = spriterAnimAtlases.get(name);
+        return animData.scmlFile;
+    }
+
+    @Override
+    public TextureAtlas getSpriterAtlas(String name) {
+        SpriterAnimData animData = spriterAnimAtlases.get(name);
+        return animData.atlas;
     }
 
     @Override
@@ -241,6 +249,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         loadCurrentProjectTalosVFXs(projectPath + "/assets/orig/talos-vfx");
         loadCurrentProjectSpineAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectSpriteAnimations(projectPath + "/assets/", curResolution);
+        loadCurrentProjectSpriterAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectBitmapFonts(projectPath, curResolution);
         loadCurrentProjectShaders(projectPath + "/assets/shaders/");
     }
@@ -346,6 +355,23 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    private void loadCurrentProjectSpriterAnimations(String path, String curResolution) {
+        spriterAnimAtlases.clear();
+        FileHandle sourceDir = new FileHandle(path + "orig" + "/spriter-animations");
+        for (FileHandle entry : sourceDir.list()) {
+            if (entry.file().isDirectory()) {
+                String animName = entry.file().getName();
+                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/spriter-animations/" + File.separator + animName + File.separator + animName + ".atlas"));
+                FileHandle scmlFile = new FileHandle(path + "orig" + "/spriter-animations/" + animName + "/" + animName + ".scml");
+                SpriterAnimData data = new SpriterAnimData();
+                data.scmlFile = scmlFile;
+                data.atlas = atlas;
+                data.animName = animName;
+                spriterAnimAtlases.put(animName, data);
             }
         }
     }
@@ -529,6 +555,10 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     public HashMap<String, TextureAtlas> getProjectSpriteAnimationsList() {
         return spriteAnimAtlases;
+    }
+
+    public HashMap<String, SpriterAnimData> getProjectSpriterAnimationsList() {
+        return spriterAnimAtlases;
     }
 
     public TextureAtlas getProjectAssetsList() {

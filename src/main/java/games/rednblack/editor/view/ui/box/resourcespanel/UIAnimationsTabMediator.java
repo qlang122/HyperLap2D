@@ -84,7 +84,7 @@ public class UIAnimationsTabMediator extends UIResourcesTabMediator<UIAnimations
 
         createAnimationResources(resourceManager.getProjectSpineAnimationsList().keySet(), SpineResource.class, ItemFactory.get()::createSpineAnimation, searchText);
         createAnimationResources(resourceManager.getProjectSpriteAnimationsList().keySet(), SpriteResource.class, ItemFactory.get()::createSpriteAnimation, searchText);
-        createAnimationResources(resourceManager.getProjectSpineAnimationsList().keySet(), SpriterResource.class, ItemFactory.get()::createSpriterAnimation, searchText);
+        createAnimationResources(resourceManager.getProjectSpriterAnimationsList().keySet(), SpriterResource.class, ItemFactory.get()::createSpriterAnimation, searchText);
         animationBoxes.sort();
         viewComponent.setThumbnailBoxes(animationBoxes);
     }

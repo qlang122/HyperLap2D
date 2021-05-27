@@ -33,7 +33,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.ui.util.ToastManager;
-import com.qlang122.h2d.extention.spriter.SpriterItemType;
+import com.qlang.h2d.extention.spriter.SpriterItemType;
 
 import games.rednblack.editor.proxy.*;
 import games.rednblack.editor.renderer.systems.LightSystem;

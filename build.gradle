@@ -2,8 +2,10 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        google()
     }
     dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     }
 }
@@ -20,6 +22,7 @@ repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url 'https://jitpack.io' }
+    google()
 }
 
 ext {
@@ -49,7 +52,7 @@ task packTextures {
 }
 
 mainClassName = "games.rednblack.editor.Main"
-project.ext.assetsDir = new File("assets/");
+project.ext.assetsDir = new File("assets/")
 def osName = System.getProperty('os.name').toLowerCase(Locale.ROOT)
 
 task runHyperLap2D(dependsOn: classes, type: JavaExec) {
@@ -64,13 +67,13 @@ task dist(type: Jar) {
     from files(sourceSets.main.output.classesDirs)
     from files(sourceSets.main.output.resourcesDir)
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    from files(project.assetsDir);
+    from files(project.assetsDir)
 
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
 
-    destinationDirectory = file("$buildDir/lib")
+//    destinationDirectory = file("$buildDir/lib")
 }
 
 jpackageImage.dependsOn dist
@@ -145,7 +148,7 @@ runtime {
 
     jpackage {
         setVersion(getBuildVersion())
-        mainJar = dist.archiveFileName.get()
+//        mainJar = dist.archiveFileName.get()
         imageOptions += ['--app-version', getBuildVersion(), '--vendor', 'Red & Black Games', '--description', 'HyperLap2D Editor', '--name', 'HyperLap2D']
         installerOptions += ['--license-file', 'LICENSE']
         if (osName.contains('windows')) {
