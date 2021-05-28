@@ -516,3 +516,9 @@ window-node
 window-node-selected
 	bounds: 396, 76, 35, 51
 	split: 14, 14, 35, 15
+
+uiskin-1.png
+	size: 32, 32
+	filter: Linear, Linear
+icon-spriter
+    bounds: 1, 1, 22, 22

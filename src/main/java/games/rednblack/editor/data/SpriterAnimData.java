@@ -22,7 +22,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 /**
- * @author Created by qlang on 27/5/2021.
+ * @author Created by qlang on 5/27/2021.
  */
 public class SpriterAnimData {
     public TextureAtlas atlas;

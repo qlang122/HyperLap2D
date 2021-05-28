@@ -19,6 +19,7 @@
 package games.rednblack.editor.view.ui.properties.panels;
 
 import com.badlogic.ashley.core.Entity;
+
 import games.rednblack.editor.code.syntax.GLSLSyntax;
 import games.rednblack.editor.controller.commands.component.UpdateShaderDataCommand;
 import games.rednblack.editor.proxy.ProjectManager;
@@ -29,10 +30,12 @@ import games.rednblack.editor.proxy.ResourceManager;
 import games.rednblack.editor.renderer.components.ShaderComponent;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.view.ui.properties.UIItemPropertiesMediator;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.puremvc.java.interfaces.INotification;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -89,7 +92,10 @@ public class UIShaderPropertiesMediator extends UIItemPropertiesMediator<Entity,
                 File shader = new File(projectManager.getCurrentProjectPath() + File.separator
                         + ProjectManager.SHADER_DIR_PATH + File.separator + viewComponent.getShader() + ".frag");
                 try {
-                    Files.writeString(shader.toPath(), notification.getBody());
+                    FileOutputStream stream = new FileOutputStream(shader);
+                    stream.write(notification.getBody().toString().getBytes());
+                    stream.close();
+//                    Files.writeString(shader.toPath(), notification.getBody());
                     resourceManager.reloadShader(viewComponent.getShader());
                     Object payload = UpdateShaderDataCommand.payload(observableReference, viewComponent.getShader(), viewComponent.getRenderingLayer());
                     facade.sendNotification(MsgAPI.ACTION_UPDATE_SHADER_DATA, payload);

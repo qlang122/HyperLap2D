@@ -11,6 +11,7 @@ import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.google.common.io.ByteStreams;
+
 import games.rednblack.editor.plugin.tiled.TiledPlugin;
 import games.rednblack.editor.plugin.tiled.view.SpineDrawable;
 import games.rednblack.editor.renderer.factory.EntityFactory;
@@ -60,10 +61,10 @@ public class ResourcesManager {
     }
 
     private FileHandle getResourceFileFromJar(String fileName) {
-        File tempFile = new File(tiledPlugin.getAPI().getCacheDir()+ File.separator + fileName);
+        File tempFile = new File(tiledPlugin.getAPI().getCacheDir() + File.separator + fileName);
 
         try {
-            InputStream in = getClass().getResourceAsStream("/"+fileName);
+            InputStream in = getClass().getResourceAsStream("/" + fileName);
             FileOutputStream out = new FileOutputStream(tempFile);
             ByteStreams.copy(in, out);
             in.close();
@@ -107,7 +108,7 @@ public class ResourcesManager {
 
     public NinePatch getPluginNinePatch(String name) {
         TextureAtlas.AtlasRegion region = textureAtlas.findRegion(name);
-        if(region == null) return null;
+        if (region == null) return null;
         int[] splits = region.findValue("split");
         return new NinePatch(region, splits[0], splits[1], splits[2], splits[3]);
     }

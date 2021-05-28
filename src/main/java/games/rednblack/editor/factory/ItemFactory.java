@@ -143,8 +143,8 @@ public class ItemFactory implements IFactory {
         vo.animationName = animationName;
 
         if (!setEssentialData(vo, position)) return false;
-        Entity entity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
-        HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, entity);
+        createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
+        HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
 
         return true;
     }

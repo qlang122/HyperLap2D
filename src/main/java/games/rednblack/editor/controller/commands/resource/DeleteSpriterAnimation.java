@@ -36,7 +36,6 @@ public class DeleteSpriterAnimation extends DeleteResourceCommand {
         } else {
             cancel();
         }
-
     }
 
     private void deleteAllItemsSpriterAnimations(String spriterAnimationName) {

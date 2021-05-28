@@ -24,6 +24,7 @@ import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.*;
 import games.rednblack.editor.controller.commands.resource.*;
+
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.command.SimpleCommand;
 
@@ -94,6 +95,7 @@ public class BootstrapCommand extends SimpleCommand {
         facade.registerCommand(MsgAPI.ACTION_UPDATE_IMAGE_ITEM_DATA, UpdateImageItemDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_SPRITE_ANIMATION_DATA, UpdateSpriteAnimationDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_SPINE_ANIMATION_DATA, UpdateSpineDataCommand::new);
+        facade.registerCommand(MsgAPI.ACTION_UPDATE_SPRITEr_ANIMATION_DATA, UpdateSpriterDataCommand::new);
 
         facade.registerCommand(MsgAPI.ACTION_UPDATE_MESH_DATA, UpdatePolygonDataCommand::new);
 

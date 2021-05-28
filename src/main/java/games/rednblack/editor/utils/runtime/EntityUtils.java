@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.ui.VisUI;
+
 import games.rednblack.editor.renderer.SceneLoader;
 import games.rednblack.editor.renderer.components.*;
 import games.rednblack.editor.renderer.components.light.LightBodyComponent;
@@ -49,6 +50,7 @@ public class EntityUtils {
 
     public static final HashMap<Integer, String> itemTypeIconMap = new HashMap<>();
     public static final HashMap<Integer, String> itemTypeNameMap = new HashMap<>();
+
     static {
         itemTypeNameMap.put(UNKNOWN_TYPE, "Unknown");
         itemTypeNameMap.put(COMPOSITE_TYPE, "Composite Item");
@@ -59,6 +61,7 @@ public class EntityUtils {
         itemTypeNameMap.put(LIGHT_TYPE, "Light");
         itemTypeNameMap.put(SPINE_TYPE, "Spine Animation");
         itemTypeNameMap.put(SPRITE_TYPE, "Sprite Animation");
+        itemTypeNameMap.put(SPRITER_TYPE, "Spriter Animation");
         itemTypeNameMap.put(COLOR_PRIMITIVE, "Primitive");
         itemTypeNameMap.put(TALOS_TYPE, "Talos VFX");
 
@@ -70,6 +73,7 @@ public class EntityUtils {
         itemTypeIconMap.put(NINE_PATCH, "icon-image");
         itemTypeIconMap.put(LIGHT_TYPE, "icon-particle-white");
         itemTypeIconMap.put(SPINE_TYPE, "icon-spine");
+        itemTypeIconMap.put(SPRITER_TYPE, "icon-spriter");
         itemTypeIconMap.put(SPRITE_TYPE, "icon-animation");
         itemTypeIconMap.put(COLOR_PRIMITIVE, "icon-image");
         itemTypeIconMap.put(TALOS_TYPE, "icon-particle-white");
@@ -350,43 +354,43 @@ public class EntityUtils {
 
     public static Entity getEntityFromJson(String jsonString, int entityType, EntityFactory factory, Entity parent) {
         Json json = new Json();
-        if(entityType == EntityFactory.COMPOSITE_TYPE) {
+        if (entityType == EntityFactory.COMPOSITE_TYPE) {
             CompositeItemVO vo = json.fromJson(CompositeItemVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.IMAGE_TYPE) {
+        if (entityType == EntityFactory.IMAGE_TYPE) {
             SimpleImageVO vo = json.fromJson(SimpleImageVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.NINE_PATCH) {
+        if (entityType == EntityFactory.NINE_PATCH) {
             Image9patchVO vo = json.fromJson(Image9patchVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.LABEL_TYPE) {
+        if (entityType == EntityFactory.LABEL_TYPE) {
             LabelVO vo = json.fromJson(LabelVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.PARTICLE_TYPE) {
+        if (entityType == EntityFactory.PARTICLE_TYPE) {
             ParticleEffectVO vo = json.fromJson(ParticleEffectVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.TALOS_TYPE) {
+        if (entityType == EntityFactory.TALOS_TYPE) {
             TalosVO vo = json.fromJson(TalosVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.SPRITE_TYPE) {
+        if (entityType == EntityFactory.SPRITE_TYPE) {
             SpriteAnimationVO vo = json.fromJson(SpriteAnimationVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.SPINE_TYPE) {
+        if (entityType == EntityFactory.SPINE_TYPE) {
             SpineVO vo = json.fromJson(SpineVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.COLOR_PRIMITIVE) {
+        if (entityType == EntityFactory.COLOR_PRIMITIVE) {
             ColorPrimitiveVO vo = json.fromJson(ColorPrimitiveVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
-        if(entityType == EntityFactory.LIGHT_TYPE) {
+        if (entityType == EntityFactory.LIGHT_TYPE) {
             LightVO vo = json.fromJson(LightVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
@@ -396,52 +400,52 @@ public class EntityUtils {
     public static String getJsonStringFromEntity(Entity entity) {
         Json json = new Json();
         int entityType = ComponentRetriever.get(entity, MainItemComponent.class).entityType;
-        if(entityType == EntityFactory.COMPOSITE_TYPE) {
+        if (entityType == EntityFactory.COMPOSITE_TYPE) {
             CompositeItemVO vo = new CompositeItemVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.IMAGE_TYPE) {
+        if (entityType == EntityFactory.IMAGE_TYPE) {
             SimpleImageVO vo = new SimpleImageVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.NINE_PATCH) {
+        if (entityType == EntityFactory.NINE_PATCH) {
             Image9patchVO vo = new Image9patchVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.LABEL_TYPE) {
+        if (entityType == EntityFactory.LABEL_TYPE) {
             LabelVO vo = new LabelVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.PARTICLE_TYPE) {
+        if (entityType == EntityFactory.PARTICLE_TYPE) {
             ParticleEffectVO vo = new ParticleEffectVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.TALOS_TYPE) {
+        if (entityType == EntityFactory.TALOS_TYPE) {
             TalosVO vo = new TalosVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.SPRITE_TYPE) {
+        if (entityType == EntityFactory.SPRITE_TYPE) {
             SpriteAnimationVO vo = new SpriteAnimationVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.SPINE_TYPE) {
+        if (entityType == EntityFactory.SPINE_TYPE) {
             SpineVO vo = new SpineVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.COLOR_PRIMITIVE) {
+        if (entityType == EntityFactory.COLOR_PRIMITIVE) {
             ColorPrimitiveVO vo = new ColorPrimitiveVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
-        if(entityType == EntityFactory.LIGHT_TYPE) {
+        if (entityType == EntityFactory.LIGHT_TYPE) {
             LightVO vo = new LightVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
@@ -451,54 +455,54 @@ public class EntityUtils {
 
     public static String getJsonStringFromEntities(Set<Entity> entities) {
         CompositeVO holderComposite = new CompositeVO();
-        for(Entity entity : entities) {
+        for (Entity entity : entities) {
             int entityType = ComponentRetriever.get(entity, MainItemComponent.class).entityType;
-            if(entityType == EntityFactory.COMPOSITE_TYPE) {
+            if (entityType == EntityFactory.COMPOSITE_TYPE) {
                 CompositeItemVO vo = new CompositeItemVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sComposites.add(vo);
             }
-            if(entityType == EntityFactory.IMAGE_TYPE) {
+            if (entityType == EntityFactory.IMAGE_TYPE) {
                 SimpleImageVO vo = new SimpleImageVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sImages.add(vo);
             }
-            if(entityType == EntityFactory.NINE_PATCH) {
+            if (entityType == EntityFactory.NINE_PATCH) {
                 Image9patchVO vo = new Image9patchVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sImage9patchs.add(vo);
             }
-            if(entityType == EntityFactory.LABEL_TYPE) {
+            if (entityType == EntityFactory.LABEL_TYPE) {
                 LabelVO vo = new LabelVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sLabels.add(vo);
             }
-            if(entityType == EntityFactory.PARTICLE_TYPE) {
+            if (entityType == EntityFactory.PARTICLE_TYPE) {
                 ParticleEffectVO vo = new ParticleEffectVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sParticleEffects.add(vo);
             }
-            if(entityType == EntityFactory.TALOS_TYPE) {
+            if (entityType == EntityFactory.TALOS_TYPE) {
                 TalosVO vo = new TalosVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sTalosVFX.add(vo);
             }
-            if(entityType == EntityFactory.SPRITE_TYPE) {
+            if (entityType == EntityFactory.SPRITE_TYPE) {
                 SpriteAnimationVO vo = new SpriteAnimationVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sSpriteAnimations.add(vo);
             }
-            if(entityType == EntityFactory.SPINE_TYPE) {
+            if (entityType == EntityFactory.SPINE_TYPE) {
                 SpineVO vo = new SpineVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sSpineAnimations.add(vo);
             }
-            if(entityType == EntityFactory.COLOR_PRIMITIVE) {
+            if (entityType == EntityFactory.COLOR_PRIMITIVE) {
                 ColorPrimitiveVO vo = new ColorPrimitiveVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sColorPrimitives.add(vo);
             }
-            if(entityType == EntityFactory.LIGHT_TYPE) {
+            if (entityType == EntityFactory.LIGHT_TYPE) {
                 LightVO vo = new LightVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sLights.add(vo);

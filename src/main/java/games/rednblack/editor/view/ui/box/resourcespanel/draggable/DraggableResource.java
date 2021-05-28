@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+
 import games.rednblack.editor.view.stage.UIStage;
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.BoxItemResource;
@@ -56,7 +57,7 @@ public class DraggableResource extends DragAndDrop implements Comparable<Draggab
                 Payload payload = new Payload();
                 Actor dragActor = viewComponent.getDragActor();
                 OrthographicCamera runtimeCamera = Sandbox.getInstance().getCamera();
-                dragActor.setScale(1f/runtimeCamera.zoom);
+                dragActor.setScale(1f / runtimeCamera.zoom);
 
                 ResourcePayloadObject payloadData = viewComponent.getPayloadData();
                 payloadData.xOffset = dragActor.getWidth() / 2f;
@@ -100,7 +101,7 @@ public class DraggableResource extends DragAndDrop implements Comparable<Draggab
         ResourcePayloadObject resourcePayloadObject = (ResourcePayloadObject) payload.getObject();
         ResourceManager resourceManager = HyperLap2DFacade.getInstance().retrieveProxy(ResourceManager.NAME);
 
-        vector2.sub(resourcePayloadObject.xOffset/resourceManager.getProjectVO().pixelToWorld, resourcePayloadObject.yOffset/resourceManager.getProjectVO().pixelToWorld);
+        vector2.sub(resourcePayloadObject.xOffset / resourceManager.getProjectVO().pixelToWorld, resourcePayloadObject.yOffset / resourceManager.getProjectVO().pixelToWorld);
         factoryFunction.apply(resourcePayloadObject.name, vector2);
     }
 

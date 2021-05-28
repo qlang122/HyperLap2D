@@ -1,14 +1,17 @@
 package games.rednblack.editor.view.ui.dialog;
 
 import com.kotcrab.vis.ui.util.highlight.Highlighter;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.stage.UIStage;
 import games.rednblack.h2d.common.MsgAPI;
+
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.mediator.Mediator;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -68,9 +71,14 @@ public class CodeEditorDialogMediator extends Mediator<CodeEditorDialog> {
 
     private void readObservedFile() {
         try {
-            String fileContent = Files.readString(observedFile.toPath());
+            FileInputStream stream = new FileInputStream(observedFile);
+            byte[] bytes = new byte[stream.available()];
+            stream.read(bytes);
+            String fileContent = new String(bytes);
+//            String fileContent = Files.readString(observedFile.toPath());
             viewComponent.setText(fileContent);
-        } catch (IOException e) {
+            stream.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -18,34 +18,36 @@
 
 package games.rednblack.editor.view.ui.widget.actors;
 
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
+import me.winter.gdx.animation.Animation;
+import me.winter.gdx.animation.Entity;
+import me.winter.gdx.animation.scml.SCMLLoader;
+import me.winter.gdx.animation.scml.SCMLProject;
 
 /**
- * Created by hayk on 12/8/14.
+ * @author Created by qlang on 5/28/2021.
  */
 public class SpriterActor extends Actor {
+    private String animationName = "";
 
-    public boolean looping;
+    public boolean looping = true;
     protected boolean reverse = false;
 
-    private int frameHeight;
-    private int frameWidth;
+    public Entity entity;
+    public Animation animation;
 
-    private String animationName = "";
-    private String currentAnimationName = "";
+    private ArrayList<Animation> animations = new ArrayList<>();
+    private ArrayList<Entity> entities = new ArrayList<>();
 
-//    private LibGdxDrawer drawer;
-//    private Player player;
-//    private Data data;
-    private ArrayList<String> animations = new ArrayList<String>();
-    private ArrayList<String> entities = new ArrayList<String>();
     private int currentEntityIndex = 0;
     private int currentAnimationIndex;
 
@@ -58,45 +60,41 @@ public class SpriterActor extends Actor {
         initSpriterAnimation();
     }
 
-
     private void initSpriterAnimation() {
-        FileHandle handle = irr.getSCMLFile(animationName);
-//        data = new SCMLReader(handle.read()).getData();
-//        LibGdxLoader loader = new LibGdxLoader(data);
-//        loader.load(handle.file());
-//        ShapeRenderer renderer = new ShapeRenderer();
-//        drawer = new LibGdxDrawer(loader, renderer);
+        FileHandle scmlFile = irr.getSpriterSCML(animationName);
+        TextureAtlas atlas = irr.getSpriterAtlas(animationName);
+        SCMLLoader loader = new SCMLLoader(new InternalFileHandleResolver());
+        SCMLProject scmlProject = loader.load(atlas, scmlFile);
+
         currentAnimationIndex = 0;
         currentEntityIndex = 0;
-        initPlayer();
-    }
 
-    private void initPlayer() {
-//        player = new Player(data.getEntity(currentEntityIndex));
-//        player.setAnimation(currentAnimationIndex);
-//        player.setScale(1);
-        setRectangle();
-    }
+        entity = scmlProject.getEntity(currentEntityIndex);
+        if (entity != null) {
+            animation = entity.getAnimation(currentAnimationIndex);
+            animation.update(0);
 
-    private void setRectangle() {
-//        player.update();
-//        Rectangle bbox = player.getBoundingRectangle(null);
-//        frameWidth = (int) bbox.size.width;
-//        frameHeight = (int) bbox.size.height;
-//        setWidth(frameWidth);
-//        setHeight(frameHeight);
+            Array<Animation> array = entity.getAnimations();
+            for (Animation animation : array) {
+                animations.add(animation);
+            }
+        }
+        Array<Entity> array = scmlProject.getSourceEntities();
+        for (Entity entity : array.iterator()) {
+            entities.add(entity);
+        }
     }
 
     @Override
     public void setScale(float scaleXY) {
         super.setScale(scaleXY);
-//        player.setScale(scaleXY);
+        animation.setScale(scaleXY, scaleXY);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-//        player.update();
+        animation.update(delta * 1000);
     }
 
     @Override
@@ -104,19 +102,17 @@ public class SpriterActor extends Actor {
         batch.setColor(1, 1, 1, parentAlpha * getColor().a);
         super.draw(batch, parentAlpha);
 
-//        player.setPosition(getX(), getY());
+        animation.setPosition(getX(), getY());
 //        player.setPivot(getWidth() / 2, getHeight() / 2);
-//        player.rotate(getRotation() - player.getAngle());
-//        drawer.beforeDraw(player, batch);
+        animation.setAngle(getRotation() - animation.getAngle());
+        animation.draw(batch);
     }
 
+    public void setAnimation(String animName) {
+        animation = entity.getAnimation(animName);
+    }
 
-    public ArrayList<String> getAnimations() {
-        animations = new ArrayList<String>();
-
-//        for (int i = 0; i < data.getEntity(currentEntityIndex).animations(); i++) {
-//            animations.add(data.getEntity(currentEntityIndex).getAnimation(i).name);
-//        }
+    public ArrayList<Animation> getAnimations() {
         return animations;
     }
 }

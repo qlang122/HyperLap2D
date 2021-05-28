@@ -22,12 +22,11 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+
 import games.rednblack.editor.plugin.tiled.view.SpineDrawable;
 import games.rednblack.editor.renderer.factory.EntityFactory;
-import games.rednblack.h2d.common.vo.CursorData;
 import games.rednblack.editor.plugin.tiled.data.TileVO;
 import games.rednblack.editor.plugin.tiled.tools.DeleteTileTool;
 import games.rednblack.editor.plugin.tiled.tools.DrawTileTool;
@@ -36,6 +35,7 @@ import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.h2d.common.ResourcePayloadObject;
+
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.mediator.Mediator;
 
@@ -102,7 +102,8 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
                     public void drop(DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
                         ResourcePayloadObject resourcePayloadObject = (ResourcePayloadObject) payload.getObject();
                         int type = mapClassNameToEntityType(resourcePayloadObject.className);
-                        if (type == EntityFactory.UNKNOWN_TYPE) return; //only some resources can become a tile!
+                        if (type == EntityFactory.UNKNOWN_TYPE)
+                            return; //only some resources can become a tile!
 
                         String tileName = resourcePayloadObject.name;
                         if (tiledPlugin.dataToSave.containsTile(tileName)) return;
@@ -172,12 +173,12 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
                 switch (body) {
                     case DeleteTileTool.NAME:
                     case DrawTileTool.NAME:
-                        if(viewComponent.isOpen) {
+                        if (viewComponent.isOpen) {
                             break;
                         }
 
                         viewComponent.show(tiledPlugin.getAPI().getUIStage());
-                        if(tiledPlugin.isSceneLoaded) {
+                        if (tiledPlugin.isSceneLoaded) {
                             viewComponent.setFixedPosition();
                         }
 

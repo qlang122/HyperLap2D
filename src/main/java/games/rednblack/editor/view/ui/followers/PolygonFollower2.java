@@ -51,13 +51,13 @@ public class PolygonFollower2 extends SubFollower {
 
     private int[] intersections = null;
 
-    private final Pool<PolyLine> linePool = new Pool<>() {
+    private final Pool<PolyLine> linePool = new Pool<PolyLine>() {
         @Override
         protected PolyLine newObject() {
             return new PolyLine(shapeDrawer);
         }
     };
-    private final Pool<PolyVertex> vertexPool = new Pool<>() {
+    private final Pool<PolyVertex> vertexPool = new Pool<PolyVertex>() {
         @Override
         protected PolyVertex newObject() {
             return new PolyVertex(shapeDrawer);

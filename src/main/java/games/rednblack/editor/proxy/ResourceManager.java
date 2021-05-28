@@ -66,7 +66,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     private final HashMap<String, SpineAnimData> spineAnimAtlases = new HashMap<>();
     private final HashMap<String, TextureAtlas> spriteAnimAtlases = new HashMap<>();
-    private HashMap<String, SpriterAnimData> spriterAnimAtlases = new HashMap<>();
+    private final HashMap<String, SpriterAnimData> spriterAnimAtlases = new HashMap<>();
     private final HashMap<FontSizePair, BitmapFont> bitmapFonts = new HashMap<>();
     private final HashMap<String, ShaderProgram> shaderPrograms = new HashMap<>(1);
 

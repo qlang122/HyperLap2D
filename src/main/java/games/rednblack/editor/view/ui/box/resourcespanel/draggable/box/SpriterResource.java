@@ -19,6 +19,8 @@
 package games.rednblack.editor.view.ui.box.resourcespanel.draggable.box;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.renderer.data.SpriterVO;
@@ -55,12 +57,24 @@ public class SpriterResource extends BoxItemResource {
 
             animThumb.setX((getWidth() - animThumb.getWidth()) / 2);
             animThumb.setY((getHeight() - animThumb.getHeight()) / 2);
-
         } else {
             // put it in middle
             animThumb.setX((getWidth() - animThumb.getWidth()) / 2);
             animThumb.setY((getHeight() - animThumb.getHeight()) / 2);
         }
+
+        addListener(new ClickListener() {
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                isMouseInside = true;
+                super.enter(event, x, y, pointer, fromActor);
+            }
+
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                isMouseInside = false;
+                super.enter(event, x, y, pointer, toActor);
+            }
+        });
+        animThumb.setAnimation(animThumb.getAnimations().get(0).getName());
 
         addActor(animThumb);
 
@@ -79,9 +93,9 @@ public class SpriterResource extends BoxItemResource {
 
     @Override
     public void act(float delta) {
-        //if (isMouseInside) {
-        super.act(delta);
-        //}
+        if (isMouseInside) {
+            super.act(delta);
+        }
     }
 
     @Override

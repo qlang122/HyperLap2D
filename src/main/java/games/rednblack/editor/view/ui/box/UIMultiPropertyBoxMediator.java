@@ -21,6 +21,7 @@ package games.rednblack.editor.view.ui.box;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+
 import games.rednblack.editor.renderer.components.label.TypingLabelComponent;
 import games.rednblack.editor.renderer.components.light.LightBodyComponent;
 import games.rednblack.h2d.common.MsgAPI;
@@ -40,6 +41,7 @@ import games.rednblack.editor.view.stage.tools.TextTool;
 import games.rednblack.editor.view.ui.properties.UIAbstractProperties;
 import games.rednblack.editor.view.ui.properties.UIAbstractPropertiesMediator;
 import games.rednblack.editor.view.ui.properties.panels.*;
+
 import org.puremvc.java.interfaces.IMediator;
 import org.puremvc.java.interfaces.INotification;
 
@@ -175,6 +177,9 @@ public class UIMultiPropertyBoxMediator extends PanelMediator<UIMultiPropertyBox
         }
         if (entityType == EntityFactory.SPINE_TYPE) {
             mediatorNames.add(UISpineAnimationItemPropertiesMediator.NAME);
+        }
+        if (entityType == EntityFactory.SPRITER_TYPE) {
+            mediatorNames.add(UISpriterAnimationItemPropertiesMediator.NAME);
         }
         if (entityType == EntityFactory.LIGHT_TYPE) {
             mediatorNames.add(UILightItemPropertiesMediator.NAME);

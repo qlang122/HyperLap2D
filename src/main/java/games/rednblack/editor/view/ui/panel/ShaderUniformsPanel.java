@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.InputValidator;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.*;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.renderer.data.ShaderUniformVO;
 import games.rednblack.editor.view.ui.widget.actors.table.CellBody;
@@ -18,6 +19,7 @@ import games.rednblack.h2d.common.UIDraggablePanel;
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class ShaderUniformsPanel extends UIDraggablePanel {
@@ -92,7 +94,12 @@ public class ShaderUniformsPanel extends UIDraggablePanel {
 
         this.uniforms = uniforms;
         this.customUniforms = customUniforms;
-        uniformName.setItems(uniforms.keySet().toArray(String[]::new));
+        Array<String> array = new Array<>();
+        for (Map.Entry<String, String> entry : uniforms.entrySet()) {
+            array.add(entry.getKey());
+        }
+        uniformName.setItems(array);
+//        uniformName.setItems(uniforms.keySet().toArray(String[]::new));
 
         getContentTable().add(addUniformTable).growX().row();
         hSeparator(getContentTable());
@@ -259,22 +266,22 @@ public class ShaderUniformsPanel extends UIDraggablePanel {
             uniformsTable.add(new CellBody(uniformVO.getType()));
 
             switch (uniformVO.getType()) {
-                case "int" -> {
+                case "int": {
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.intValue))).colspan(4);
                 }
-                case "float" -> {
+                case "float": {
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue))).colspan(4);
                 }
-                case "vec2" -> {
+                case "vec2": {
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue)));
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue2)));
                 }
-                case "vec3" -> {
+                case "vec3": {
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue)));
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue2)));
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue3)));
                 }
-                case "vec4" -> {
+                case "vec4": {
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue)));
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue2)));
                     uniformsTable.add(new CellBody(String.valueOf(uniformVO.floatValue3)));
@@ -317,22 +324,22 @@ public class ShaderUniformsPanel extends UIDraggablePanel {
 
     private void editUniform(ShaderUniformVO uniformVO) {
         switch (uniformVO.getType()) {
-            case "int" -> {
+            case "int": {
                 input1.setText(String.valueOf(uniformVO.intValue));
             }
-            case "float" -> {
+            case "float": {
                 input1.setText(String.valueOf(uniformVO.floatValue));
             }
-            case "vec2" -> {
+            case "vec2": {
                 input1.setText(String.valueOf(uniformVO.floatValue));
                 input2.setText(String.valueOf(uniformVO.floatValue2));
             }
-            case "vec3" -> {
+            case "vec3": {
                 input1.setText(String.valueOf(uniformVO.floatValue));
                 input2.setText(String.valueOf(uniformVO.floatValue2));
                 input3.setText(String.valueOf(uniformVO.floatValue3));
             }
-            case "vec4" -> {
+            case "vec4": {
                 input1.setText(String.valueOf(uniformVO.floatValue));
                 input2.setText(String.valueOf(uniformVO.floatValue2));
                 input3.setText(String.valueOf(uniformVO.floatValue3));
