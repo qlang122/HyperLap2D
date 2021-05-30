@@ -3,6 +3,7 @@ package games.rednblack.editor.view.ui.box;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.scenes.scene2d.utils.Selection;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.controller.commands.resource.DeleteResourceCommand;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
@@ -12,6 +13,7 @@ import games.rednblack.editor.controller.commands.SetSelectionCommand;
 import games.rednblack.editor.renderer.data.LayerItemVO;
 import games.rednblack.editor.utils.runtime.EntityUtils;
 import games.rednblack.editor.view.stage.Sandbox;
+
 import org.puremvc.java.interfaces.INotification;
 
 import java.util.HashSet;
@@ -78,16 +80,14 @@ public class UIItemsTreeBoxMediator extends PanelMediator<UIItemsTreeBox> {
                     Entity item = EntityUtils.getByUniqueId(entityId);
                     //layer lock thing
                     LayerItemVO layerItemVO = EntityUtils.getEntityLayer(item);
-                    if(layerItemVO != null && layerItemVO.isLocked) {
+                    if (layerItemVO != null && layerItemVO.isLocked) {
                         continue;
                     }
                     if (item != null) {
                         items.add(item);
                     }
                 }
-
                 sendSelectionNotification(items);
-
                 break;
             case SetSelectionCommand.DONE:
             case AddSelectionCommand.DONE:
@@ -98,7 +98,7 @@ public class UIItemsTreeBoxMediator extends PanelMediator<UIItemsTreeBox> {
     }
 
     private void sendSelectionNotification(Set<Entity> items) {
-        Set<Entity> ntfItems = (items.isEmpty())? null : items;
+        Set<Entity> ntfItems = (items.isEmpty()) ? null : items;
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_SET_SELECTION, ntfItems);
     }
 }

@@ -29,6 +29,7 @@ public class UpdateSpriterDataCommand extends EntityModifyRevertibleCommand {
         SpriterDataComponent spineDataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
         SpriterObjectComponent spineObjectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
 
+        spineDataComponent.currentEntityIndex = vo.currentEntityIndex;
         spineDataComponent.currentAnimationName = vo.currentAnimationName;
         spineObjectComponent.setAnimation(vo.currentAnimationName);
 
@@ -41,6 +42,7 @@ public class UpdateSpriterDataCommand extends EntityModifyRevertibleCommand {
         SpriterDataComponent spineDataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
         SpriterObjectComponent spineObjectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
 
+        spineDataComponent.currentEntityIndex = backup.currentEntityIndex;
         spineDataComponent.currentAnimationName = backup.currentAnimationName;
         spineObjectComponent.setAnimation(backup.currentAnimationName);
 

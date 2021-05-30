@@ -61,6 +61,6 @@ public class UISpriterAnimationItemPropertiesMediator extends UIItemPropertiesMe
         payloadVO.currentAnimationName = viewComponent.getSelected();
 
         Object payload = UpdateSpriterDataCommand.payload(observableReference, payloadVO);
-        facade.sendNotification(MsgAPI.ACTION_UPDATE_SPRITEr_ANIMATION_DATA, payload);
+        facade.sendNotification(MsgAPI.ACTION_UPDATE_SPRITER_ANIMATION_DATA, payload);
     }
 }

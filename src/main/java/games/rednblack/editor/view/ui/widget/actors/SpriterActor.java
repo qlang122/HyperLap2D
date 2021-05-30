@@ -22,6 +22,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
@@ -50,6 +51,7 @@ public class SpriterActor extends Actor {
 
     private int currentEntityIndex = 0;
     private int currentAnimationIndex;
+    private Rectangle rectangle = new Rectangle();
 
     private IResourceRetriever irr;
 
@@ -72,7 +74,8 @@ public class SpriterActor extends Actor {
         entity = scmlProject.getEntity(currentEntityIndex);
         if (entity != null) {
             animation = entity.getAnimation(currentAnimationIndex);
-            animation.update(0);
+            rectangle.set(animation.getBoundingRectangle(null));
+            setSize(rectangle.width, rectangle.height);
 
             Array<Animation> array = entity.getAnimations();
             for (Animation animation : array) {
@@ -103,8 +106,7 @@ public class SpriterActor extends Actor {
         super.draw(batch, parentAlpha);
 
         animation.setPosition(getX(), getY());
-//        player.setPivot(getWidth() / 2, getHeight() / 2);
-        animation.setAngle(getRotation() - animation.getAngle());
+        animation.setAngle(getRotation());
         animation.draw(batch);
     }
 
@@ -114,5 +116,9 @@ public class SpriterActor extends Actor {
 
     public ArrayList<Animation> getAnimations() {
         return animations;
+    }
+
+    public Rectangle getRectangle() {
+        return rectangle;
     }
 }

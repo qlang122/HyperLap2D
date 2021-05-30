@@ -3,6 +3,7 @@ package games.rednblack.editor.view.menu;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
+
 import games.rednblack.editor.data.manager.PreferencesManager;
 import games.rednblack.editor.event.MenuItemListener;
 import games.rednblack.editor.utils.KeyBindingsLayout;
@@ -31,7 +32,7 @@ public class FileMenu extends H2DMenu {
     private final Array<MenuItem> recentProjectsMenuItems;
 
     public FileMenu() {
-        super("File"); //⌘⇧⌥
+        super("File");
         saveProject = new MenuItem("Save Project", new MenuItemListener(SAVE_PROJECT, null, FILE_MENU)).setShortcut(KeyBindingsLayout.getShortcutList(KeyBindingsLayout.SAVE_PROJECT));
         saveProjectAs = new MenuItem("Save Project As...", new MenuItemListener(SAVE_PROJECT_AS, null, FILE_MENU)).setShortcut(KeyBindingsLayout.getShortcutList(KeyBindingsLayout.SAVE_PROJECT_AS));
         addItem(new MenuItem("New Project...", new MenuItemListener(NEW_PROJECT, null, FILE_MENU)).setShortcut(KeyBindingsLayout.getShortcutList(KeyBindingsLayout.NEW_PROJECT)));
@@ -57,7 +58,7 @@ public class FileMenu extends H2DMenu {
         reInitRecent(prefs.getRecentHistory());
         //
         addSeparator();
-        addItem(new MenuItem("Exit", new MenuItemListener(EXIT, null , FILE_MENU)));
+        addItem(new MenuItem("Exit", new MenuItemListener(EXIT, null, FILE_MENU)));
     }
 
     public String getFolderNameAndPath(String path) {
@@ -68,7 +69,7 @@ public class FileMenu extends H2DMenu {
 
     public void addRecent(ArrayList<String> paths) {
         for (String path : paths) {
-            MenuItem menuItem = new MenuItem(getFolderNameAndPath(path) , new MenuItemListener(RECENT_PROJECTS, path, FILE_MENU));
+            MenuItem menuItem = new MenuItem(getFolderNameAndPath(path), new MenuItemListener(RECENT_PROJECTS, path, FILE_MENU));
             recentProjectsMenuItems.add(menuItem);
             recentProjectsPopupMenu.addItem(menuItem);
         }

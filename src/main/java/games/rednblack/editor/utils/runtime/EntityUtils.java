@@ -386,6 +386,10 @@ public class EntityUtils {
             SpineVO vo = json.fromJson(SpineVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
+        if (entityType == EntityFactory.SPRITER_TYPE) {
+            SpriterVO vo = json.fromJson(SpriterVO.class, jsonString);
+            return factory.createEntity(parent, vo);
+        }
         if (entityType == EntityFactory.COLOR_PRIMITIVE) {
             ColorPrimitiveVO vo = json.fromJson(ColorPrimitiveVO.class, jsonString);
             return factory.createEntity(parent, vo);
@@ -437,6 +441,11 @@ public class EntityUtils {
         }
         if (entityType == EntityFactory.SPINE_TYPE) {
             SpineVO vo = new SpineVO();
+            vo.loadFromEntity(entity);
+            return json.toJson(vo);
+        }
+        if (entityType == EntityFactory.SPRITER_TYPE) {
+            SpriterVO vo = new SpriterVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
@@ -496,6 +505,11 @@ public class EntityUtils {
                 SpineVO vo = new SpineVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sSpineAnimations.add(vo);
+            }
+            if (entityType == EntityFactory.SPRITER_TYPE) {
+                SpriterVO vo = new SpriterVO();
+                vo.loadFromEntity(entity);
+                holderComposite.sSpriterAnimations.add(vo);
             }
             if (entityType == EntityFactory.COLOR_PRIMITIVE) {
                 ColorPrimitiveVO vo = new ColorPrimitiveVO();

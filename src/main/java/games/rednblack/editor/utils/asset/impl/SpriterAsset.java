@@ -41,7 +41,7 @@ public class SpriterAsset extends Asset {
     public boolean checkExistence(Array<FileHandle> files) {
         for (FileHandle file : new Array.ArrayIterator<>(files)) {
             FileHandle fileHandle = new FileHandle(projectManager.getCurrentProjectPath() + File.separator
-                    + ProjectManager.SPITER_DIR_PATH + File.separator + file.nameWithoutExtension() + File.separator +
+                    + ProjectManager.SPRITER_DIR_PATH + File.separator + file.nameWithoutExtension() + File.separator +
                     file.nameWithoutExtension() + ".scml");
             if (fileHandle.exists())
                 return true;

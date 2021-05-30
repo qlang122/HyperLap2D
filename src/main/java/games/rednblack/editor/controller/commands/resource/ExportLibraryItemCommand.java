@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import com.talosvfx.talos.runtime.ParticleEffectDescriptor;
 import com.talosvfx.talos.runtime.ParticleEmitterDescriptor;
 import com.talosvfx.talos.runtime.modules.*;
+
 import games.rednblack.editor.controller.commands.NonRevertibleCommand;
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.proxy.ResourceManager;
@@ -19,6 +20,7 @@ import games.rednblack.editor.utils.ZipUtils;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.h2d.common.vo.ExportMapperVO;
 import games.rednblack.h2d.common.vo.ExportMapperVO.ExportedAsset;
+
 import org.apache.commons.io.FileUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
@@ -50,7 +52,7 @@ public class ExportLibraryItemCommand extends NonRevertibleCommand {
     @Override
     public void doAction() {
         exportMapperVO.mapper.clear();
-		exportMapperVO.projectVersion = projectManager.currentProjectVO.projectVersion;
+        exportMapperVO.projectVersion = projectManager.currentProjectVO.projectVersion;
 
         String libraryItemName = notification.getBody();
 
@@ -81,7 +83,7 @@ public class ExportLibraryItemCommand extends NonRevertibleCommand {
                             doExport(libraryItemName, file.pathWithoutExtension());
 
                             facade.sendNotification(DONE, libraryItemName);
-                            facade.sendNotification(MsgAPI.SHOW_NOTIFICATION, "'" + libraryItemName +"' successfully exported");
+                            facade.sendNotification(MsgAPI.SHOW_NOTIFICATION, "'" + libraryItemName + "' successfully exported");
                         } catch (IOException e) {
                             e.printStackTrace();
                             try {
@@ -97,12 +99,12 @@ public class ExportLibraryItemCommand extends NonRevertibleCommand {
         executor.shutdown();
     }
 
-    private void doExport(String libraryItemName, String destFile) throws IOException  {
+    private void doExport(String libraryItemName, String destFile) throws IOException {
         File tempDir = new File(destFile + "TMP");
         FileUtils.forceMkdir(tempDir);
 
         CompositeItemVO compositeItemVO = libraryItems.get(libraryItemName).clone();
-		adjustPPWCoordinates(compositeItemVO);
+        adjustPPWCoordinates(compositeItemVO);
 
         FileUtils.writeStringToFile(new File(tempDir.getPath() + File.separator + libraryItemName + ".lib"), json.toJson(compositeItemVO), "utf-8");
 
@@ -135,6 +137,12 @@ public class ExportLibraryItemCommand extends NonRevertibleCommand {
             File fileSrc = new File(currentProjectPath + ProjectManager.SPINE_DIR_PATH + File.separator + imageVO.animationName);
             FileUtils.copyDirectory(fileSrc, tmpDir);
             exportMapperVO.mapper.add(new ExportedAsset(ImportUtils.TYPE_SPINE_ANIMATION, fileSrc.getName() + ".json"));
+            copyShader(imageVO.shaderName, tmpDir);
+        }
+        for (SpriterVO imageVO : compositeVO.sSpriterAnimations) {
+            File fileSrc = new File(currentProjectPath + ProjectManager.SPRITER_DIR_PATH + File.separator + imageVO.animationName);
+            FileUtils.copyDirectory(fileSrc, tmpDir);
+            exportMapperVO.mapper.add(new ExportedAsset(ImportUtils.TYPE_SPRITER_ANIMATION, fileSrc.getName() + ".scml"));
             copyShader(imageVO.shaderName, tmpDir);
         }
 
@@ -213,27 +221,27 @@ public class ExportLibraryItemCommand extends NonRevertibleCommand {
         exportMapperVO.mapper.add(new ExportedAsset(ImportUtils.TYPE_SHADER, shaderName + ".vert"));
     }
 
-	private void adjustPPWCoordinates(CompositeItemVO compositeItemVO) {
-		for (MainItemVO item : compositeItemVO.composite.getAllItems()) {
-			item.originX = item.originX * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-			item.originY = item.originY * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-			item.x = item.x * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-			item.y = item.y * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+    private void adjustPPWCoordinates(CompositeItemVO compositeItemVO) {
+        for (MainItemVO item : compositeItemVO.composite.getAllItems()) {
+            item.originX = item.originX * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+            item.originY = item.originY * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+            item.x = item.x * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+            item.y = item.y * projectManager.getCurrentProjectInfoVO().pixelToWorld;
 
-			if (item instanceof CompositeItemVO) {
-				((CompositeItemVO) item).width = ((CompositeItemVO) item).width * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-				((CompositeItemVO) item).height = ((CompositeItemVO) item).height * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-			}
+            if (item instanceof CompositeItemVO) {
+                ((CompositeItemVO) item).width = ((CompositeItemVO) item).width * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+                ((CompositeItemVO) item).height = ((CompositeItemVO) item).height * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+            }
 
-			if (item instanceof Image9patchVO) {
-				((Image9patchVO) item).width = ((Image9patchVO) item).width * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-				((Image9patchVO) item).height = ((Image9patchVO) item).height * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-			}
+            if (item instanceof Image9patchVO) {
+                ((Image9patchVO) item).width = ((Image9patchVO) item).width * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+                ((Image9patchVO) item).height = ((Image9patchVO) item).height * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+            }
 
-			if (item instanceof LabelVO) {
-				((LabelVO) item).width = ((LabelVO) item).width * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-				((LabelVO) item).height = ((LabelVO) item).height * projectManager.getCurrentProjectInfoVO().pixelToWorld;
-			}
-		}
-	}
+            if (item instanceof LabelVO) {
+                ((LabelVO) item).width = ((LabelVO) item).width * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+                ((LabelVO) item).height = ((LabelVO) item).height * projectManager.getCurrentProjectInfoVO().pixelToWorld;
+            }
+        }
+    }
 }

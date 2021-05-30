@@ -328,8 +328,8 @@
       disabledFontColor: white,
       selection: selection,
       cursor: cursor,
-      underline : white,
-      highlightBackground : white
+      underline: white,
+      highlightBackground: white
     },
     code-editor: {
       errorBorder: border-error,
@@ -739,7 +739,7 @@
   com.kotcrab.vis.ui.widget.MenuItem$MenuItemStyle: {
     default: {
       down: menu-item-down,
-      up : menu-item
+      up: menu-item
       over: menu-item-over,
       font: default-font,
       fontColor: hyperlap2d-menuitem-grey,

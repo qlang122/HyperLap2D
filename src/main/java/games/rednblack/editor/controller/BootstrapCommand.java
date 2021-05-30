@@ -95,7 +95,7 @@ public class BootstrapCommand extends SimpleCommand {
         facade.registerCommand(MsgAPI.ACTION_UPDATE_IMAGE_ITEM_DATA, UpdateImageItemDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_SPRITE_ANIMATION_DATA, UpdateSpriteAnimationDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_SPINE_ANIMATION_DATA, UpdateSpineDataCommand::new);
-        facade.registerCommand(MsgAPI.ACTION_UPDATE_SPRITEr_ANIMATION_DATA, UpdateSpriterDataCommand::new);
+        facade.registerCommand(MsgAPI.ACTION_UPDATE_SPRITER_ANIMATION_DATA, UpdateSpriterDataCommand::new);
 
         facade.registerCommand(MsgAPI.ACTION_UPDATE_MESH_DATA, UpdatePolygonDataCommand::new);
 

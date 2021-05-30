@@ -19,6 +19,7 @@
 package games.rednblack.editor.view.ui;
 
 import com.badlogic.ashley.core.Entity;
+
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.CompositeCameraChangeCommand;
@@ -31,6 +32,7 @@ import games.rednblack.editor.view.stage.tools.PanTool;
 import games.rednblack.editor.view.ui.followers.BasicFollower;
 import games.rednblack.editor.view.ui.followers.FollowerFactory;
 import games.rednblack.editor.view.ui.followers.NormalSelectionFollower;
+
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.mediator.Mediator;
 import org.puremvc.java.patterns.observer.Notification;
@@ -88,13 +90,13 @@ public class FollowersUIMediator extends Mediator<FollowersUI> {
                 break;
             case MsgAPI.ITEM_PROPERTY_DATA_FINISHED_MODIFYING:
                 BasicFollower follower = followers.get(notification.getBody());
-                if(follower != null) {
+                if (follower != null) {
                     follower.update();
                 }
                 break;
             case MsgAPI.ITEM_DATA_UPDATED:
                 follower = followers.get(notification.getBody());
-                if(follower != null) {
+                if (follower != null) {
                     follower.update();
                 }
                 break;
@@ -132,9 +134,9 @@ public class FollowersUIMediator extends Mediator<FollowersUI> {
 
     private void clearAllSubFollowersExceptNew(Set<Entity> items) {
         for (BasicFollower follower : followers.values()) {
-            if(!items.contains(follower)) {
-                if(follower instanceof NormalSelectionFollower) {
-                    ((NormalSelectionFollower)follower).clearSubFollowers();
+            if (!items.contains(follower)) {
+                if (follower instanceof NormalSelectionFollower) {
+                    ((NormalSelectionFollower) follower).clearSubFollowers();
                 }
             }
         }
@@ -153,7 +155,7 @@ public class FollowersUIMediator extends Mediator<FollowersUI> {
         Sandbox sandbox = Sandbox.getInstance();
         NodeComponent nodeComponent = ComponentRetriever.get(sandbox.getCurrentViewingEntity(), NodeComponent.class);
 
-        for (Entity entity: nodeComponent.children) {
+        for (Entity entity : nodeComponent.children) {
             createFollower(entity);
         }
     }

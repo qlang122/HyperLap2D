@@ -33,8 +33,8 @@ import games.rednblack.h2d.common.ResourcePayloadObject;
  */
 public class SpriterResource extends BoxItemResource {
     private final HyperLap2DFacade facade;
-    private Actor payloadActor;
-    private ResourcePayloadObject payload;
+    private final Actor payloadActor;
+    private final ResourcePayloadObject payload;
     private boolean isMouseInside = true;
 
     public SpriterResource(String animationName) {
@@ -55,12 +55,12 @@ public class SpriterResource extends BoxItemResource {
             }
             animThumb.setScale(scaleFactor);
 
-            animThumb.setX((getWidth() - animThumb.getWidth()) / 2);
-            animThumb.setY((getHeight() - animThumb.getHeight()) / 2);
+            animThumb.setX(getWidth() - (animThumb.getWidth() / 2 * scaleFactor));
+            animThumb.setY(getHeight() - (animThumb.getHeight() / 2 * scaleFactor));
         } else {
             // put it in middle
-            animThumb.setX((getWidth() - animThumb.getWidth()) / 2);
-            animThumb.setY((getHeight() - animThumb.getHeight()) / 2);
+            animThumb.setX(getWidth() - (animThumb.getWidth()) / 2);
+            animThumb.setY(getHeight() - (animThumb.getHeight()) / 2);
         }
 
         addListener(new ClickListener() {
@@ -75,6 +75,7 @@ public class SpriterResource extends BoxItemResource {
             }
         });
         animThumb.setAnimation(animThumb.getAnimations().get(0).getName());
+        animThumb.animation.setPosition(getX(), getY());
 
         addActor(animThumb);
 
@@ -86,7 +87,6 @@ public class SpriterResource extends BoxItemResource {
         setWidth(thumbnailSize);
         setHeight(thumbnailSize);
 
-        super.act(1f);
         setRightClickEvent(UIResourcesBoxMediator.SPRITER_ANIMATION_RIGHT_CLICK, payload.name);
     }
 

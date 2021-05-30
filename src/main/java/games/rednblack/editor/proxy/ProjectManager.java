@@ -67,7 +67,7 @@ public class ProjectManager extends Proxy {
 
     public static final String IMAGE_DIR_PATH = "assets/orig/images";
     public static final String SPINE_DIR_PATH = "assets/orig/spine-animations";
-    public static final String SPITER_DIR_PATH = "assets/orig/spriter-animations";
+    public static final String SPRITER_DIR_PATH = "assets/orig/spriter-animations";
     public static final String SPRITE_DIR_PATH = "assets/orig/sprite-animations";
     public static final String PARTICLE_DIR_PATH = "assets/orig/particles";
     public static final String TALOS_VFX_DIR_PATH = "assets/orig/talos-vfx";
@@ -527,13 +527,14 @@ public class ProjectManager extends Proxy {
         }
     }
 
-
     private void exportAnimations(String targetPath) {
         exportSpineAnimationForResolution("orig", targetPath);
         exportSpriteAnimationForResolution("orig", targetPath);
+        exportSpriterAnimationForResolution("orig", targetPath);
         for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
             exportSpineAnimationForResolution(resolutionEntryVO.name, targetPath);
             exportSpriteAnimationForResolution(resolutionEntryVO.name, targetPath);
+            exportSpriterAnimationForResolution(resolutionEntryVO.name, targetPath);
         }
     }
 
@@ -567,6 +568,21 @@ public class ProjectManager extends Proxy {
         }
     }
 
+    private void exportSpriterAnimationForResolution(String res, String targetPath) {
+        String spineSrcPath = currentProjectPath + "/assets/" + res + File.separator + "spriter-animations";
+        try {
+            FileUtils.forceMkdir(new File(targetPath + File.separator + res + File.separator + "spriter_animations"));
+            File fileSrc = new File(spineSrcPath);
+            String finalTarget = targetPath + File.separator + res + File.separator + "spriter_animations";
+
+            File fileTargetSprite = new File(finalTarget);
+
+            FileUtils.copyDirectory(fileSrc, fileTargetSprite);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void exportPacks(String targetPath) {
         String srcPath = currentProjectPath + "/assets";
         FileHandle assetDirectoryHandle = Gdx.files.absolute(srcPath);
@@ -583,7 +599,6 @@ public class ProjectManager extends Proxy {
                         e.printStackTrace();
                     }
                 }
-
             }
         }
     }

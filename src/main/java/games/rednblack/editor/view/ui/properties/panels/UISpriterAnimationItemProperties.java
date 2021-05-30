@@ -36,8 +36,10 @@ public class UISpriterAnimationItemProperties extends UIItemCollapsiblePropertie
     public UISpriterAnimationItemProperties() {
         super("Spriter Animations");
         animationsSelectBox = StandardWidgetsFactory.createSelectBox(String.class);
+
         mainTable.add(StandardWidgetsFactory.createLabel("Animations:", Align.right)).padRight(5).colspan(2).fillX();
         mainTable.add(animationsSelectBox).width(120).colspan(2);
+
         setListeners();
     }
 
