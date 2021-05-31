@@ -40,9 +40,6 @@ import me.winter.gdx.animation.scml.SCMLProject;
 public class SpriterActor extends Actor {
     private String animationName = "";
 
-    public boolean looping = true;
-    protected boolean reverse = false;
-
     public Entity entity;
     public Animation animation;
 
@@ -76,7 +73,7 @@ public class SpriterActor extends Actor {
             animation = entity.getAnimation(currentAnimationIndex);
             rectangle.set(animation.getBoundingRectangle(null));
             setSize(rectangle.width, rectangle.height);
-
+            System.out.println("----rect--->>" + rectangle);
             Array<Animation> array = entity.getAnimations();
             for (Animation animation : array) {
                 animations.add(animation);
@@ -105,7 +102,8 @@ public class SpriterActor extends Actor {
         batch.setColor(1, 1, 1, parentAlpha * getColor().a);
         super.draw(batch, parentAlpha);
 
-        animation.setPosition(getX(), getY());
+        animation.setPosition(getX() + (getWidth() * getScaleX() / 2) - rectangle.x * getScaleX(),
+                getY() + (getHeight() * getScaleY() / 2) - rectangle.y * getScaleY());
         animation.setAngle(getRotation());
         animation.draw(batch);
     }

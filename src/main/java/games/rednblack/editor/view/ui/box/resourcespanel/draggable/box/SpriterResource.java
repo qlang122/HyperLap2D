@@ -29,13 +29,13 @@ import games.rednblack.editor.view.ui.widget.actors.SpriterActor;
 import games.rednblack.h2d.common.ResourcePayloadObject;
 
 /**
- * Created by hayk on 19/12/2014.
+ * Created by qlang on 28/5/2021.
  */
 public class SpriterResource extends BoxItemResource {
     private final HyperLap2DFacade facade;
     private final Actor payloadActor;
     private final ResourcePayloadObject payload;
-    private boolean isMouseInside = true;
+    private boolean isMouseInside = false;
 
     public SpriterResource(String animationName) {
         facade = HyperLap2DFacade.getInstance();
@@ -54,14 +54,24 @@ public class SpriterResource extends BoxItemResource {
                 scaleFactor = 1.0f / (animThumb.getHeight() / thumbnailSize);
             }
             animThumb.setScale(scaleFactor);
-
-            animThumb.setX(getWidth() - (animThumb.getWidth() / 2 * scaleFactor));
-            animThumb.setY(getHeight() - (animThumb.getHeight() / 2 * scaleFactor));
         } else {
-            // put it in middle
-            animThumb.setX(getWidth() - (animThumb.getWidth()) / 2);
-            animThumb.setY(getHeight() - (animThumb.getHeight()) / 2);
+            // resizing is needed
+            float scaleFactor = 1.0f;
+            if (animThumb.getWidth() > animThumb.getHeight()) {
+                //scale by width
+                scaleFactor = 1.0f / (thumbnailSize / animThumb.getWidth());
+            } else {
+                scaleFactor = 1.0f / (thumbnailSize / animThumb.getHeight());
+            }
+            animThumb.setScale(scaleFactor);
         }
+
+        // put it in middle
+        animThumb.setX((getWidth() - animThumb.getWidth() * animThumb.getScaleX()) / 2f);
+        animThumb.setY((getHeight() - animThumb.getHeight() * animThumb.getScaleY()) / 2f);
+        animThumb.animation.setPosition(getX() + (animThumb.getWidth() * animThumb.getScaleX()) - animThumb.getRectangle().x * animThumb.getScaleX(),
+                getY() + (animThumb.getHeight() * animThumb.getScaleY()) - animThumb.getRectangle().y * animThumb.getScaleY());
+        System.out.println(animThumb.animation.getPosition());
 
         addListener(new ClickListener() {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -75,7 +85,6 @@ public class SpriterResource extends BoxItemResource {
             }
         });
         animThumb.setAnimation(animThumb.getAnimations().get(0).getName());
-        animThumb.animation.setPosition(getX(), getY());
 
         addActor(animThumb);
 

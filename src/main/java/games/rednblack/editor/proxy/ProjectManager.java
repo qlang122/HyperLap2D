@@ -741,15 +741,9 @@ public class ProjectManager extends Proxy {
         return deleteSpineAnimation("orig", spineName);
     }
 
-    private boolean deleteSpriteAnimation(String resolutionName, String spineName) {
-        String spritePath = currentProjectPath + "/assets/" + resolutionName + "/sprite-animations" + File.separator;
-        String filePath = spritePath + spineName;
-        return deleteDirectory(filePath);
-    }
-
-    public boolean deleteSpriterAnimation(String resolutionName, String spineName) {
+    public boolean deleteSpriterAnimation(String resolutionName, String spriterName) {
         String spriterPath = currentProjectPath + "/assets/" + resolutionName + "/spriter-animations" + File.separator;
-        String filePath = spriterPath + spineName;
+        String filePath = spriterPath + spriterName;
         return deleteDirectory(filePath);
     }
 
@@ -759,6 +753,12 @@ public class ProjectManager extends Proxy {
                 return false;
         }
         return deleteSpriterAnimation("orig", spriterName);
+    }
+
+    private boolean deleteSpriteAnimation(String resolutionName, String spineName) {
+        String spritePath = currentProjectPath + "/assets/" + resolutionName + "/sprite-animations" + File.separator;
+        String filePath = spritePath + spineName;
+        return deleteDirectory(filePath);
     }
 
     public boolean deleteSpriteAnimationForAllResolutions(String spineName) {

@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.qlang.h2d.extention.spriter.SpriterObjectComponent;
+
 import games.rednblack.editor.renderer.data.CompositeItemVO;
 import games.rednblack.editor.renderer.data.SceneVO;
 import games.rednblack.editor.renderer.data.SpriterVO;
@@ -22,6 +23,11 @@ public class DeleteSpriterAnimation extends DeleteResourceCommand {
 
     private final ArrayList<Entity> entityList = new ArrayList<>();
     private final ArrayList<SpriterVO> tmpSpriterAnimList = new ArrayList<>();
+
+    @Override
+    protected String confirmDialogTitle() {
+        return "Delete Spriter Animation";
+    }
 
     @Override
     public void doAction() {

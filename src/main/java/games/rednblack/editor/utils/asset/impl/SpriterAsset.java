@@ -1,7 +1,9 @@
 package games.rednblack.editor.utils.asset.impl;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
 import org.apache.commons.io.FileUtils;
@@ -9,6 +11,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +25,8 @@ import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.ProgressHandler;
 
 public class SpriterAsset extends Asset {
+    private Semaphore lock = new Semaphore(1);
+
     @Override
     protected boolean matchMimeType(FileHandle file) {
         try {
@@ -52,7 +58,7 @@ public class SpriterAsset extends Asset {
     @Override
     public void importAsset(Array<FileHandle> files, ProgressHandler progressHandler, boolean skipRepack) {
         for (FileHandle handle : new Array.ArrayIterator<>(files)) {
-            File copiedFile = importExternalAnimationIntoProject(handle);
+            File copiedFile = importExternalAnimationIntoProject(handle, progressHandler);
             if (copiedFile == null)
                 continue;
 
@@ -62,7 +68,7 @@ public class SpriterAsset extends Asset {
         }
     }
 
-    private File importExternalAnimationIntoProject(FileHandle animationFileSource) {
+    private File importExternalAnimationIntoProject(FileHandle animationFileSource, ProgressHandler progressHandler) {
         try {
             String fileName = animationFileSource.name();
             if (!HyperLap2DUtils.SCML_FILTER.accept(null, fileName)) {
@@ -79,43 +85,70 @@ public class SpriterAsset extends Asset {
                 animationDataPath = FilenameUtils.getFullPathNoEndSeparator(sourcePath);
                 targetPath = projectManager.getCurrentProjectPath() + "/assets/orig/spriter-animations" + File.separator + fileNameWithOutExt;
                 FileHandle atlasFileSource = new FileHandle(animationDataPath + File.separator + fileNameWithOutExt + ".atlas");
+
+                File atlasFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".atlas");
+
                 if (!atlasFileSource.exists()) {
-                    Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-                            "\nCould not find '" + atlasFileSource.name() + "'.\nCheck if the file exists in the same directory.").padBottom(20).pack();
-                    return null;
-                }
-                Array<File> imageFiles = ImportUtils.getAtlasPages(atlasFileSource);
-                for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
-                    if (!imageFile.exists()) {
-                        Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-                                "\nCould not find " + imageFile.getName() + ".\nCheck if the file exists in the same directory.").padBottom(20).pack();
-                        return null;
+                    ArrayList<String> fileNames = readAssetFileNames(animationFileSource);
+                    File tempDir = new File(targetPath + File.separator + "temp");
+                    FileUtils.forceMkdir(tempDir);
+                    for (String name : fileNames) {
+                        FileHandle imgSource = new FileHandle(animationDataPath + File.separator + name);
+                        if (imgSource.exists()) {
+                            String[] split = name.split("/");
+                            String _name = split[split.length - 1];
+                            File imgTarget = new File(targetPath + File.separator + "temp" + File.separator + _name);
+                            FileUtils.copyFile(imgSource.file(), imgTarget);
+                        } else {
+                            Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
+                                    "\nCould not find '" + imgSource.name() + "'.\nCheck if the file exists in the same directory.").padBottom(20).pack();
+                            return null;
+                        }
+                    }
+
+                    TexturePacker.Settings settings = new TexturePacker.Settings();
+                    settings.maxWidth = 2048;
+                    settings.maxHeight = 2048;
+                    lock.acquire();
+                    TexturePacker.process(settings, tempDir.getAbsolutePath(), targetPath,
+                            fileNameWithOutExt, new TexturePacker.ProgressListener() {
+                                @Override
+                                public void progress(float progress) {
+                                    progressHandler.progressChanged((progress * 100) % 100);
+                                    if (progress >= 1.0) lock.release();
+                                }
+                            });
+                    lock.acquire();
+                    FileUtils.deleteDirectory(tempDir);
+                    lock.release();
+                } else {
+                    FileUtils.forceMkdir(new File(targetPath));
+
+                    Array<File> imageFiles = ImportUtils.getAtlasPages(atlasFileSource);
+                    for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
+                        if (!imageFile.exists()) {
+                            Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
+                                    "\nCould not find " + imageFile.getName() + ".\nCheck if the file exists in the same directory.").padBottom(20).pack();
+                            return null;
+                        }
+                    }
+
+                    FileUtils.copyFile(atlasFileSource.file(), atlasFileTarget);
+
+                    for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
+                        FileHandle imgFileTarget = new FileHandle(targetPath + File.separator + imageFile.getName());
+                        FileUtils.copyFile(imageFile, imgFileTarget.file());
                     }
                 }
 
-//                Version version = getVersion(animationFileSource);
-//                Version that = new Version("1.0");
-//                if (version.compareTo(that) < 0) {
-//                    Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-//                            "\nCould not import Spriter Animation.\nRequired version >=" + that.get() + " found " + version.get()).padBottom(20).pack();
-//                    return null;
-//                }
-
-                FileUtils.forceMkdir(new File(targetPath));
                 File scmlFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".scml");
-                File atlasFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".atlas");
-
                 FileUtils.copyFile(animationFileSource.file(), scmlFileTarget);
-                FileUtils.copyFile(atlasFileSource.file(), atlasFileTarget);
-
-                for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
-                    FileHandle imgFileTarget = new FileHandle(targetPath + File.separator + imageFile.getName());
-                    FileUtils.copyFile(imageFile, imgFileTarget.file());
-                }
 
                 return atlasFileTarget;
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -135,5 +168,20 @@ public class SpriterAsset extends Asset {
         }
 
         return version;
+    }
+
+    private ArrayList<String> readAssetFileNames(FileHandle fileHandle) {
+        XmlReader reader = new XmlReader();
+        XmlReader.Element root = reader.parse(fileHandle.read());
+        Array<XmlReader.Element> folders = root.getChildrenByName("folder");
+
+        ArrayList<String> files = new ArrayList<>();
+        for (XmlReader.Element folder : folders) {
+            for (XmlReader.Element file : folder.getChildrenByName("file")) {
+                String name = file.get("name");
+                files.add(name);
+            }
+        }
+        return files;
     }
 }
