@@ -73,7 +73,7 @@ public class SpriterActor extends Actor {
             animation = entity.getAnimation(currentAnimationIndex);
             rectangle.set(animation.getBoundingRectangle(null));
             setSize(rectangle.width, rectangle.height);
-            System.out.println("----rect--->>" + rectangle);
+             
             Array<Animation> array = entity.getAnimations();
             for (Animation animation : array) {
                 animations.add(animation);

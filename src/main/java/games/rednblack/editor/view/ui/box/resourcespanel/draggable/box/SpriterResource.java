@@ -69,9 +69,8 @@ public class SpriterResource extends BoxItemResource {
         // put it in middle
         animThumb.setX((getWidth() - animThumb.getWidth() * animThumb.getScaleX()) / 2f);
         animThumb.setY((getHeight() - animThumb.getHeight() * animThumb.getScaleY()) / 2f);
-        animThumb.animation.setPosition(getX() + (animThumb.getWidth() * animThumb.getScaleX()) - animThumb.getRectangle().x * animThumb.getScaleX(),
-                getY() + (animThumb.getHeight() * animThumb.getScaleY()) - animThumb.getRectangle().y * animThumb.getScaleY());
-        System.out.println(animThumb.animation.getPosition());
+        animThumb.animation.setPosition(getX() - (animThumb.getWidth() * animThumb.getScaleX()) - animThumb.getRectangle().x * animThumb.getScaleX(),
+                getY() - (animThumb.getHeight() * animThumb.getScaleY()) - animThumb.getRectangle().y * animThumb.getScaleY());
 
         addListener(new ClickListener() {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
