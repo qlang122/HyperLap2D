@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -141,15 +142,16 @@ public class UIBasicItemProperties extends UIItemProperties {
         add(rotationValue).width(55).height(21).left().padLeft(13);
         add(getTintTable()).fillX();
         row().padTop(6);
-        add(StandardWidgetsFactory.createLabel("Scale:")).padRight(3).left().top();
+        add(StandardWidgetsFactory.createLabel("Scale:")).padRight(3).left();
         linkScaleButton = StandardWidgetsFactory.createImageButton("library-link-button");
-        add(getAsTable("X:", scaleXValue, "Y:", scaleYValue, linkScaleButton)).left();
-        VisTable buttonsTable = new VisTable();
-        buttonsTable.add(customVarsButton);
-        buttonsTable.row();
-        buttonsTable.add(tagsButton).right().padTop(2);
-        add(buttonsTable).height(45).left().top().padLeft(13);
-        row().padTop(5);
+//        add(getAsTable("X:", scaleXValue, "Y:", scaleYValue, linkScaleButton)).left();
+        add(getAsHorizontal("X:", scaleXValue, "Y:", scaleYValue, linkScaleButton)).colspan(2).left();
+        row().padTop(6);
+        VisTable tagsTable = new VisTable();
+        tagsTable.add(customVarsButton);
+        tagsTable.add(tagsButton).padLeft(13);
+        add(tagsTable).colspan(3).left();
+        row().padTop(6);
         add(flipX);
         add(flipY);
         row();
@@ -158,6 +160,7 @@ public class UIBasicItemProperties extends UIItemProperties {
         row().padTop(6);
         add(componentsTable).left().colspan(3);
         row();
+        addSeparator().padTop(6).colspan(3);
 
         setListeners();
     }
@@ -179,7 +182,7 @@ public class UIBasicItemProperties extends UIItemProperties {
     private Table getTintTable() {
         VisTable tintTable = new VisTable();
         tintTable.add(StandardWidgetsFactory.createLabel("Tint:")).growX().padRight(3);
-        tintTable.add(tintColorComponent).width(55).right();
+        tintTable.add(tintColorComponent).width(50).right();
         return tintTable;
     }
 
@@ -199,6 +202,16 @@ public class UIBasicItemProperties extends UIItemProperties {
         } else {
             positionTable.row().padTop(4);
         }
+        positionTable.add(StandardWidgetsFactory.createLabel(text2)).right().padRight(3);
+        positionTable.add(actor2).width(55).height(21).left();
+        return positionTable;
+    }
+
+    private Table getAsHorizontal(String text1, Actor actor1, String text2, Actor actor2, Actor link) {
+        VisTable positionTable = new VisTable();
+        positionTable.add(StandardWidgetsFactory.createLabel(text1)).right().padRight(3);
+        positionTable.add(actor1).width(55).height(21);
+        positionTable.add(link).padLeft(13).padRight(13);
         positionTable.add(StandardWidgetsFactory.createLabel(text2)).right().padRight(3);
         positionTable.add(actor2).width(55).height(21).left();
         return positionTable;

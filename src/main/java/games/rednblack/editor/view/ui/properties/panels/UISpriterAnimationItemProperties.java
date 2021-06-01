@@ -18,11 +18,13 @@
 
 package games.rednblack.editor.view.ui.properties.panels;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 import games.rednblack.editor.event.ButtonToNotificationListener;
 import games.rednblack.editor.event.CheckBoxChangeListener;
@@ -42,18 +44,17 @@ public class UISpriterAnimationItemProperties extends UIItemCollapsiblePropertie
     public static final String LAST_BUTTON_CLICKED = prefix + ".LAST_BUTTON_CLICKED";
 
     private VisSelectBox<String> animationsSelectBox;
-    private VisImageButton btnFirst, btnPrev, btnNext, btnLast;
-    private VisCheckBox btnStart, cbLoop;
+    private VisImageButton btnStart, btnFirst, btnPrev, btnNext, btnLast;
+    private VisCheckBox cbLoop;
 
     public UISpriterAnimationItemProperties() {
         super("Spriter Animations");
         animationsSelectBox = StandardWidgetsFactory.createSelectBox(String.class);
 
-        mainTable.add(StandardWidgetsFactory.createLabel("Animations:", Align.right)).padRight(5).colspan(2).fillX();
-        mainTable.add(animationsSelectBox).width(160).colspan(2);
+        mainTable.add(StandardWidgetsFactory.createLabel("Animations:", Align.left)).padRight(5);
+        mainTable.add(animationsSelectBox).colspan(2).fillX();
 
-        btnStart = StandardWidgetsFactory.createCheckBox("", "spriter-playbtn-start");
-
+        btnStart = StandardWidgetsFactory.createImageButton("spriter-playbtn-start");
         btnFirst = StandardWidgetsFactory.createImageButton("spriter-playbtn-first");
         btnLast = StandardWidgetsFactory.createImageButton("spriter-playbtn-last");
         btnPrev = StandardWidgetsFactory.createImageButton("spriter-playbtn-prev");
@@ -61,12 +62,16 @@ public class UISpriterAnimationItemProperties extends UIItemCollapsiblePropertie
 
         cbLoop = StandardWidgetsFactory.createCheckBox("Loop");
 
-        mainTable.add(btnFirst).size(24, 24).padRight(10);
-        mainTable.add(btnPrev).size(24, 24).padRight(10);
-        mainTable.add(btnStart).size(24, 24).padRight(10);
-        mainTable.add(btnNext).size(24, 24).padRight(10);
-        mainTable.add(btnLast).size(24, 24).padRight(50);
-        mainTable.add(cbLoop).colspan(2);
+        mainTable.row().padTop(6);
+        mainTable.add(cbLoop).left();
+        VisTable playTable = new VisTable();
+        playTable.add(btnFirst).width(20);
+        playTable.add(btnPrev).width(20).padLeft(8);
+        playTable.add(btnStart).width(20).padLeft(8);
+        playTable.add(btnNext).width(20).padLeft(8);
+        playTable.add(btnLast).width(20).padLeft(8);
+        mainTable.add(playTable).colspan(2).left();
+
         setListeners();
     }
 
@@ -109,7 +114,13 @@ public class UISpriterAnimationItemProperties extends UIItemCollapsiblePropertie
 
     private void setListeners() {
         animationsSelectBox.addListener(new SelectBoxChangeListener(getUpdateEventName()));
-        btnStart.addListener(new CheckBoxChangeListener(START_BUTTON_CLICKED));
+        btnStart.addListener(new CheckBoxChangeListener(START_BUTTON_CLICKED) {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                super.changed(changeEvent, actor);
+                btnStart.setChecked(!btnStart.isChecked());
+            }
+        });
         btnFirst.addListener(new ButtonToNotificationListener(FIRST_BUTTON_CLICKED));
         btnPrev.addListener(new ButtonToNotificationListener(PREV_BUTTON_CLICKED));
         btnNext.addListener(new ButtonToNotificationListener(NEXT_BUTTON_CLICKED));

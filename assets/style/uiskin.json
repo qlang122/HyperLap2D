@@ -673,7 +673,7 @@
       imageUp: btn-play-next
     },
     spriter-playbtn-start: {
-      imageUp: btn-play-start
+      imageUp: btn-play-start,
       imageChecked: btn-play-pause
     }
   },
