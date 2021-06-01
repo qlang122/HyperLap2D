@@ -32,6 +32,7 @@ public class UpdateSpriterDataCommand extends EntityModifyRevertibleCommand {
         spineDataComponent.currentEntityIndex = vo.currentEntityIndex;
         spineDataComponent.currentAnimationName = vo.currentAnimationName;
         spineObjectComponent.setAnimation(vo.currentAnimationName);
+        spineObjectComponent.setLooping(vo.isLooping);
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
     }
@@ -45,6 +46,7 @@ public class UpdateSpriterDataCommand extends EntityModifyRevertibleCommand {
         spineDataComponent.currentEntityIndex = backup.currentEntityIndex;
         spineDataComponent.currentAnimationName = backup.currentAnimationName;
         spineObjectComponent.setAnimation(backup.currentAnimationName);
+        spineObjectComponent.setLooping(backup.isLooping);
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
     }

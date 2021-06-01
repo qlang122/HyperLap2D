@@ -659,6 +659,22 @@
       imageDown: window-action-restore-pressed,
       imageOver: window-action-restore-hover,
       imageUp: window-action-restore-normal
+    },
+    spriter-playbtn-first: {
+      imageUp: btn-play-first
+    },
+    spriter-playbtn-last: {
+      imageUp: btn-play-last
+    },
+    spriter-playbtn-prev: {
+      imageUp: btn-play-prev
+    },
+    spriter-playbtn-next: {
+      imageUp: btn-play-next
+    },
+    spriter-playbtn-start: {
+      imageUp: btn-play-start
+      imageChecked: btn-play-pause
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {

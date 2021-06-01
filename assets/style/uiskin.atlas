@@ -518,7 +518,19 @@ window-node-selected
 	split: 14, 14, 35, 15
 
 uiskin-1.png
-	size: 32, 32
+	size: 256, 32
 	filter: Linear, Linear
 icon-spriter
-    bounds: 1, 1, 22, 22
+    bounds: 157, 3, 22, 22
+btn-play-start
+    bounds: 131, 1, 22, 22
+btn-play-next
+    bounds: 105, 1, 24, 24
+btn-play-pause
+    bounds: 79, 1, 24, 24
+btn-play-prev
+    bounds: 53, 1, 24, 24
+btn-play-last
+    bounds: 27, 1, 24, 24
+btn-play-first
+    bounds: 1, 1, 24, 24

@@ -96,6 +96,7 @@ public class SpriterResource extends BoxItemResource {
         setHeight(thumbnailSize);
 
         setRightClickEvent(UIResourcesBoxMediator.SPRITER_ANIMATION_RIGHT_CLICK, payload.name);
+
     }
 
 

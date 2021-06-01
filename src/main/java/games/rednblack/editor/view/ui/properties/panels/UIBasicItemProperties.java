@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.*;
+
 import games.rednblack.editor.event.ButtonToNotificationListener;
 import games.rednblack.editor.utils.runtime.EntityUtils;
 import games.rednblack.h2d.common.view.ui.widget.TintButton;
@@ -137,7 +138,7 @@ public class UIBasicItemProperties extends UIItemProperties {
         add(getAsTable("Width:", widthValue, "Height:", heightValue)).right();
         row().padTop(6);
         add(StandardWidgetsFactory.createLabel("Rotation:")).padRight(3).left();
-        add(rotationValue).width(45).height(21).left().padLeft(13);
+        add(rotationValue).width(55).height(21).left().padLeft(13);
         add(getTintTable()).fillX();
         row().padTop(6);
         add(StandardWidgetsFactory.createLabel("Scale:")).padRight(3).left().top();
@@ -178,7 +179,7 @@ public class UIBasicItemProperties extends UIItemProperties {
     private Table getTintTable() {
         VisTable tintTable = new VisTable();
         tintTable.add(StandardWidgetsFactory.createLabel("Tint:")).growX().padRight(3);
-        tintTable.add(tintColorComponent).width(45).right();
+        tintTable.add(tintColorComponent).width(55).right();
         return tintTable;
     }
 
@@ -189,7 +190,7 @@ public class UIBasicItemProperties extends UIItemProperties {
     private Table getAsTable(String text1, Actor actor1, String text2, Actor actor2, Actor link) {
         VisTable positionTable = new VisTable();
         positionTable.add(StandardWidgetsFactory.createLabel(text1)).right().padRight(3);
-        positionTable.add(actor1).width(45).height(21);
+        positionTable.add(actor1).width(55).height(21);
         if (link != null) {
             positionTable.row();
             positionTable.add();
@@ -199,12 +200,12 @@ public class UIBasicItemProperties extends UIItemProperties {
             positionTable.row().padTop(4);
         }
         positionTable.add(StandardWidgetsFactory.createLabel(text2)).right().padRight(3);
-        positionTable.add(actor2).width(45).height(21).left();
+        positionTable.add(actor2).width(55).height(21).left();
         return positionTable;
     }
 
     public void setItemType(int type, int itemUniqueId) {
-        itemType.setText(EntityUtils.itemTypeNameMap.get(type) + " ("+itemUniqueId+")");
+        itemType.setText(EntityUtils.itemTypeNameMap.get(type) + " (" + itemUniqueId + ")");
         itemTypeIcon.setDrawable(VisUI.getSkin().getDrawable(EntityUtils.itemTypeIconMap.get(type)));
         itemTypeIcon.setScaling(Scaling.fit);
         itemTypeIcon.setWidth(22);

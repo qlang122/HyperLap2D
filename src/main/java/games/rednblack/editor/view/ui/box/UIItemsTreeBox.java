@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Selection;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.*;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.renderer.components.MainItemComponent;
 import games.rednblack.editor.renderer.components.NodeComponent;
@@ -127,7 +128,7 @@ public class UIItemsTreeBox extends UICollapsibleBox {
 
         NodeComponent nodeComponent = ComponentRetriever.get(entity, NodeComponent.class);
 
-        if(nodeComponent != null) {
+        if (nodeComponent != null) {
             for (Entity item : nodeComponent.children) {
                 if (EntityUtils.getType(entity) == EntityFactory.COMPOSITE_TYPE) {
                     addTreeRoot(item, node);
@@ -198,7 +199,7 @@ public class UIItemsTreeBox extends UICollapsibleBox {
 
         for (int entityId : EntityUtils.getEntityId(selection)) {
             for (UIItemsTreeNode n : allSceneRootNodes) {
-                if(n.getValue().entityId == entityId) {
+                if (n.getValue().entityId == entityId) {
                     tree.getSelection().add(n);
                     break;
                 }
@@ -215,7 +216,7 @@ public class UIItemsTreeBox extends UICollapsibleBox {
 
         for (int entityId : EntityUtils.getEntityId(selection)) {
             for (UIItemsTreeNode n : allSceneRootNodes) {
-                if(n.getValue().entityId == entityId) {
+                if (n.getValue().entityId == entityId) {
                     tree.getSelection().remove(n);
                     break;
                 }
@@ -225,7 +226,7 @@ public class UIItemsTreeBox extends UICollapsibleBox {
 
 
     private class TreeChangeListener extends ClickListener {
-        public void clicked (InputEvent event, float x, float y) {
+        public void clicked(InputEvent event, float x, float y) {
             Selection<UIItemsTreeNode> selection = tree.getSelection();
             selection.remove(rootNode);
             facade.sendNotification(ITEMS_SELECTED, selection);
