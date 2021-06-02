@@ -186,7 +186,7 @@ public class ResolutionManager extends Proxy {
         String currProjectPath = projectManager.getCurrentProjectPath();
 
         // Unpack spine orig
-        File spineSourceDir = new File(currProjectPath + File.separator + "assets/orig/spine-animations");
+        File spineSourceDir = new File(currProjectPath + File.separator + ProjectManager.SPINE_DIR_PATH);
         if (spineSourceDir.exists()) {
             for (File entry : spineSourceDir.listFiles()) {
                 if (entry.isDirectory()) {
@@ -197,7 +197,7 @@ public class ResolutionManager extends Proxy {
         }
 
         //Unpack sprite orig
-        File spriteSourceDir = new File(currProjectPath + File.separator + "assets/orig/sprite-animations");
+        File spriteSourceDir = new File(currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH);
         if (spriteSourceDir.exists()) {
             for (File entry : spriteSourceDir.listFiles()) {
                 if (entry.isDirectory()) {
@@ -211,9 +211,9 @@ public class ResolutionManager extends Proxy {
     public void createResizedSpriteAnimation(String animName, ResolutionEntryVO resolution) {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         String currProjectPath = projectManager.getCurrentProjectPath();
-        File animAtlasFile = new File(currProjectPath + File.separator + "assets/orig/sprite-animations/" + animName + "/" + animName + ".atlas");
+        File animAtlasFile = new File(currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + animName + "/" + animName + ".atlas");
 
-        String tmpPath = currProjectPath + File.separator + "assets/orig/sprite-animations/" + animName + "/tmp";
+        String tmpPath = currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + animName + "/tmp";
         File tmpFolder = new File(tmpPath);
         try {
             FileUtils.forceMkdir(new File(currProjectPath + File.separator + "assets/" + resolution.name + "/sprite-animations/"));
@@ -243,9 +243,9 @@ public class ResolutionManager extends Proxy {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         String currProjectPath = projectManager.getCurrentProjectPath();
 
-        File animAtlasFile = new File(currProjectPath + File.separator + "assets/orig/spine-animations/" + animName + "/" + animName + ".atlas");
+        File animAtlasFile = new File(currProjectPath + File.separator + ProjectManager.SPINE_DIR_PATH + animName + "/" + animName + ".atlas");
 
-        String tmpPath = currProjectPath + File.separator + "assets/orig/spine-animations/" + animName + "/tmp";
+        String tmpPath = currProjectPath + File.separator + ProjectManager.SPINE_DIR_PATH + animName + "/tmp";
         File tmpFolder = new File(tmpPath);
         try {
             FileUtils.forceMkdir(new File(currProjectPath + File.separator + "assets/" + resolution.name + "/spine-animations/"));
@@ -267,9 +267,9 @@ public class ResolutionManager extends Proxy {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         String currProjectPath = projectManager.getCurrentProjectPath();
 
-        File atlasFile = new File(currProjectPath + File.separator + "assets" + File.separator + "orig" + File.separator + "sprite-animations" + File.separator + animName + File.separator + animName + ".atlas");
+        File atlasFile = new File(currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + File.separator + animName + File.separator + animName + ".atlas");
 
-        String tmpDir = currProjectPath + File.separator + "assets" + File.separator + "orig" + File.separator + "sprite-animations" + File.separator + animName + File.separator + "tmp";
+        String tmpDir = currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + File.separator + animName + File.separator + "tmp";
         File sourceFolder = new File(tmpDir);
 
         unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
@@ -293,7 +293,8 @@ public class ResolutionManager extends Proxy {
 
         String fileNameWithOutExt = FilenameUtils.removeExtension(atlasFile.getName());
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String tmpDir = projectManager.getCurrentProjectPath() + "/assets/orig/spine-animations" + File.separator + fileNameWithOutExt + File.separator + "tmp";
+        String tmpDir = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.SPINE_DIR_PATH
+                + File.separator + fileNameWithOutExt + File.separator + "tmp";
         File sourceFolder = new File(tmpDir);
 
         unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
@@ -316,7 +317,8 @@ public class ResolutionManager extends Proxy {
     public void resizeSpriterAnimationForAllResolutions(File atlasFile, ProjectInfoVO currentProjectInfoVO) {
         String fileNameWithOutExt = FilenameUtils.removeExtension(atlasFile.getName());
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String tmpDir = projectManager.getCurrentProjectPath() + "/assets/orig/spriter-animations" + File.separator + fileNameWithOutExt + File.separator + "tmp";
+        String tmpDir = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.SPRITER_DIR_PATH
+                + File.separator + fileNameWithOutExt + File.separator + "tmp";
         File sourceFolder = new File(tmpDir);
 
         unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
@@ -326,6 +328,30 @@ public class ResolutionManager extends Proxy {
                         "assets" + File.separator + resolutionEntryVO.name + File.separator + "spriter-animations"));
                 String targetPath = projectManager.getCurrentProjectPath() + File.separator + "assets" +
                         File.separator + resolutionEntryVO.name + File.separator + "spriter-animations" + File.separator + fileNameWithOutExt;
+                FileUtils.forceMkdir(new File(targetPath));
+                File targetFolder = new File(targetPath);
+                resizeImagesTmpDirToResolution(atlasFile.getName(), sourceFolder, resolutionEntryVO, targetFolder);
+            }
+            FileUtils.deleteDirectory(sourceFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resizeAtlasForAllResolutions(File atlasFile, ProjectInfoVO currentProjectInfoVO) {
+        String fileNameWithOutExt = FilenameUtils.removeExtension(atlasFile.getName());
+        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+        String tmpDir = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.ATLAS_IMAGE_DIR_PATH
+                + File.separator + fileNameWithOutExt + File.separator + "tmp";
+        File sourceFolder = new File(tmpDir);
+
+        unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
+        try {
+            for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
+                FileUtils.forceMkdir(new File(projectManager.getCurrentProjectPath() + File.separator +
+                        "assets" + File.separator + resolutionEntryVO.name + File.separator + "atlas-images"));
+                String targetPath = projectManager.getCurrentProjectPath() + File.separator + "assets" +
+                        File.separator + resolutionEntryVO.name + File.separator + "atlas-images" + File.separator + fileNameWithOutExt;
                 FileUtils.forceMkdir(new File(targetPath));
                 File targetFolder = new File(targetPath);
                 resizeImagesTmpDirToResolution(atlasFile.getName(), sourceFolder, resolutionEntryVO, targetFolder);

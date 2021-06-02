@@ -20,14 +20,17 @@ package games.rednblack.editor.view.ui.box.resourcespanel;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.controller.commands.resource.DeleteImageResource;
-import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.factory.ItemFactory;
 import games.rednblack.editor.proxy.ResourceManager;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResource;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.ImageResource;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.puremvc.java.interfaces.INotification;
+
+import java.util.ArrayList;
 
 /**
  * Created by azakhary on 4/17/2015.
@@ -67,21 +70,23 @@ public class UIImagesTabMediator extends UIResourcesTabMediator<UIImagesTab> {
     protected void initList(String searchText) {
         ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
 
-        TextureAtlas atlas = resourceManager.getProjectAssetsList();
+        ArrayList<TextureAtlas> atlass = resourceManager.getProjectAtlasList();
 
         Array<DraggableResource> thumbnailBoxes = new Array<>();
-        Array<TextureAtlas.AtlasRegion> atlasRegions = atlas.getRegions();
-        for (TextureAtlas.AtlasRegion region : new Array.ArrayIterator<>(atlasRegions)) {
-            if(!region.name.contains(searchText))continue;
-            boolean is9patch = region.findValue("split") != null;
-            DraggableResource draggableResource = new DraggableResource(new ImageResource(region));
-            if (is9patch) {
-                draggableResource.setFactoryFunction(ItemFactory.get()::create9Patch);
-            } else {
-                draggableResource.setFactoryFunction(ItemFactory.get()::createSimpleImage);
+        for (TextureAtlas atlas : atlass) {
+            Array<TextureAtlas.AtlasRegion> atlasRegions = atlas.getRegions();
+            for (TextureAtlas.AtlasRegion region : new Array.ArrayIterator<>(atlasRegions)) {
+                if (!region.name.contains(searchText)) continue;
+                boolean is9patch = region.findValue("split") != null;
+                DraggableResource draggableResource = new DraggableResource(new ImageResource(region));
+                if (is9patch) {
+                    draggableResource.setFactoryFunction(ItemFactory.get()::create9Patch);
+                } else {
+                    draggableResource.setFactoryFunction(ItemFactory.get()::createSimpleImage);
+                }
+                draggableResource.initDragDrop();
+                thumbnailBoxes.add(draggableResource);
             }
-            draggableResource.initDragDrop();
-            thumbnailBoxes.add(draggableResource);
         }
 
         thumbnailBoxes.sort();

@@ -29,6 +29,7 @@ Currently, HyperLap2D is in Alpha stage. Many breaking changes could happen upda
 - Box2D Physics World
 - Dynamic Lights
 - [Spine support](https://github.com/rednblackgames/h2d-libgdx-spine-extension)
+- [Spriter support](https://github.com/qlang122/h2d-libgdx-spriter-extension)
 - Particle Effects
 - Grouping complex objects into library items
 - Import, Export and Share your compositions

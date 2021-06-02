@@ -21,6 +21,7 @@ package games.rednblack.editor.view.ui.box;
 import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
+
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 import games.rednblack.editor.view.ui.properties.UIAbstractProperties;
 
@@ -41,7 +42,7 @@ public class UIMultiPropertyBox extends UICollapsibleBox {
         scrollPane = StandardWidgetsFactory.createScrollPane(scrollPaneInner);
         scrollPane.setFadeScrollBars(true);
 
-        propertiesTable.add(scrollPane).maxHeight(Gdx.graphics.getHeight() * 0.38f).width(BOX_DEFAULT_WIDTH);
+        propertiesTable.add(scrollPane).maxHeight(Gdx.graphics.getHeight() * 0.4f).width(BOX_DEFAULT_WIDTH);
         createCollapsibleWidget(propertiesTable);
     }
 

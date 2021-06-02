@@ -76,76 +76,72 @@ public class SpriterAsset extends Asset {
             }
 
             String fileNameWithOutExt = FilenameUtils.removeExtension(fileName);
-            String sourcePath;
+            String sourcePath = animationFileSource.path();
             String animationDataPath;
             String targetPath;
-            if (HyperLap2DUtils.SCML_FILTER.accept(null, fileName)) {
-                sourcePath = animationFileSource.path();
 
-                animationDataPath = FilenameUtils.getFullPathNoEndSeparator(sourcePath);
-                targetPath = projectManager.getCurrentProjectPath() + "/assets/orig/spriter-animations" + File.separator + fileNameWithOutExt;
-                FileHandle atlasFileSource = new FileHandle(animationDataPath + File.separator + fileNameWithOutExt + ".atlas");
+            animationDataPath = FilenameUtils.getFullPathNoEndSeparator(sourcePath);
+            targetPath = projectManager.getCurrentProjectPath() + ProjectManager.SPRITER_DIR_PATH + File.separator + fileNameWithOutExt;
+            FileHandle atlasFileSource = new FileHandle(animationDataPath + File.separator + fileNameWithOutExt + ".atlas");
 
-                File atlasFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".atlas");
+            File atlasFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".atlas");
 
-                if (!atlasFileSource.exists()) {
-                    ArrayList<String> fileNames = readAssetFileNames(animationFileSource);
-                    File tempDir = new File(targetPath + File.separator + "temp");
-                    FileUtils.forceMkdir(tempDir);
-                    for (String name : fileNames) {
-                        FileHandle imgSource = new FileHandle(animationDataPath + File.separator + name);
-                        if (imgSource.exists()) {
-                            String[] split = name.split("/");
-                            String _name = split[split.length - 1];
-                            File imgTarget = new File(targetPath + File.separator + "temp" + File.separator + _name);
-                            FileUtils.copyFile(imgSource.file(), imgTarget);
-                        } else {
-                            Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-                                    "\nCould not find '" + imgSource.name() + "'.\nCheck if the file exists in the same directory.").padBottom(20).pack();
-                            return null;
-                        }
-                    }
-
-                    TexturePacker.Settings settings = new TexturePacker.Settings();
-                    settings.maxWidth = 2048;
-                    settings.maxHeight = 2048;
-                    lock.acquire();
-                    TexturePacker.process(settings, tempDir.getAbsolutePath(), targetPath,
-                            fileNameWithOutExt, new TexturePacker.ProgressListener() {
-                                @Override
-                                public void progress(float progress) {
-                                    progressHandler.progressChanged((progress * 100) % 100);
-                                    if (progress >= 1.0) lock.release();
-                                }
-                            });
-                    lock.acquire();
-                    FileUtils.deleteDirectory(tempDir);
-                    lock.release();
-                } else {
-                    FileUtils.forceMkdir(new File(targetPath));
-
-                    Array<File> imageFiles = ImportUtils.getAtlasPages(atlasFileSource);
-                    for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
-                        if (!imageFile.exists()) {
-                            Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-                                    "\nCould not find " + imageFile.getName() + ".\nCheck if the file exists in the same directory.").padBottom(20).pack();
-                            return null;
-                        }
-                    }
-
-                    FileUtils.copyFile(atlasFileSource.file(), atlasFileTarget);
-
-                    for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
-                        FileHandle imgFileTarget = new FileHandle(targetPath + File.separator + imageFile.getName());
-                        FileUtils.copyFile(imageFile, imgFileTarget.file());
+            if (!atlasFileSource.exists()) {
+                ArrayList<String> fileNames = readAssetFileNames(animationFileSource);
+                File tempDir = new File(targetPath + File.separator + "temp");
+                FileUtils.forceMkdir(tempDir);
+                for (String name : fileNames) {
+                    FileHandle imgSource = new FileHandle(animationDataPath + File.separator + name);
+                    if (imgSource.exists()) {
+                        String[] split = name.split("/");
+                        String _name = split[split.length - 1];
+                        File imgTarget = new File(targetPath + File.separator + "temp" + File.separator + _name);
+                        FileUtils.copyFile(imgSource.file(), imgTarget);
+                    } else {
+                        Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
+                                "\nCould not find '" + imgSource.name() + "'.\nCheck if the file exists in the same directory.").padBottom(20).pack();
+                        return null;
                     }
                 }
 
-                File scmlFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".scml");
-                FileUtils.copyFile(animationFileSource.file(), scmlFileTarget);
+                ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+                TexturePacker.Settings settings = projectManager.getTexturePackerSettings();
+                lock.acquire();
+                TexturePacker.process(settings, tempDir.getAbsolutePath(), targetPath,
+                        fileNameWithOutExt, new TexturePacker.ProgressListener() {
+                            @Override
+                            public void progress(float progress) {
+                                progressHandler.progressChanged((progress * 100) % 100);
+                                if (progress >= 1.0) lock.release();
+                            }
+                        });
+                lock.acquire();
+                FileUtils.deleteDirectory(tempDir);
+                lock.release();
+            } else {
+                FileUtils.forceMkdir(new File(targetPath));
 
-                return atlasFileTarget;
+                Array<File> imageFiles = ImportUtils.getAtlasPages(atlasFileSource);
+                for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
+                    if (!imageFile.exists()) {
+                        Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
+                                "\nCould not find " + imageFile.getName() + ".\nCheck if the file exists in the same directory.").padBottom(20).pack();
+                        return null;
+                    }
+                }
+
+                FileUtils.copyFile(atlasFileSource.file(), atlasFileTarget);
+
+                for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
+                    FileHandle imgFileTarget = new FileHandle(targetPath + File.separator + imageFile.getName());
+                    FileUtils.copyFile(imageFile, imgFileTarget.file());
+                }
             }
+
+            File scmlFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".scml");
+            FileUtils.copyFile(animationFileSource.file(), scmlFileTarget);
+
+            return atlasFileTarget;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

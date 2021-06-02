@@ -27,9 +27,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.view.ui.UIWindowAction;
 import games.rednblack.editor.view.ui.UIWindowActionMediator;
+
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang3.SystemUtils;
 import org.lwjgl.BufferUtils;
@@ -43,6 +45,7 @@ public class HyperLap2DUtils {
     public static final FilenameFilter TTF_FILTER = new SuffixFileFilter(".ttf");
     public static final FilenameFilter JSON_FILTER = new SuffixFileFilter(".json");
     public static final FilenameFilter SCML_FILTER = new SuffixFileFilter(".scml");
+    public static final FilenameFilter ATLAS_FILTER = new SuffixFileFilter(".atlas");
     public static final FilenameFilter DT_FILTER = new SuffixFileFilter(".dt");
     public static final String MY_DOCUMENTS_PATH = getMyDocumentsLocation();
 
@@ -78,6 +81,7 @@ public class HyperLap2DUtils {
             private int getX() {
                 return MathUtils.floor((float) cursorX.get(0));
             }
+
             private int getY() {
                 return MathUtils.floor((float) cursorY.get(0));
             }
@@ -100,7 +104,7 @@ public class HyperLap2DUtils {
                 float offsetX = getX() - startX;
                 float offsetY = getY() - startY;
                 GLFW.glfwGetWindowPos(context, windowX, windowY);
-                GLFW.glfwSetWindowPos(context, (int)(windowX.get(0) + offsetX), (int)(windowY.get(0) + offsetY));
+                GLFW.glfwSetWindowPos(context, (int) (windowX.get(0) + offsetX), (int) (windowY.get(0) + offsetY));
             }
         });
     }
@@ -137,18 +141,23 @@ public class HyperLap2DUtils {
             private int getX() {
                 return MathUtils.floor((float) cursorX.get(0));
             }
+
             private int getY() {
                 return MathUtils.floor((float) cursorY.get(0));
             }
+
             private int getWidth() {
                 return MathUtils.floor((float) windowW.get(0));
             }
+
             private int getHeight() {
                 return MathUtils.floor((float) windowH.get(0));
             }
+
             private int getWindowX() {
                 return MathUtils.floor((float) windowX.get(0));
             }
+
             private int getWindowY() {
                 return MathUtils.floor((float) windowY.get(0));
             }
@@ -186,28 +195,28 @@ public class HyperLap2DUtils {
                 GLFW.glfwGetWindowSize(context, windowW, windowH);
                 switch (anchorPoint) {
                     case BOTTOM_BORDER:
-                        GLFW.glfwSetWindowSize(context, (int) startW, (int)(startH + offsetY));
+                        GLFW.glfwSetWindowSize(context, (int) startW, (int) (startH + offsetY));
                         break;
                     case TOP_BORDER:
-                        GLFW.glfwSetWindowSize(context, (int) startW, (int)(startH - offsetY));
+                        GLFW.glfwSetWindowSize(context, (int) startW, (int) (startH - offsetY));
                         break;
                     case LEFT_BORDER:
-                        GLFW.glfwSetWindowSize(context, (int)(startW - offsetX), (int) startH);
+                        GLFW.glfwSetWindowSize(context, (int) (startW - offsetX), (int) startH);
                         break;
                     case RIGHT_BORDER:
-                        GLFW.glfwSetWindowSize(context, (int)(startW + offsetX), (int) startH);
+                        GLFW.glfwSetWindowSize(context, (int) (startW + offsetX), (int) startH);
                         break;
                     case BOTTOM_RIGHT_CORNER:
-                        GLFW.glfwSetWindowSize(context, (int)(startW + offsetX), (int)(startH + offsetY));
+                        GLFW.glfwSetWindowSize(context, (int) (startW + offsetX), (int) (startH + offsetY));
                         break;
                     case TOP_RIGHT_CORNER:
-                        GLFW.glfwSetWindowSize(context, (int)(startW + offsetX), (int)(startH - offsetY));
+                        GLFW.glfwSetWindowSize(context, (int) (startW + offsetX), (int) (startH - offsetY));
                         break;
                     case BOTTOM_LEFT_CORNER:
-                        GLFW.glfwSetWindowSize(context, (int)(startW - offsetX), (int)(startH + offsetY));
+                        GLFW.glfwSetWindowSize(context, (int) (startW - offsetX), (int) (startH + offsetY));
                         break;
                     case TOP_LEFT_CORNER:
-                        GLFW.glfwSetWindowSize(context, (int)(startW - offsetX), (int)(startH - offsetY));
+                        GLFW.glfwSetWindowSize(context, (int) (startW - offsetX), (int) (startH - offsetY));
                         break;
                 }
             }

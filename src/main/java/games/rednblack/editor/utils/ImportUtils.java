@@ -69,8 +69,7 @@ public class ImportUtils {
         supportedTypes.add(TYPE_SHADER);
         supportedTypes.add(TYPE_HYPERLAP2D_LIBRARY);
         supportedTypes.add(TYPE_HYPERLAP2D_ACTION);
-        // TODO: not supported yet
-        //supportedTypes.add(TYPE_TEXTURE_ATLAS);
+        supportedTypes.add(TYPE_TEXTURE_ATLAS);
 
         fileTypeFilter = new FileTypeFilter(false);
 

@@ -26,12 +26,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
+
 import games.rednblack.editor.renderer.components.MainItemComponent;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
+
 import org.puremvc.java.interfaces.INotification;
 
 /**
@@ -72,7 +74,7 @@ public abstract class BasicFollower extends Group {
 
         int pixelPerWU = sandbox.sceneControl.sceneLoader.getRm().getProjectVO().pixelToWorld;
 
-    	Vector2 position = Pools.obtain(Vector2.class);
+        Vector2 position = Pools.obtain(Vector2.class);
 
         position.x = 0;
         position.y = 0;
@@ -80,8 +82,8 @@ public abstract class BasicFollower extends Group {
         TransformMathUtils.localToAscendantCoordinates(sandbox.getCurrentViewingEntity(), entity, position);
         position = Sandbox.getInstance().worldToScreen(position);
 
-        setX( ( int ) ( position.x ) );
-        setY( ( int ) ( position.y ) );
+        setX((int) (position.x));
+        setY((int) (position.y));
 
         polygonOffsetX = 0;
         polygonOffsetY = 0;
@@ -89,7 +91,7 @@ public abstract class BasicFollower extends Group {
         float scaleX = transformComponent.scaleX * (transformComponent.flipX ? -1 : 1);
         float scaleY = transformComponent.scaleY * (transformComponent.flipY ? -1 : 1);
 
-        if(dimensionsComponent.boundBox != null ) // if we have a composite item ...
+        if (dimensionsComponent.boundBox != null) // if we have a composite item ...
         {   // .. we set the width to be the width of the AABB + the starting point of the AABB
             // .. same for the height
             /**
@@ -100,11 +102,11 @@ public abstract class BasicFollower extends Group {
              *       ...........
              */
 
-            setWidth (pixelPerWU * (dimensionsComponent.boundBox.x + dimensionsComponent.boundBox.width) * scaleX / camera.zoom);
+            setWidth(pixelPerWU * (dimensionsComponent.boundBox.x + dimensionsComponent.boundBox.width) * scaleX / camera.zoom);
             setHeight(pixelPerWU * (dimensionsComponent.boundBox.y + dimensionsComponent.boundBox.height) * scaleY / camera.zoom);
         } else if (dimensionsComponent.polygon != null) {
             Rectangle b = dimensionsComponent.polygon.getBoundingRectangle();
-            setWidth (pixelPerWU * (b.width) * scaleX / camera.zoom);
+            setWidth(pixelPerWU * (b.width) * scaleX / camera.zoom);
             setHeight(pixelPerWU * (b.height) * scaleY / camera.zoom);
 
             polygonOffsetX = pixelPerWU * (b.x) * scaleX / camera.zoom;
@@ -113,8 +115,8 @@ public abstract class BasicFollower extends Group {
             setX(getX() + polygonOffsetX);
             setY(getY() + polygonOffsetY);
         } else {
-            setWidth ( pixelPerWU * dimensionsComponent.width * scaleX / camera.zoom );
-            setHeight( pixelPerWU * dimensionsComponent.height * scaleY / camera.zoom );
+            setWidth(pixelPerWU * dimensionsComponent.width * scaleX / camera.zoom);
+            setHeight(pixelPerWU * dimensionsComponent.height * scaleY / camera.zoom);
         }
 
         Pools.free(position);
@@ -140,7 +142,6 @@ public abstract class BasicFollower extends Group {
 
     public abstract void create();
 
-
     public void setFollowerListener(FollowerTransformationListener listener) {
 
     }
@@ -150,16 +151,16 @@ public abstract class BasicFollower extends Group {
     }
 
     @Override
-    public Actor hit (float x, float y, boolean touchable) {
+    public Actor hit(float x, float y, boolean touchable) {
         Actor hitActor = super.hit(x, y, touchable);
-        if(hitActor == null) return null;
-        if(hitActor.equals(this)) return null;
+        if (hitActor == null) return null;
+        if (hitActor.equals(this)) return null;
 
         return hitActor;
     }
 
     public void handleNotification(INotification notification) {
-        for(SubFollower follower: subFollowers) {
+        for (SubFollower follower : subFollowers) {
             follower.handleNotification(notification);
         }
     }
@@ -179,8 +180,8 @@ public abstract class BasicFollower extends Group {
     }
 
     public SubFollower getSubFollower(Class<? extends SubFollower> clazz) {
-        for(SubFollower subFollower: new Array.ArrayIterator<>(subFollowers)) {
-            if(subFollower.getClass() == clazz) {
+        for (SubFollower subFollower : new Array.ArrayIterator<>(subFollowers)) {
+            if (subFollower.getClass() == clazz) {
                 return subFollower;
             }
         }
@@ -190,7 +191,7 @@ public abstract class BasicFollower extends Group {
 
     public void removeSubFollower(Class<? extends SubFollower> clazz) {
         SubFollower subFollower = getSubFollower(clazz);
-        if(subFollower != null) {
+        if (subFollower != null) {
             removeSubFollower(subFollower);
         }
     }
@@ -201,7 +202,7 @@ public abstract class BasicFollower extends Group {
     }
 
     public void clearSubFollowers() {
-        for(SubFollower subFollower: subFollowers) {
+        for (SubFollower subFollower : subFollowers) {
             subFollower.remove();
         }
         subFollowers.clear();

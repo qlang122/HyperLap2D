@@ -18,7 +18,7 @@
 
 package games.rednblack.editor.view.ui.properties.panels;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
@@ -27,7 +27,6 @@ import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 import games.rednblack.editor.event.ButtonToNotificationListener;
-import games.rednblack.editor.event.CheckBoxChangeListener;
 import games.rednblack.editor.event.SelectBoxChangeListener;
 import games.rednblack.editor.view.ui.properties.UIItemCollapsibleProperties;
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
@@ -62,7 +61,7 @@ public class UISpriterAnimationItemProperties extends UIItemCollapsiblePropertie
 
         cbLoop = StandardWidgetsFactory.createCheckBox("Loop");
 
-        mainTable.row().padTop(6);
+        mainTable.row().padTop(4);
         mainTable.add(cbLoop).left();
         VisTable playTable = new VisTable();
         playTable.add(btnFirst).width(20);
@@ -114,11 +113,11 @@ public class UISpriterAnimationItemProperties extends UIItemCollapsiblePropertie
 
     private void setListeners() {
         animationsSelectBox.addListener(new SelectBoxChangeListener(getUpdateEventName()));
-        btnStart.addListener(new CheckBoxChangeListener(START_BUTTON_CLICKED) {
+        btnStart.addListener(new ButtonToNotificationListener(START_BUTTON_CLICKED) {
             @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                super.changed(changeEvent, actor);
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 btnStart.setChecked(!btnStart.isChecked());
+                super.touchUp(event, x, y, pointer, button);
             }
         });
         btnFirst.addListener(new ButtonToNotificationListener(FIRST_BUTTON_CLICKED));

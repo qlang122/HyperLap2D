@@ -66,6 +66,7 @@ public class ProjectManager extends Proxy {
     public static final String PROJECT_DATA_UPDATED = EVENT_PREFIX + ".PROJECT_DATA_UPDATED";
 
     public static final String IMAGE_DIR_PATH = "assets/orig/images";
+    public static final String ATLAS_IMAGE_DIR_PATH = "assets/orig/atlas-images";
     public static final String SPINE_DIR_PATH = "assets/orig/spine-animations";
     public static final String SPRITER_DIR_PATH = "assets/orig/spriter-animations";
     public static final String SPRITE_DIR_PATH = "assets/orig/sprite-animations";

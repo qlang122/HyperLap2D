@@ -106,6 +106,7 @@ public class SpriterActor extends Actor {
         animation.setPosition(getX() + (getWidth() * getScaleX() / 2) - rectangle.x * getScaleX(),
                 getY() + (getHeight() * getScaleY() / 2) - rectangle.y * getScaleY());
         animation.setAngle(getRotation());
+        animation.setScale(getScaleX(), getScaleY());
         animation.draw(batch);
     }
 

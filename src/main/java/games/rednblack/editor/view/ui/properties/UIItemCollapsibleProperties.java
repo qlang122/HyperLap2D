@@ -39,7 +39,7 @@ public abstract class UIItemCollapsibleProperties extends UIItemProperties {
 
     public UIItemCollapsibleProperties(String title) {
         this.title = title;
-        row().padTop(9).padBottom(6);
+        row().padTop(6).padBottom(6);
         add(crateHeaderTable()).expandX().fillX().padBottom(7);
         createCollapsibleWidget();
     }

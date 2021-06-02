@@ -37,8 +37,8 @@ public class UISpriterAnimationItemPropertiesMediator extends UIItemPropertiesMe
     private static final String TAG = UISpriterAnimationItemPropertiesMediator.class.getCanonicalName();
     public static final String NAME = TAG;
 
-    private SpriterDataComponent spineDataComponent;
-    private SpriterObjectComponent spineObjectComponent;
+    private SpriterDataComponent dataComponent;
+    private SpriterObjectComponent objectComponent;
 
     public UISpriterAnimationItemPropertiesMediator() {
         super(NAME, new UISpriterAnimationItemProperties());
@@ -92,18 +92,18 @@ public class UISpriterAnimationItemPropertiesMediator extends UIItemPropertiesMe
 
     @Override
     protected void translateObservableDataToView(Entity entity) {
-        spineObjectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
-        spineDataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
+        objectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
+        dataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
 
         Array<String> animations = new Array<>();
-        for (Animation animation : spineObjectComponent.getAnimations()) {
+        for (Animation animation : objectComponent.getAnimations()) {
             animations.add(animation.getName());
         }
 
         viewComponent.setAnimations(animations);
-        viewComponent.setSelectedAnimation(spineDataComponent.currentAnimationName);
-        viewComponent.setCanAnimationLooping(spineDataComponent.isLooping);
-        viewComponent.changePlayBtnStage(spineObjectComponent.isPlaying());
+        viewComponent.setSelectedAnimation(dataComponent.currentAnimationName);
+        viewComponent.setCanAnimationLooping(dataComponent.isLooping);
+        viewComponent.changePlayBtnStage(objectComponent.isPlaying());
     }
 
     @Override

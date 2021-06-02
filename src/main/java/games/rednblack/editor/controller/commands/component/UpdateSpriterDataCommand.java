@@ -26,13 +26,14 @@ public class UpdateSpriterDataCommand extends EntityModifyRevertibleCommand {
         backup = new SpriterVO();
         backup.loadFromEntity(entity);
 
-        SpriterDataComponent spineDataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
-        SpriterObjectComponent spineObjectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
+        SpriterDataComponent dataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
+        SpriterObjectComponent objectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
 
-        spineDataComponent.currentEntityIndex = vo.currentEntityIndex;
-        spineDataComponent.currentAnimationName = vo.currentAnimationName;
-        spineObjectComponent.setAnimation(vo.currentAnimationName);
-        spineObjectComponent.setLooping(vo.isLooping);
+        dataComponent.isLooping = vo.isLooping;
+        dataComponent.currentEntityIndex = vo.currentEntityIndex;
+        dataComponent.currentAnimationName = vo.currentAnimationName;
+        objectComponent.setAnimation(vo.currentAnimationName);
+        objectComponent.setLooping(vo.isLooping);
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
     }
@@ -40,13 +41,14 @@ public class UpdateSpriterDataCommand extends EntityModifyRevertibleCommand {
     @Override
     public void undoAction() {
         Entity entity = EntityUtils.getByUniqueId(entityId);
-        SpriterDataComponent spineDataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
-        SpriterObjectComponent spineObjectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
+        SpriterDataComponent dataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
+        SpriterObjectComponent objectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
 
-        spineDataComponent.currentEntityIndex = backup.currentEntityIndex;
-        spineDataComponent.currentAnimationName = backup.currentAnimationName;
-        spineObjectComponent.setAnimation(backup.currentAnimationName);
-        spineObjectComponent.setLooping(backup.isLooping);
+        dataComponent.isLooping = backup.isLooping;
+        dataComponent.currentEntityIndex = backup.currentEntityIndex;
+        dataComponent.currentAnimationName = backup.currentAnimationName;
+        objectComponent.setAnimation(backup.currentAnimationName);
+        objectComponent.setLooping(backup.isLooping);
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
     }
