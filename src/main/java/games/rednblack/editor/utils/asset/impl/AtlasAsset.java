@@ -2,9 +2,7 @@ package games.rednblack.editor.utils.asset.impl;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.tools.texturepacker.TextureUnpacker;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
 import org.apache.commons.io.FileUtils;
@@ -14,8 +12,10 @@ import java.io.File;
 import java.io.IOException;
 
 import games.rednblack.editor.proxy.ProjectManager;
+import games.rednblack.editor.proxy.ResolutionManager;
 import games.rednblack.editor.utils.HyperLap2DUtils;
 import games.rednblack.editor.utils.ImportUtils;
+import games.rednblack.editor.utils.TextureUnpacker;
 import games.rednblack.editor.utils.asset.Asset;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.ProgressHandler;
@@ -52,14 +52,54 @@ public class AtlasAsset extends Asset {
     @Override
     public void importAsset(Array<FileHandle> files, ProgressHandler progressHandler, boolean skipRepack) {
         for (FileHandle handle : new Array.ArrayIterator<>(files)) {
-            File copiedFile = importExternalIntoProject(handle, progressHandler);
-            if (copiedFile == null)
-                continue;
+            File copiedFile = importExternalIntoProjectImages(handle, progressHandler);
+//            if (copiedFile == null)
+//                continue;
 
-            if (copiedFile.getName().toLowerCase().endsWith(".atlas")) {
-                resolutionManager.resizeAtlasForAllResolutions(copiedFile, projectManager.getCurrentProjectInfoVO());
-            }
+//            if (copiedFile.getName().toLowerCase().endsWith(".atlas")) {
+//                resolutionManager.resizeAtlasForAllResolutions(copiedFile, projectManager.getCurrentProjectInfoVO());
+//            }
         }
+        if (!skipRepack) {
+            ResolutionManager resolutionManager = facade.retrieveProxy(ResolutionManager.NAME);
+            resolutionManager.rePackProjectImagesForAllResolutionsSync();
+        }
+    }
+
+    private File importExternalIntoProjectImages(FileHandle atlasFileSource, ProgressHandler progressHandler) {
+        try {
+            String fileName = atlasFileSource.name();
+            if (!HyperLap2DUtils.ATLAS_FILTER.accept(null, fileName)) {
+                return null;
+            }
+
+            String targetPath;
+            int progress = 0;
+
+            targetPath = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.IMAGE_DIR_PATH;
+
+            Array<File> imageFiles = ImportUtils.getAtlasPages(atlasFileSource);
+            for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
+                if (!imageFile.exists()) {
+                    Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
+                            "\nCould not find " + imageFile.getName() + ".\nCheck if the file exists in the same directory.").padBottom(20).pack();
+                    return null;
+                }
+            }
+            progress += 15;
+            progressHandler.progressChanged(progress);
+
+            FileUtils.forceMkdir(new File(targetPath));
+
+            unpackAtlasIntoFolder(atlasFileSource.file(), targetPath);
+            progress += 60;
+            progressHandler.progressChanged(progress);
+
+            return atlasFileSource.file();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private File importExternalIntoProject(FileHandle atlasFileSource, ProgressHandler progressHandler) {
@@ -77,7 +117,7 @@ public class AtlasAsset extends Asset {
             int progress = 0;
 
 //            sourceDataPath = FilenameUtils.getFullPathNoEndSeparator(sourcePath);
-            targetPath = projectManager.getCurrentProjectPath() + ProjectManager.ATLAS_IMAGE_DIR_PATH;
+            targetPath = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.ATLAS_IMAGE_DIR_PATH;
 
             File atlasFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".atlas");
 
@@ -110,6 +150,7 @@ public class AtlasAsset extends Asset {
                 progress += pp;
                 progressHandler.progressChanged(progress % 100);
             }
+            return atlasFileTarget;
         } catch (IOException e) {
             e.printStackTrace();
         }

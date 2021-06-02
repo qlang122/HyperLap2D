@@ -81,7 +81,7 @@ public class SpriterAsset extends Asset {
             String targetPath;
 
             animationDataPath = FilenameUtils.getFullPathNoEndSeparator(sourcePath);
-            targetPath = projectManager.getCurrentProjectPath() + ProjectManager.SPRITER_DIR_PATH + File.separator + fileNameWithOutExt;
+            targetPath = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.SPRITER_DIR_PATH + File.separator + fileNameWithOutExt;
             FileHandle atlasFileSource = new FileHandle(animationDataPath + File.separator + fileNameWithOutExt + ".atlas");
 
             File atlasFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".atlas");

@@ -251,7 +251,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         loadCurrentProjectSpineAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectSpriteAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectSpriterAnimations(projectPath + "/assets/", curResolution);
-        loadCurrentProjectAtlasAnimations(projectPath + "/assets/", curResolution);
+//        loadCurrentProjectAtlasAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectBitmapFonts(projectPath, curResolution);
         loadCurrentProjectShaders(projectPath + "/assets/shaders/");
     }
@@ -383,7 +383,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         FileHandle sourceDir = new FileHandle(path + "orig" + "/atlas-images");
         for (FileHandle entry : sourceDir.list()) {
             File file = entry.file();
-            if (file.isFile() && file.getName().equalsIgnoreCase(".atlas")) {
+            if (file.isFile() && file.getName().toLowerCase().endsWith(".atlas")) {
                 String fileName = file.getName();
                 TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/atlas-images/" + File.separator + fileName));
                 atlasAtlases.put(fileName.replace(".atlas", ""), atlas);
