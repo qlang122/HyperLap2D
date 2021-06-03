@@ -1,7 +1,7 @@
 ![Logo](https://raw.githubusercontent.com/rednblackgames/HyperLap2D/master/icons/HyperLap2D.png)
 
-[![build](https://img.shields.io/github/workflow/status/rednblackgames/HyperLap2D/SNAPSHOT%20Build?logo=github)](https://github.com/rednblackgames/HyperLap2D/actions?query=workflow%3A%22SNAPSHOT+Build%22)
-[![release](https://img.shields.io/github/v/release/rednblackgames/HyperLap2D)](https://github.com/rednblackgames/HyperLap2D/releases)
+[![build](https://img.shields.io/github/workflow/status/qlang122/HyperLap2D/SNAPSHOT%20Build?logo=github)](https://github.com/qlang122/HyperLap2D/actions?query=workflow%3A%22SNAPSHOT+Build%22)
+[![release](https://img.shields.io/github/v/release/qlang122/HyperLap2D)](https://github.com/qlang122/HyperLap2D/releases)
 
 [![Discord](https://img.shields.io/discord/740954840259362826?label=Discord&logo=discord)](https://discord.gg/p69rPNF)
 
@@ -22,7 +22,7 @@ Currently, HyperLap2D is in Alpha stage. Many breaking changes could happen upda
 
 | Release | Snapshot |
 | ------- | -------- |
-| [GitHub Releases](https://github.com/rednblackgames/HyperLap2D/releases) | [GitHub Actions](https://github.com/rednblackgames/HyperLap2D/actions?query=workflow%3A%22SNAPSHOT+Build%22) |
+| [GitHub Releases](https://github.com/qlang122/HyperLap2D/releases) | [GitHub Actions](https://github.com/qlang122/HyperLap2D/actions?query=workflow%3A%22SNAPSHOT+Build%22) |
 
 ### Features
 - Images and Sprite Animations
@@ -49,7 +49,7 @@ Currently, HyperLap2D is in Alpha stage. Many breaking changes could happen upda
 
 Currently, HyperLap2D is mainly developed for [libGDX](https://github.com/libgdx/libgdx), but it can easily be integrated into any software thanks to its open JSON output format.
 
-Check out the libGDX runtime [README](https://github.com/rednblackgames/hyperlap2d-runtime-libgdx) to start integrating HyperLap2D's project into your game.
+Check out the libGDX runtime [README](https://github.com/qlang122/hyperlap2d-runtime-libgdx) to start integrating HyperLap2D's project into your game.
 
 See our [Wiki](https://hyperlap2d.rednblack.games/wiki/hyperlap2d/14-json-export-format/), if you want to learn more about the output format.
 
@@ -73,7 +73,7 @@ HyperLap2D is developed using IntelliJ IDEA. Needs `Java 14`.
 
 ### License
 
-HyperLap2D Editor is licensed under the GNU Public License, Version 3. You may wish to read [HyperLap2D libGDX Runtime](https://github.com/rednblackgames/hyperlap2d-runtime-libgdx) License and [Spine Extension](https://github.com/rednblackgames/h2d-libgdx-spine-extension) License.
+HyperLap2D Editor is licensed under the GNU Public License, Version 3. You may wish to read [HyperLap2D libGDX Runtime](https://github.com/qlang122/hyperlap2d-runtime-libgdx) License and [Spine Extension](https://github.com/rednblackgames/h2d-libgdx-spine-extension) License.
 
 ```
 HyperLap2D Editor

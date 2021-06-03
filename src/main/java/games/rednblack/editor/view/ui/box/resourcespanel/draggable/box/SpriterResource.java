@@ -74,12 +74,12 @@ public class SpriterResource extends BoxItemResource {
 
         addListener(new ClickListener() {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                isMouseInside = true;
+                if (animThumb.animation != null) animThumb.animation.setPlay(true);
                 super.enter(event, x, y, pointer, fromActor);
             }
 
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                isMouseInside = false;
+                if (animThumb.animation != null) animThumb.animation.setPlay(false);
                 super.enter(event, x, y, pointer, toActor);
             }
         });
@@ -103,9 +103,7 @@ public class SpriterResource extends BoxItemResource {
 
     @Override
     public void act(float delta) {
-        if (isMouseInside) {
-            super.act(delta);
-        }
+        super.act(delta);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.qlang.h2d.extention.spriter.SpriterObjectComponent;
 
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.EntityModifyRevertibleCommand;
+import games.rednblack.editor.renderer.components.SpriterDataComponent;
 import games.rednblack.editor.renderer.data.SpriterVO;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.utils.runtime.EntityUtils;
@@ -19,23 +20,28 @@ public class ActionsSpriterDataCommand extends EntityModifyRevertibleCommand {
         Object[] payload = getNotification().getBody();
         Entity entity = (Entity) payload[0];
         SpriterVO vo = (SpriterVO) payload[1];
-        entityId = EntityUtils.getEntityId(entity);
+//        entityId = EntityUtils.getEntityId(entity);
+//
+//        backup = new SpriterVO();
+//        backup.loadFromEntity(entity);
 
-        backup = new SpriterVO();
-
-        SpriterObjectComponent component = ComponentRetriever.get(entity, SpriterObjectComponent.class);
-        component.setLooping(vo.isLooping);
-        component.doActions(vo.getActionName());
+        SpriterDataComponent dataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
+        SpriterObjectComponent objectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
+        dataComponent.isLooping = vo.isLooping;
+        objectComponent.setLooping(vo.isLooping);
+        objectComponent.doActions(vo.getActionName());
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
     }
 
     @Override
     public void undoAction() {
-        Entity entity = EntityUtils.getByUniqueId(entityId);
-
-        SpriterObjectComponent component = ComponentRetriever.get(entity, SpriterObjectComponent.class);
-        component.setLooping(backup.isLooping);
-        HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
+//        Entity entity = EntityUtils.getByUniqueId(entityId);
+//
+//        SpriterDataComponent dataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
+//        SpriterObjectComponent objectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
+//        dataComponent.isLooping = backup.isLooping;
+//        objectComponent.setLooping(backup.isLooping);
+//        HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
     }
 }
