@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import games.rednblack.editor.proxy.ResolutionManager;
 import games.rednblack.editor.renderer.components.TextureRegionComponent;
+import games.rednblack.editor.renderer.data.AtlasImageVO;
 import games.rednblack.editor.renderer.data.CompositeItemVO;
 import games.rednblack.editor.renderer.data.SceneVO;
 import games.rednblack.editor.renderer.data.SimpleImageVO;
@@ -23,7 +24,7 @@ public class DeleteAtlasImageResource extends DeleteResourceCommand {
     public static final String DONE = CLASS_NAME + "DONE";
 
     private final ArrayList<Entity> tmpEntityList = new ArrayList<>();
-    private final ArrayList<SimpleImageVO> tmpImageList = new ArrayList<>();
+    private final ArrayList<AtlasImageVO> tmpImageList = new ArrayList<>();
 
     @Override
     protected String confirmDialogTitle() {
@@ -58,8 +59,8 @@ public class DeleteAtlasImageResource extends DeleteResourceCommand {
     }
 
     private void deleteCurrentItemImage(CompositeItemVO compositeItemVO, String imageName) {
-        if (compositeItemVO.composite != null && compositeItemVO.composite.sImages.size() != 0) {
-            ArrayList<SimpleImageVO> simpleImageVOs = compositeItemVO.composite.sImages;
+        if (compositeItemVO.composite != null && compositeItemVO.composite.sAtlasImages.size() != 0) {
+            ArrayList<AtlasImageVO> simpleImageVOs = compositeItemVO.composite.sAtlasImages;
             tmpImageList.addAll(simpleImageVOs
                     .stream()
                     .filter(simpleImageVO -> simpleImageVO.imageName.equals(imageName))

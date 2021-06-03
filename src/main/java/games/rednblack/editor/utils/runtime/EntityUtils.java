@@ -57,6 +57,7 @@ public class EntityUtils {
         itemTypeNameMap.put(PARTICLE_TYPE, "Particle Effect");
         itemTypeNameMap.put(LABEL_TYPE, "Label");
         itemTypeNameMap.put(IMAGE_TYPE, "Image");
+        itemTypeNameMap.put(ATLAS_IMAGE_TYPE, "Image");
         itemTypeNameMap.put(NINE_PATCH, "9-Patch Image");
         itemTypeNameMap.put(LIGHT_TYPE, "Light");
         itemTypeNameMap.put(SPINE_TYPE, "Spine Animation");
@@ -70,6 +71,7 @@ public class EntityUtils {
         itemTypeIconMap.put(PARTICLE_TYPE, "icon-particle-white");
         itemTypeIconMap.put(LABEL_TYPE, "icon-label");
         itemTypeIconMap.put(IMAGE_TYPE, "icon-image");
+        itemTypeIconMap.put(ATLAS_IMAGE_TYPE, "icon-image");
         itemTypeIconMap.put(NINE_PATCH, "icon-image");
         itemTypeIconMap.put(LIGHT_TYPE, "icon-particle-white");
         itemTypeIconMap.put(SPINE_TYPE, "icon-spine");
@@ -362,6 +364,10 @@ public class EntityUtils {
             SimpleImageVO vo = json.fromJson(SimpleImageVO.class, jsonString);
             return factory.createEntity(parent, vo);
         }
+        if (entityType == EntityFactory.ATLAS_IMAGE_TYPE) {
+            AtlasImageVO vo = json.fromJson(AtlasImageVO.class, jsonString);
+            return factory.createEntity(parent, vo);
+        }
         if (entityType == EntityFactory.NINE_PATCH) {
             Image9patchVO vo = json.fromJson(Image9patchVO.class, jsonString);
             return factory.createEntity(parent, vo);
@@ -411,6 +417,11 @@ public class EntityUtils {
         }
         if (entityType == EntityFactory.IMAGE_TYPE) {
             SimpleImageVO vo = new SimpleImageVO();
+            vo.loadFromEntity(entity);
+            return json.toJson(vo);
+        }
+        if (entityType == EntityFactory.ATLAS_IMAGE_TYPE) {
+            AtlasImageVO vo = new AtlasImageVO();
             vo.loadFromEntity(entity);
             return json.toJson(vo);
         }
@@ -475,6 +486,11 @@ public class EntityUtils {
                 SimpleImageVO vo = new SimpleImageVO();
                 vo.loadFromEntity(entity);
                 holderComposite.sImages.add(vo);
+            }
+            if (entityType == EntityFactory.ATLAS_IMAGE_TYPE) {
+                AtlasImageVO vo = new AtlasImageVO();
+                vo.loadFromEntity(entity);
+                holderComposite.sAtlasImages.add(vo);
             }
             if (entityType == EntityFactory.NINE_PATCH) {
                 Image9patchVO vo = new Image9patchVO();

@@ -160,6 +160,15 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         return reg;
     }
 
+    @Override
+    public TextureRegion getAtlasImagesTextureRegion(String name) {
+        for (Entry<String, TextureAtlas> entry : atlasImageAtlases.entrySet()) {
+            TextureAtlas.AtlasRegion region = entry.getValue().findRegion(name);
+            if (region != null) return region;
+        }
+        return null;
+    }
+
     public TextureAtlas getTextureAtlas() {
         return currentProjectAtlas;
     }
@@ -251,7 +260,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         loadCurrentProjectSpineAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectSpriteAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectSpriterAnimations(projectPath + "/assets/", curResolution);
-        loadCurrentProjectAtlasAnimations(projectPath + "/assets/", curResolution);
+        loadCurrentProjectAtlasImages(projectPath + "/assets/", curResolution);
         loadCurrentProjectBitmapFonts(projectPath, curResolution);
         loadCurrentProjectShaders(projectPath + "/assets/shaders/");
     }
@@ -330,7 +339,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         for (FileHandle entry : sourceDir.list()) {
             if (entry.file().isDirectory()) {
                 String animName = FilenameUtils.removeExtension(entry.file().getName());
-                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/spine-animations/" + File.separator + animName + File.separator + animName + ".atlas"));
+                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/spine-animations/" + animName + File.separator + animName + ".atlas"));
                 FileHandle animJsonFile = Gdx.files.internal(entry.file().getAbsolutePath() + File.separator + animName + ".json");
                 SpineAnimData data = new SpineAnimData();
                 data.atlas = atlas;
@@ -367,7 +376,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         for (FileHandle entry : sourceDir.list()) {
             if (entry.file().isDirectory()) {
                 String animName = entry.file().getName();
-                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/spriter-animations/" + File.separator + animName + File.separator + animName + ".atlas"));
+                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/spriter-animations/" + animName + File.separator + animName + ".atlas"));
                 FileHandle scmlFile = new FileHandle(path + "orig" + "/spriter-animations/" + animName + "/" + animName + ".scml");
                 SpriterAnimData data = new SpriterAnimData();
                 data.scmlFile = scmlFile;
@@ -378,14 +387,14 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         }
     }
 
-    private void loadCurrentProjectAtlasAnimations(String path, String curResolution) {
+    private void loadCurrentProjectAtlasImages(String path, String curResolution) {
         atlasImageAtlases.clear();
         FileHandle sourceDir = new FileHandle(path + "orig" + "/atlas-images");
         for (FileHandle entry : sourceDir.list()) {
             File file = entry.file();
             if (file.isFile() && file.getName().toLowerCase().endsWith(".atlas")) {
                 String fileName = file.getName();
-                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/atlas-images/" + File.separator + fileName));
+                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/atlas-images/" + fileName));
                 atlasImageAtlases.put(fileName.replace(".atlas", ""), atlas);
             }
         }

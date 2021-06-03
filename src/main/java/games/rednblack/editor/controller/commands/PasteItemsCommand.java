@@ -110,6 +110,11 @@ public class PasteItemsCommand extends EntityModifyRevertibleCommand {
             Sandbox.getInstance().getEngine().addEntity(child);
             entities.add(child);
         }
+        for (int i = 0; i < compositeVO.sAtlasImages.size(); i++) {
+            Entity child = factory.createEntity(parentEntity, compositeVO.sAtlasImages.get(i));
+            Sandbox.getInstance().getEngine().addEntity(child);
+            entities.add(child);
+        }
         for (int i = 0; i < compositeVO.sImage9patchs.size(); i++) {
             Entity child = factory.createEntity(parentEntity, compositeVO.sImage9patchs.get(i));
             Sandbox.getInstance().getEngine().addEntity(child);

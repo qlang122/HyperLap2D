@@ -76,6 +76,7 @@ public class ImportUtils {
         fileTypeFilter.addRule("All Supported (*.png, *.atlas, *.p, *.json, *.scml, *.vert, *.frag, *.h2dlib, *.h2daction)",
                 "png", "atlas", "p", "json", "scml", "vert", "frag", "h2dlib", "h2daction");
         fileTypeFilter.addRule("PNG File (*.png)", "png");
+        fileTypeFilter.addRule("Atlas File (*.atlas)", "atlas");
         fileTypeFilter.addRule("Sprite Animation Atlas File (*.atlas)", "atlas");
         fileTypeFilter.addRule("libGDX/Talos Particle Effect (*.p)", "p");
         fileTypeFilter.addRule("Spine Animation (*.json)", "json");

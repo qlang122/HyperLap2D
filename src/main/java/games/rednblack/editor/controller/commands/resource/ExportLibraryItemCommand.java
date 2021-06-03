@@ -126,6 +126,20 @@ public class ExportLibraryItemCommand extends NonRevertibleCommand {
             copyShader(imageVO.shaderName, tmpDir);
         }
 
+        for (AtlasImageVO imageVO : compositeVO.sAtlasImages) {
+            File fileSrc = new File(currentProjectPath + ProjectManager.ATLAS_IMAGE_DIR_PATH);
+            FileUtils.copyDirectory(fileSrc, tmpDir);
+            File[] files = fileSrc.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String fileName = file.getName().toLowerCase();
+                    if (file.isFile() && (fileName.endsWith(".atlas") || fileName.endsWith(".png")))
+                        exportMapperVO.mapper.add(new ExportedAsset(ImportUtils.TYPE_TEXTURE_ATLAS, file.getName()));
+                }
+            }
+            copyShader(imageVO.shaderName, tmpDir);
+        }
+
         for (Image9patchVO imageVO : compositeVO.sImage9patchs) {
             File fileSrc = new File(currentProjectPath + ProjectManager.IMAGE_DIR_PATH + File.separator + imageVO.imageName + ".9.png");
             FileUtils.copyFileToDirectory(fileSrc, tmpDir);
@@ -143,6 +157,7 @@ public class ExportLibraryItemCommand extends NonRevertibleCommand {
             File fileSrc = new File(currentProjectPath + ProjectManager.SPRITER_DIR_PATH + File.separator + imageVO.animationName);
             FileUtils.copyDirectory(fileSrc, tmpDir);
             exportMapperVO.mapper.add(new ExportedAsset(ImportUtils.TYPE_SPRITER_ANIMATION, fileSrc.getName() + ".scml"));
+            exportMapperVO.mapper.add(new ExportedAsset(ImportUtils.TYPE_SPRITER_ANIMATION, fileSrc.getName() + ".atlas"));
             copyShader(imageVO.shaderName, tmpDir);
         }
 

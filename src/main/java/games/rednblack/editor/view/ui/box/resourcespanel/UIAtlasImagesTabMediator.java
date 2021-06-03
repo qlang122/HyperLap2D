@@ -31,6 +31,7 @@ import games.rednblack.editor.controller.commands.resource.DeleteAtlasImageResou
 import games.rednblack.editor.factory.ItemFactory;
 import games.rednblack.editor.proxy.ResourceManager;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResource;
+import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.AtlasImageResource;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.ImageResource;
 
 /**
@@ -79,11 +80,11 @@ public class UIAtlasImagesTabMediator extends UIResourcesTabMediator<UIAtlasImag
             for (TextureAtlas.AtlasRegion region : new Array.ArrayIterator<>(atlasRegions)) {
                 if (!region.name.contains(searchText)) continue;
                 boolean is9patch = region.findValue("split") != null;
-                DraggableResource draggableResource = new DraggableResource(new ImageResource(region));
+                DraggableResource draggableResource = new DraggableResource(new AtlasImageResource(region));
                 if (is9patch) {
                     draggableResource.setFactoryFunction(ItemFactory.get()::create9Patch);
                 } else {
-                    draggableResource.setFactoryFunction(ItemFactory.get()::createSimpleImage);
+                    draggableResource.setFactoryFunction(ItemFactory.get()::createAtlasImage);
                 }
                 draggableResource.initDragDrop();
                 thumbnailBoxes.add(draggableResource);

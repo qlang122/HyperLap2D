@@ -221,6 +221,8 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
     private int mapClassNameToEntityType(String className) {
         if (className.endsWith(".ImageResource"))
             return EntityFactory.IMAGE_TYPE;
+        else if (className.endsWith(".AtlasImageResource"))
+            return EntityFactory.ATLAS_IMAGE_TYPE;
         else if (className.endsWith(".SpriteResource"))
             return EntityFactory.SPRITE_TYPE;
         else if (className.endsWith(".SpineResource"))

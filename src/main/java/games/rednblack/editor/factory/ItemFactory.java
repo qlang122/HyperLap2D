@@ -97,6 +97,19 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
+    public boolean createAtlasImage(String regionName, Vector2 position) {
+        System.out.println("----->" + regionName + " " + position);
+        AtlasImageVO vo = new AtlasImageVO();
+        vo.imageName = regionName;
+
+        if (!setEssentialData(vo, position)) return false;
+        createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
+        HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
+
+        return true;
+    }
+
+    @Override
     public Entity getCreatedEntity() {
         return createdEntity;
     }
