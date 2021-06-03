@@ -21,35 +21,36 @@ package games.rednblack.editor.view.ui.box.resourcespanel;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
-import games.rednblack.editor.controller.commands.resource.DeleteImageResource;
+import org.apache.commons.lang3.ArrayUtils;
+import org.puremvc.java.interfaces.INotification;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import games.rednblack.editor.controller.commands.resource.DeleteAtlasImageResource;
 import games.rednblack.editor.factory.ItemFactory;
 import games.rednblack.editor.proxy.ResourceManager;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResource;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.ImageResource;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.puremvc.java.interfaces.INotification;
-
-import java.util.ArrayList;
-
 /**
  * Created by azakhary on 4/17/2015.
  */
-public class UIImagesTabMediator extends UIResourcesTabMediator<UIImagesTab> {
+public class UIAtlasImagesTabMediator extends UIResourcesTabMediator<UIAtlasImagesTab> {
 
-    private static final String TAG = UIImagesTabMediator.class.getCanonicalName();
+    private static final String TAG = UIAtlasImagesTabMediator.class.getCanonicalName();
     public static final String NAME = TAG;
 
 
-    public UIImagesTabMediator() {
-        super(NAME, new UIImagesTab());
+    public UIAtlasImagesTabMediator() {
+        super(NAME, new UIAtlasImagesTab());
     }
 
     @Override
     public String[] listNotificationInterests() {
         String[] listNotification = super.listNotificationInterests();
 
-        listNotification = ArrayUtils.add(listNotification, DeleteImageResource.DONE);
+        listNotification = ArrayUtils.add(listNotification, DeleteAtlasImageResource.DONE);
 
         return listNotification;
     }
@@ -58,7 +59,7 @@ public class UIImagesTabMediator extends UIResourcesTabMediator<UIImagesTab> {
     public void handleNotification(INotification notification) {
         super.handleNotification(notification);
         switch (notification.getName()) {
-            case DeleteImageResource.DONE:
+            case DeleteAtlasImageResource.DONE:
                 initList(viewComponent.searchString);
                 break;
             default:
@@ -70,21 +71,23 @@ public class UIImagesTabMediator extends UIResourcesTabMediator<UIImagesTab> {
     protected void initList(String searchText) {
         ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
 
-        TextureAtlas atlas = resourceManager.getProjectAssetsList();
+        HashMap<String, TextureAtlas> atlas = resourceManager.getProjectAtlasImagesList();
 
         Array<DraggableResource> thumbnailBoxes = new Array<>();
-        Array<TextureAtlas.AtlasRegion> atlasRegions = atlas.getRegions();
-        for (TextureAtlas.AtlasRegion region : new Array.ArrayIterator<>(atlasRegions)) {
-            if (!region.name.contains(searchText)) continue;
-            boolean is9patch = region.findValue("split") != null;
-            DraggableResource draggableResource = new DraggableResource(new ImageResource(region));
-            if (is9patch) {
-                draggableResource.setFactoryFunction(ItemFactory.get()::create9Patch);
-            } else {
-                draggableResource.setFactoryFunction(ItemFactory.get()::createSimpleImage);
+        for (Map.Entry<String, TextureAtlas> atlasEntry : atlas.entrySet()) {
+            Array<TextureAtlas.AtlasRegion> atlasRegions = atlasEntry.getValue().getRegions();
+            for (TextureAtlas.AtlasRegion region : new Array.ArrayIterator<>(atlasRegions)) {
+                if (!region.name.contains(searchText)) continue;
+                boolean is9patch = region.findValue("split") != null;
+                DraggableResource draggableResource = new DraggableResource(new ImageResource(region));
+                if (is9patch) {
+                    draggableResource.setFactoryFunction(ItemFactory.get()::create9Patch);
+                } else {
+                    draggableResource.setFactoryFunction(ItemFactory.get()::createSimpleImage);
+                }
+                draggableResource.initDragDrop();
+                thumbnailBoxes.add(draggableResource);
             }
-            draggableResource.initDragDrop();
-            thumbnailBoxes.add(draggableResource);
         }
 
         thumbnailBoxes.sort();

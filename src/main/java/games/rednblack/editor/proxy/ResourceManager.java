@@ -67,7 +67,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     private final HashMap<String, SpineAnimData> spineAnimAtlases = new HashMap<>();
     private final HashMap<String, TextureAtlas> spriteAnimAtlases = new HashMap<>();
     private final HashMap<String, SpriterAnimData> spriterAnimAtlases = new HashMap<>();
-    private final HashMap<String, TextureAtlas> atlasAtlases = new HashMap<>();
+    private final HashMap<String, TextureAtlas> atlasImageAtlases = new HashMap<>();
     private final HashMap<FontSizePair, BitmapFont> bitmapFonts = new HashMap<>();
     private final HashMap<String, ShaderProgram> shaderPrograms = new HashMap<>(1);
 
@@ -251,7 +251,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         loadCurrentProjectSpineAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectSpriteAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectSpriterAnimations(projectPath + "/assets/", curResolution);
-//        loadCurrentProjectAtlasAnimations(projectPath + "/assets/", curResolution);
+        loadCurrentProjectAtlasAnimations(projectPath + "/assets/", curResolution);
         loadCurrentProjectBitmapFonts(projectPath, curResolution);
         loadCurrentProjectShaders(projectPath + "/assets/shaders/");
     }
@@ -379,14 +379,14 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     private void loadCurrentProjectAtlasAnimations(String path, String curResolution) {
-        atlasAtlases.clear();
+        atlasImageAtlases.clear();
         FileHandle sourceDir = new FileHandle(path + "orig" + "/atlas-images");
         for (FileHandle entry : sourceDir.list()) {
             File file = entry.file();
             if (file.isFile() && file.getName().toLowerCase().endsWith(".atlas")) {
                 String fileName = file.getName();
                 TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/atlas-images/" + File.separator + fileName));
-                atlasAtlases.put(fileName.replace(".atlas", ""), atlas);
+                atlasImageAtlases.put(fileName.replace(".atlas", ""), atlas);
             }
         }
     }
@@ -576,13 +576,13 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         return spriterAnimAtlases;
     }
 
-    public ArrayList<TextureAtlas> getProjectAtlasList() {
-        ArrayList<TextureAtlas> list = new ArrayList<>();
-        list.add(currentProjectAtlas);
-        for (Entry<String, TextureAtlas> entry : atlasAtlases.entrySet()) {
-            list.add(entry.getValue());
-        }
-        return list;
+    public TextureAtlas getProjectAssetsList() {
+
+        return currentProjectAtlas;
+    }
+
+    public HashMap<String, TextureAtlas> getProjectAtlasImagesList() {
+        return atlasImageAtlases;
     }
 
     public HashMap<String, ParticleEffect> getProjectParticleList() {

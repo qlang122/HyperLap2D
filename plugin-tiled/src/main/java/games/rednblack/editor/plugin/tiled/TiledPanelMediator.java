@@ -72,6 +72,7 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
                 SettingsTab.OK_BTN_CLICKED,
                 TiledPlugin.ACTION_SET_GRID_SIZE_FROM_ITEM,
                 MsgAPI.ACTION_DELETE_IMAGE_RESOURCE,
+                MsgAPI.ACTION_DELETE_ATLAS_IMAGE_RESOURCE,
                 MsgAPI.TOOL_SELECTED,
                 MsgAPI.ACTION_KEY_DOWN
         };
@@ -139,6 +140,10 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
                 tiledPlugin.getAPI().showPopup(actionsSet, tileName);
                 break;
             case MsgAPI.ACTION_DELETE_IMAGE_RESOURCE:
+                tileName = notification.getBody();
+                tiledPlugin.facade.sendNotification(TiledPlugin.ACTION_DELETE_TILE, tileName);
+                break;
+            case MsgAPI.ACTION_DELETE_ATLAS_IMAGE_RESOURCE:
                 tileName = notification.getBody();
                 tiledPlugin.facade.sendNotification(TiledPlugin.ACTION_DELETE_TILE, tileName);
                 break;

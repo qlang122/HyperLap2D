@@ -42,6 +42,7 @@ public class UIResourcesBoxMediator extends PanelMediator<UIResourcesBox> {
     private static final String PREFIX = "games.rednblack.editor.view.ui.box.UIResourcesBoxMediator";
 
     public static final String IMAGE_RIGHT_CLICK = PREFIX + ".IMAGE_RIGHT_CLICK";
+    public static final String ATLAS_IMAGE_RIGHT_CLICK = PREFIX + ".ATLAS_IMAGE_RIGHT_CLICK";
     public static final String SPINE_ANIMATION_RIGHT_CLICK = PREFIX + ".SPINE_ANIMATION_RIGHT_CLICK";
     public static final String SPRITE_ANIMATION_RIGHT_CLICK = PREFIX + ".SPRITE_ANIMATION_RIGHT_CLICK";
     public static final String SPRITER_ANIMATION_RIGHT_CLICK = "SPRITER_ANIMATION_RIGHT_CLICK";
@@ -97,6 +98,7 @@ public class UIResourcesBoxMediator extends PanelMediator<UIResourcesBox> {
 
     private void registerTabMediators() {
         facade.registerMediator(new UIImagesTabMediator());
+        facade.registerMediator(new UIAtlasImagesTabMediator());
         facade.registerMediator(new UIAnimationsTabMediator());
         facade.registerMediator(new UILibraryItemsTabMediator());
         facade.registerMediator(new UIParticleEffectsTabMediator());
@@ -108,21 +110,25 @@ public class UIResourcesBoxMediator extends PanelMediator<UIResourcesBox> {
         ImageTab imagesTab = imagesTabMediator.getViewComponent();
         viewComponent.addTab(0, imagesTab);
 
+        UIAtlasImagesTabMediator atlasTabMediator = facade.retrieveMediator(UIAtlasImagesTabMediator.NAME);
+        ImageTab atlasTab = atlasTabMediator.getViewComponent();
+        viewComponent.addTab(1, atlasTab);
+
         UIAnimationsTabMediator animationsTabMediator = facade.retrieveMediator(UIAnimationsTabMediator.NAME);
         ImageTab animationsTab = animationsTabMediator.getViewComponent();
-        viewComponent.addTab(1, animationsTab);
+        viewComponent.addTab(2, animationsTab);
 
         UIParticleEffectsTabMediator particlesTabMediator = facade.retrieveMediator(UIParticleEffectsTabMediator.NAME);
         ImageTab particlesTab = particlesTabMediator.getViewComponent();
-        viewComponent.addTab(2, particlesTab);
+        viewComponent.addTab(3, particlesTab);
 
         UILibraryItemsTabMediator libraryTabMediator = facade.retrieveMediator(UILibraryItemsTabMediator.NAME);
         ImageTab libraryItemsTab = libraryTabMediator.getViewComponent();
-        viewComponent.addTab(3, libraryItemsTab);
+        viewComponent.addTab(4, libraryItemsTab);
 
         UIActionsTabMediator actionsTabMediator = facade.retrieveMediator(UIActionsTabMediator.NAME);
         ImageTab actionsTab = actionsTabMediator.getViewComponent();
-        viewComponent.addTab(4, actionsTab);
+        viewComponent.addTab(5, actionsTab);
 
         viewComponent.setActiveTabContent(imagesTab);
     }

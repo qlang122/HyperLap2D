@@ -484,6 +484,9 @@
     image-button: {
       imageUp: image-up
     },
+    images-button: {
+      imageUp: images-up
+    },
     animation-button: {
       imageUp: animation-up
     },
@@ -896,7 +899,7 @@
     default: {
       draggable: false,
       vertical: false,
-      tabPadding: 20,
+      tabPadding: 6,
       singleLine: true,
       font: default-font,
       buttonStyle: {

@@ -108,6 +108,7 @@ public class BootstrapCommand extends SimpleCommand {
 
         // Resources
         facade.registerCommand(MsgAPI.ACTION_DELETE_IMAGE_RESOURCE, DeleteImageResource::new);
+        facade.registerCommand(MsgAPI.ACTION_DELETE_ATLAS_IMAGE_RESOURCE, DeleteAtlasImageResource::new);
         facade.registerCommand(MsgAPI.ACTION_DELETE_LIBRARY_ITEM, DeleteLibraryItem::new);
         facade.registerCommand(MsgAPI.ACTION_DELETE_LIBRARY_ACTION, DeleteLibraryAction::new);
         facade.registerCommand(MsgAPI.ACTION_DUPLICATE_LIBRARY_ACTION, DuplicateLibraryAction::new);

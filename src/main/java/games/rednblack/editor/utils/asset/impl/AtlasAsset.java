@@ -51,14 +51,27 @@ public class AtlasAsset extends Asset {
 
     @Override
     public void importAsset(Array<FileHandle> files, ProgressHandler progressHandler, boolean skipRepack) {
-        for (FileHandle handle : new Array.ArrayIterator<>(files)) {
-            File copiedFile = importExternalIntoProjectImages(handle, progressHandler);
-//            if (copiedFile == null)
-//                continue;
+        importIntoAtlasImages(files, progressHandler, skipRepack);
 
-//            if (copiedFile.getName().toLowerCase().endsWith(".atlas")) {
-//                resolutionManager.resizeAtlasForAllResolutions(copiedFile, projectManager.getCurrentProjectInfoVO());
-//            }
+        //It's unwise to put it all together
+//        importIntoImages(files, progressHandler, skipRepack);
+    }
+
+    private void importIntoAtlasImages(Array<FileHandle> files, ProgressHandler progressHandler, boolean skipRepack) {
+        for (FileHandle handle : new Array.ArrayIterator<>(files)) {
+            File copiedFile = importExternalIntoProject(handle, progressHandler);
+            if (copiedFile == null)
+                continue;
+
+            if (copiedFile.getName().toLowerCase().endsWith(".atlas")) {
+                resolutionManager.resizeAtlasForAllResolutions(copiedFile, projectManager.getCurrentProjectInfoVO());
+            }
+        }
+    }
+
+    private void importIntoImages(Array<FileHandle> files, ProgressHandler progressHandler, boolean skipRepack) {
+        for (FileHandle handle : new Array.ArrayIterator<>(files)) {
+            importExternalIntoProjectImages(handle, progressHandler);
         }
         if (!skipRepack) {
             ResolutionManager resolutionManager = facade.retrieveProxy(ResolutionManager.NAME);

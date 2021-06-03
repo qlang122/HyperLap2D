@@ -55,6 +55,7 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
     public static final Integer ORIGIN_POINT_ACTION_SET = 11;
     public static final Integer LIBRARY_ACTION_ACTION_SET = 12;
     public static final Integer TALOS_ACTION_SET = 13;
+    public static final Integer ATLAS_IMAGE_RESOURCE_ACTION_SET = 14;
 
     private Sandbox sandbox;
 
@@ -79,6 +80,9 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
 
         actionSets.put(IMAGE_RESOURCE_ACTION_SET, new Array<>());
         actionSets.get(IMAGE_RESOURCE_ACTION_SET).add(MsgAPI.ACTION_DELETE_IMAGE_RESOURCE);
+
+        actionSets.put(ATLAS_IMAGE_RESOURCE_ACTION_SET, new Array<>());
+        actionSets.get(ATLAS_IMAGE_RESOURCE_ACTION_SET).add(MsgAPI.ACTION_DELETE_ATLAS_IMAGE_RESOURCE);
 
         actionSets.put(LIBRARY_ITEM_ACTION_SET, new Array<>());
         actionSets.get(LIBRARY_ITEM_ACTION_SET).add(MsgAPI.ACTION_DELETE_LIBRARY_ITEM);
@@ -132,6 +136,7 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
                 MsgAPI.ITEM_RIGHT_CLICK,
                 UIDropDownMenu.ITEM_CLICKED,
                 UIResourcesBoxMediator.IMAGE_RIGHT_CLICK,
+                UIResourcesBoxMediator.ATLAS_IMAGE_RIGHT_CLICK,
                 UIResourcesBoxMediator.SPINE_ANIMATION_RIGHT_CLICK,
                 UIResourcesBoxMediator.SPRITE_ANIMATION_RIGHT_CLICK,
                 UIResourcesBoxMediator.SPRITER_ANIMATION_RIGHT_CLICK,
@@ -180,6 +185,9 @@ public class UIDropDownMenuMediator extends Mediator<UIDropDownMenu> {
                 break;
             case UIResourcesBoxMediator.IMAGE_RIGHT_CLICK:
                 showPopup(IMAGE_RESOURCE_ACTION_SET, notification.getBody());
+                break;
+            case UIResourcesBoxMediator.ATLAS_IMAGE_RIGHT_CLICK:
+                showPopup(ATLAS_IMAGE_RESOURCE_ACTION_SET, notification.getBody());
                 break;
             case UIResourcesBoxMediator.SPINE_ANIMATION_RIGHT_CLICK:
                 showPopup(SPINE_ANIMATION_ACTION_SET, notification.getBody());
