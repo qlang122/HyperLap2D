@@ -1,12 +1,17 @@
 package games.rednblack.editor.controller.commands.resource;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.proxy.ResolutionManager;
+import games.rednblack.editor.proxy.ResourceManager;
 import games.rednblack.editor.renderer.components.TextureRegionComponent;
 import games.rednblack.editor.renderer.data.AtlasImageVO;
 import games.rednblack.editor.renderer.data.CompositeItemVO;
@@ -20,7 +25,7 @@ import games.rednblack.editor.utils.runtime.EntityUtils;
  */
 public class DeleteAtlasImageResource extends DeleteResourceCommand {
 
-    private static final String CLASS_NAME = "games.rednblack.editor.controller.commands.resource.DeleteImageResource";
+    private static final String CLASS_NAME = "games.rednblack.editor.controller.commands.resource.DeleteAtlasImageResource";
     public static final String DONE = CLASS_NAME + "DONE";
 
     private final ArrayList<Entity> tmpEntityList = new ArrayList<>();
@@ -34,11 +39,23 @@ public class DeleteAtlasImageResource extends DeleteResourceCommand {
     @Override
     public void doAction() {
         String imageName = notification.getBody();
-        if (projectManager.deleteSingleImageForAllResolutions(imageName)) {
+        String atlasName = "";
+        ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
+        HashMap<String, TextureAtlas> imagesList = resourceManager.getProjectAtlasImagesList();
+        for (Map.Entry<String, TextureAtlas> entry : imagesList.entrySet()) {
+            TextureAtlas.AtlasRegion region = entry.getValue().findRegion(imageName);
+            if (region != null) {
+                atlasName = entry.getKey();
+                break;
+            }
+        }
+        if (atlasName.isEmpty()) return;
+
+        if (projectManager.deleteAtlasImageForAllResolutions(atlasName, imageName)) {
             deleteEntitiesWithImages(sandbox.getRootEntity(), imageName);
             deleteAllItemsImages(imageName);
             ResolutionManager resolutionManager = facade.retrieveProxy(ResolutionManager.NAME);
-            resolutionManager.rePackProjectImagesForAllResolutions(true);
+            resolutionManager.rePackProjectAtlasImagesForAllResolutions(true, atlasName,null);
             sendNotification(DONE, imageName);
             SceneVO vo = sandbox.sceneVoFromItems();
             projectManager.saveCurrentProject(vo);

@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
+import games.rednblack.editor.utils.ImportUtils;
 import games.rednblack.h2d.common.MsgAPI;
 
 import org.apache.commons.io.FileUtils;
@@ -392,6 +393,42 @@ public class ResolutionManager extends Proxy {
         tp.pack(outputDir, "pack");
     }
 
+    public void rePackProjectAtlasImages(ResolutionEntryVO resEntry, String atlasName) {
+        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+        TexturePacker.Settings settings = projectManager.getTexturePackerSettings();
+
+        TexturePacker tp = new TexturePacker(settings);
+
+        String sourcePath = projectManager.getCurrentProjectPath() + "/assets/" + resEntry.name + "/atlas-images" + File.separator + atlasName;
+        String outputPath = projectManager.getCurrentProjectPath() + "/assets/" + resEntry.name + "/atlas-images";
+
+        FileHandle sourceDir = new FileHandle(sourcePath);
+        File outputDir = new File(outputPath);
+
+        FileHandle atlasFile = new FileHandle(outputPath + File.separator + atlasName + ".atlas");
+        Array<File> imageFiles = ImportUtils.getAtlasPages(atlasFile);
+
+        try {
+            FileUtils.forceMkdir(outputDir);
+            for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
+                FileUtils.forceDelete(imageFile);
+            }
+            FileUtils.forceDelete(atlasFile.file());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (FileHandle entry : sourceDir.list()) {
+            String filename = entry.file().getName();
+            String extension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+            if (extension.equals("png")) {
+                tp.addImage(entry.file());
+            }
+        }
+
+        tp.pack(outputDir, atlasName);
+    }
+
     private int resizeTextures(String path, ResolutionEntryVO resolution) {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         float ratio = getResolutionRatio(resolution, projectManager.getCurrentProjectInfoVO().originalResolution);
@@ -521,11 +558,45 @@ public class ResolutionManager extends Proxy {
         executor.shutdown();
     }
 
+    public void rePackProjectAtlasImagesForAllResolutions(boolean reloadProjectData, String atlasName, RepackCallback callback) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            facade.sendNotification(MsgAPI.SHOW_LOADING_DIALOG);
+            try {
+                rePackProjectAtlasImagesForAllResolutionsSync(atlasName);
+                facade.sendNotification(MsgAPI.HIDE_LOADING_DIALOG);
+                if (callback != null)
+                    callback.onRepack(true);
+            } catch (Exception e) {
+                if (callback != null)
+                    callback.onRepack(false);
+            }
+
+            if (reloadProjectData) {
+                Gdx.app.postRunnable(() -> {
+                    ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+                    ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
+                    resourceManager.loadCurrentProjectData(projectManager.getCurrentProjectPath(), currentResolutionName);
+                    facade.sendNotification(ProjectManager.PROJECT_DATA_UPDATED);
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
     public void rePackProjectImagesForAllResolutionsSync() {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         rePackProjectImages(projectManager.getCurrentProjectInfoVO().originalResolution);
         for (ResolutionEntryVO resolutionEntryVO : projectManager.getCurrentProjectInfoVO().resolutions) {
             rePackProjectImages(resolutionEntryVO);
+        }
+    }
+
+    public void rePackProjectAtlasImagesForAllResolutionsSync(String atlasName) {
+        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+        rePackProjectAtlasImages(projectManager.getCurrentProjectInfoVO().originalResolution, atlasName);
+        for (ResolutionEntryVO resolutionEntryVO : projectManager.getCurrentProjectInfoVO().resolutions) {
+            rePackProjectAtlasImages(resolutionEntryVO, atlasName);
         }
     }
 

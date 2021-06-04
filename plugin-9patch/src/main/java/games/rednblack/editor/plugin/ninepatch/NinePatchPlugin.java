@@ -2,10 +2,12 @@ package games.rednblack.editor.plugin.ninepatch;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.renderer.components.MainItemComponent;
 import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.h2d.common.plugins.H2DPluginAdapter;
+
 import net.mountainblade.modular.annotations.Implementation;
 
 import java.util.Set;
@@ -39,16 +41,21 @@ public class NinePatchPlugin extends H2DPluginAdapter {
 
     @Override
     public void onDropDownOpen(Set<Entity> selectedEntities, Array<String> actionsSet) {
-        if(selectedEntities.size() == 1) {
+        if (selectedEntities.size() == 1) {
             Entity entity = selectedEntities.stream().findFirst().get();
             MainItemComponent mainItemComponent = ComponentRetriever.get(entity, MainItemComponent.class);
 
-            if(mainItemComponent.entityType == EntityFactory.NINE_PATCH) {
+            if (mainItemComponent.entityType == EntityFactory.NINE_PATCH) {
                 // it's our guy
                 currEditingEntity = entity;
                 actionsSet.add(EDIT_NINE_PATCH);
             }
-            if(mainItemComponent.entityType == EntityFactory.IMAGE_TYPE) {
+            if (mainItemComponent.entityType == EntityFactory.IMAGE_TYPE) {
+                // it's our guy
+                currEditingEntity = entity;
+                actionsSet.add(CONVERT_TO_NINE_PATCH);
+            }
+            if (mainItemComponent.entityType == EntityFactory.ATLAS_IMAGE_TYPE) {
                 // it's our guy
                 currEditingEntity = entity;
                 actionsSet.add(CONVERT_TO_NINE_PATCH);

@@ -10,7 +10,9 @@ import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+
 import games.rednblack.h2d.common.H2DDialog;
+
 import org.puremvc.java.interfaces.IFacade;
 
 /**
@@ -83,7 +85,7 @@ public class MainPanel extends H2DDialog {
         previewTable.row();
 
         saveBtn.addListener(new ClickListener() {
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 facade.sendNotification(SAVE_CLICKED);
             }
         });

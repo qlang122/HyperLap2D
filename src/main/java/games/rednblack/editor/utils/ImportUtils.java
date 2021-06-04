@@ -28,6 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,7 +147,9 @@ public class ImportUtils {
     public static Array<File> getAtlasPages(FileHandle fileHandle) {
         Array<File> imgs = new Array<>();
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fileHandle.read()), 64);
+            InputStream read = fileHandle.read();
+            InputStreamReader in = new InputStreamReader(read);
+            BufferedReader reader = new BufferedReader(in, 64);
             while (true) {
                 String line = reader.readLine();
                 if (line == null) break;
@@ -156,6 +159,9 @@ public class ImportUtils {
                     imgs.add(new File(FilenameUtils.getFullPath(fileHandle.path()) + line));
                 }
             }
+            reader.close();
+            in.close();
+            read.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -165,7 +171,9 @@ public class ImportUtils {
     public static String getAtlasName(FileHandle fileHandle) {
         String name = "atlas";
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fileHandle.read()), 64);
+            InputStream read = fileHandle.read();
+            InputStreamReader in = new InputStreamReader(read);
+            BufferedReader reader = new BufferedReader(in, 64);
             while (true) {
                 String line = reader.readLine();
                 if (line == null) break;
@@ -175,6 +183,9 @@ public class ImportUtils {
                     break;
                 }
             }
+            reader.close();
+            in.close();
+            read.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

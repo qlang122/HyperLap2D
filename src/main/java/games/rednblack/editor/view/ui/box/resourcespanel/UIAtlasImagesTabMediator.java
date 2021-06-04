@@ -82,7 +82,7 @@ public class UIAtlasImagesTabMediator extends UIResourcesTabMediator<UIAtlasImag
                 boolean is9patch = region.findValue("split") != null;
                 DraggableResource draggableResource = new DraggableResource(new AtlasImageResource(region));
                 if (is9patch) {
-                    draggableResource.setFactoryFunction(ItemFactory.get()::create9Patch);
+                    draggableResource.setFactoryFunction(ItemFactory.get()::createAtlas9Patch);
                 } else {
                     draggableResource.setFactoryFunction(ItemFactory.get()::createAtlasImage);
                 }

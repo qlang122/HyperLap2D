@@ -3,18 +3,21 @@ package games.rednblack.editor.utils.asset.impl;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
+
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.proxy.ResolutionManager;
 import games.rednblack.editor.utils.ImportUtils;
 import games.rednblack.editor.utils.asset.Asset;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.ProgressHandler;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class ParticleEffectAsset extends Asset {
@@ -84,7 +87,9 @@ public class ParticleEffectAsset extends Asset {
 
     private boolean addParticleEffectImages(FileHandle fileHandle, Array<FileHandle> imgs) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fileHandle.read()), 64);
+            InputStream read = fileHandle.read();
+            InputStreamReader in = new InputStreamReader(read);
+            BufferedReader reader = new BufferedReader(in, 64);
             while (true) {
                 String line = reader.readLine();
                 if (line == null) break;
@@ -119,6 +124,9 @@ public class ParticleEffectAsset extends Asset {
                     }
                 }
             }
+            reader.close();
+            in.close();
+            read.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

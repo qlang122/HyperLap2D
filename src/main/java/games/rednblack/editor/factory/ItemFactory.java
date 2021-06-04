@@ -98,7 +98,6 @@ public class ItemFactory implements IFactory {
 
     @Override
     public boolean createAtlasImage(String regionName, Vector2 position) {
-        System.out.println("----->" + regionName + " " + position);
         AtlasImageVO vo = new AtlasImageVO();
         vo.imageName = regionName;
 
@@ -120,6 +119,17 @@ public class ItemFactory implements IFactory {
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
+        HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
+
+        return true;
+    }
+
+    public boolean createAtlas9Patch(String regionName, Vector2 position) {
+        Image9patchVO vo = new Image9patchVO();
+        vo.imageName = regionName;
+
+        if (!setEssentialData(vo, position)) return false;
+        createdEntity = entityFactory.createEntityAtlas9Patch(sandbox.getCurrentViewingEntity(), vo);
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
 
         return true;

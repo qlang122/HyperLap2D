@@ -716,6 +716,24 @@ public class ProjectManager extends Proxy {
         return deleteSingleImage("orig", imageName);
     }
 
+    private boolean deleteAtlasImage(String resolutionName, String atlasName, String imageName) {
+        String imagesPath = currentProjectPath + "/assets/" + resolutionName + "/atlas-images" + File.separator + atlasName;
+        String filePath = imagesPath + File.separator + imageName + ".png";
+        if (!(new File(filePath)).delete()) {
+            filePath = imagesPath + imageName + ".9.png";
+            return (new File(filePath)).delete();
+        }
+        return true;
+    }
+
+    public boolean deleteAtlasImageForAllResolutions(String atlasName, String imageName) {
+        for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
+            if (!deleteAtlasImage(resolutionEntryVO.name, atlasName, imageName))
+                return false;
+        }
+        return deleteAtlasImage("orig", atlasName, imageName);
+    }
+
     public boolean deleteParticle(String particleName) {
         String particlePath = currentProjectPath + File.separator + PARTICLE_DIR_PATH + File.separator;
         String filePath = particlePath + particleName;

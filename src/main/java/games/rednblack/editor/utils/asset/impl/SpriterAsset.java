@@ -11,6 +11,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
@@ -168,7 +169,8 @@ public class SpriterAsset extends Asset {
 
     private ArrayList<String> readAssetFileNames(FileHandle fileHandle) {
         XmlReader reader = new XmlReader();
-        XmlReader.Element root = reader.parse(fileHandle.read());
+        InputStream read = fileHandle.read();
+        XmlReader.Element root = reader.parse(read);
         Array<XmlReader.Element> folders = root.getChildrenByName("folder");
 
         ArrayList<String> files = new ArrayList<>();
@@ -177,6 +179,11 @@ public class SpriterAsset extends Asset {
                 String name = file.get("name");
                 files.add(name);
             }
+        }
+        try {
+            read.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return files;
     }

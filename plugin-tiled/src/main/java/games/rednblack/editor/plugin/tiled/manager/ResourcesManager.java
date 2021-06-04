@@ -86,6 +86,9 @@ public class ResourcesManager {
                 case EntityFactory.IMAGE_TYPE:
                     region = tiledPlugin.getAPI().getSceneLoader().getRm().getTextureRegion(name);
                     break;
+                case EntityFactory.ATLAS_IMAGE_TYPE:
+                    region = tiledPlugin.getAPI().getSceneLoader().getRm().getAtlasImagesTextureRegion(name);
+                    break;
                 case EntityFactory.SPRITE_TYPE:
                     region = tiledPlugin.getAPI().getSceneLoader().getRm().getSpriteAnimation(name).getRegions().get(0);
                     break;
