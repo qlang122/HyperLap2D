@@ -418,15 +418,24 @@ public class ResolutionManager extends Proxy {
             e.printStackTrace();
         }
 
+        int count = 0;
         for (FileHandle entry : sourceDir.list()) {
             String filename = entry.file().getName();
             String extension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
             if (extension.equals("png")) {
                 tp.addImage(entry.file());
+                count++;
             }
         }
-
-        tp.pack(outputDir, atlasName);
+        if (count > 0)
+            tp.pack(outputDir, atlasName);
+        else {
+            try {
+                FileUtils.forceDelete(sourceDir.file());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private int resizeTextures(String path, ResolutionEntryVO resolution) {

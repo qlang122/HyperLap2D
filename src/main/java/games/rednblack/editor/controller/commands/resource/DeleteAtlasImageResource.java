@@ -38,15 +38,21 @@ public class DeleteAtlasImageResource extends DeleteResourceCommand {
 
     @Override
     public void doAction() {
-        String imageName = notification.getBody();
-        String atlasName = "";
+        String name = notification.getBody();
+        String[] strs = name.split("\\|");
+        String atlasName = strs[0];
+        String imageName = strs[1];
+
         ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
         HashMap<String, TextureAtlas> imagesList = resourceManager.getProjectAtlasImagesList();
-        for (Map.Entry<String, TextureAtlas> entry : imagesList.entrySet()) {
-            TextureAtlas.AtlasRegion region = entry.getValue().findRegion(imageName);
-            if (region != null) {
-                atlasName = entry.getKey();
-                break;
+        if (!atlasName.isEmpty() && imagesList.containsKey(atlasName)) {
+        } else {
+            for (Map.Entry<String, TextureAtlas> entry : imagesList.entrySet()) {
+                TextureAtlas.AtlasRegion region = entry.getValue().findRegion(imageName);
+                if (region != null) {
+                    atlasName = entry.getKey();
+                    break;
+                }
             }
         }
         if (atlasName.isEmpty()) return;
@@ -55,7 +61,7 @@ public class DeleteAtlasImageResource extends DeleteResourceCommand {
             deleteEntitiesWithImages(sandbox.getRootEntity(), imageName);
             deleteAllItemsImages(imageName);
             ResolutionManager resolutionManager = facade.retrieveProxy(ResolutionManager.NAME);
-            resolutionManager.rePackProjectAtlasImagesForAllResolutions(true, atlasName,null);
+            resolutionManager.rePackProjectAtlasImagesForAllResolutions(true, atlasName, null);
             sendNotification(DONE, imageName);
             SceneVO vo = sandbox.sceneVoFromItems();
             projectManager.saveCurrentProject(vo);

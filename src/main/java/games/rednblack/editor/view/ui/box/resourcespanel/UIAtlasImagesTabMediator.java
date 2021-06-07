@@ -74,24 +74,26 @@ public class UIAtlasImagesTabMediator extends UIResourcesTabMediator<UIAtlasImag
 
         HashMap<String, TextureAtlas> atlas = resourceManager.getProjectAtlasImagesList();
 
-        Array<DraggableResource> thumbnailBoxes = new Array<>();
+        HashMap<String, Array<DraggableResource>> thumbnailBoxes = new HashMap<>();
         for (Map.Entry<String, TextureAtlas> atlasEntry : atlas.entrySet()) {
+            String atlasName = atlasEntry.getKey();
             Array<TextureAtlas.AtlasRegion> atlasRegions = atlasEntry.getValue().getRegions();
+            Array<DraggableResource> array = new Array<>();
             for (TextureAtlas.AtlasRegion region : new Array.ArrayIterator<>(atlasRegions)) {
                 if (!region.name.contains(searchText)) continue;
                 boolean is9patch = region.findValue("split") != null;
-                DraggableResource draggableResource = new DraggableResource(new AtlasImageResource(region));
+                DraggableResource draggableResource = new DraggableResource(new AtlasImageResource(atlasName, region));
                 if (is9patch) {
                     draggableResource.setFactoryFunction(ItemFactory.get()::createAtlas9Patch);
                 } else {
                     draggableResource.setFactoryFunction(ItemFactory.get()::createAtlasImage);
                 }
                 draggableResource.initDragDrop();
-                thumbnailBoxes.add(draggableResource);
+                array.add(draggableResource);
             }
+            array.sort();
+            thumbnailBoxes.put(atlasName, array);
         }
-
-        thumbnailBoxes.sort();
         viewComponent.setThumbnailBoxes(thumbnailBoxes);
     }
 }

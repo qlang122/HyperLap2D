@@ -97,9 +97,11 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
-    public boolean createAtlasImage(String regionName, Vector2 position) {
+    public boolean createAtlasImage(String names, Vector2 position) {
+        String[] strs = names.split("\\|");
         AtlasImageVO vo = new AtlasImageVO();
-        vo.imageName = regionName;
+        vo.atlasName = strs[0];
+        vo.imageName = strs[1];
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -124,9 +126,11 @@ public class ItemFactory implements IFactory {
         return true;
     }
 
-    public boolean createAtlas9Patch(String regionName, Vector2 position) {
+    public boolean createAtlas9Patch(String names, Vector2 position) {
+        String[] strs = names.split("\\|");
         Image9patchVO vo = new Image9patchVO();
-        vo.imageName = regionName;
+        vo.atlasName = strs[0];
+        vo.imageName = strs[1];
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntityAtlas9Patch(sandbox.getCurrentViewingEntity(), vo);

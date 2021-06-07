@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.badlogic.gdx.assets.AssetManager;
@@ -162,10 +163,15 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     @Override
-    public TextureRegion getAtlasImagesTextureRegion(String name) {
-        for (Entry<String, TextureAtlas> entry : atlasImageAtlases.entrySet()) {
-            TextureAtlas.AtlasRegion region = entry.getValue().findRegion(name);
-            if (region != null) return region;
+    public TextureRegion getAtlasImagesTextureRegion(String atlasName, String name) {
+        if (!atlasName.isEmpty() && atlasImageAtlases.containsKey(atlasName)) {
+            TextureAtlas textureAtlas = atlasImageAtlases.get(atlasName);
+            return textureAtlas.findRegion(name);
+        } else {
+            for (Map.Entry<String, TextureAtlas> entry : atlasImageAtlases.entrySet()) {
+                TextureAtlas.AtlasRegion region = entry.getValue().findRegion(name);
+                if (region != null) return region;
+            }
         }
         return null;
     }

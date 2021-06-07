@@ -19,9 +19,19 @@
 package games.rednblack.editor.view.ui.box.resourcespanel;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.CollapsibleWidget;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResource;
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
@@ -30,8 +40,7 @@ import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
  * Created by azakhary on 4/17/2015.
  */
 public class UIAtlasImagesTab extends UIResourcesTab {
-
-    private VisTable imagesTable;
+    protected VisTable mainTable;
 
     public UIAtlasImagesTab() {
         super();
@@ -39,8 +48,8 @@ public class UIAtlasImagesTab extends UIResourcesTab {
 
     @Override
     protected VisScrollPane crateScrollPane() {
-        imagesTable = new VisTable();
-        return StandardWidgetsFactory.createScrollPane(imagesTable);
+        mainTable = new VisTable();
+        return StandardWidgetsFactory.createScrollPane(mainTable);
     }
 
     @Override
@@ -53,15 +62,49 @@ public class UIAtlasImagesTab extends UIResourcesTab {
         return "images-button";
     }
 
-    public void setThumbnailBoxes(Array<DraggableResource> draggableResources) {
-        imagesTable.clearChildren();
-        for (int i = 0; i < draggableResources.size; i++) {
-            DraggableResource draggableResource = draggableResources.get(i);
+    public void setThumbnailBoxes(HashMap<String, Array<DraggableResource>> draggableResources) {
+        mainTable.clearChildren();
+        for (Map.Entry<String, Array<DraggableResource>> entry : draggableResources.entrySet()) {
+            String key = entry.getKey();
+            Array<DraggableResource> value = entry.getValue();
 
-            imagesTable.add((Actor) draggableResource.getViewComponent()).padRight(5).padBottom(5);
-            if ((i - 7) % 4 == 0) {
-                imagesTable.row();
+            VisTable imagesTable = new VisTable();
+            CollapsibleWidget collapsibleWidget = new CollapsibleWidget(imagesTable);
+            Table titleTable = crateTitleTable(key, collapsibleWidget);
+
+            for (int i = 0; i < value.size; i++) {
+                DraggableResource draggableResource = value.get(i);
+                imagesTable.add((Actor) draggableResource.getViewComponent()).padRight(5).padBottom(5);
+                if ((i - 7) % 4 == 0) {
+                    imagesTable.row();
+                }
             }
+            mainTable.add(titleTable).expandX().fillX().padBottom(7);
+            mainTable.row();
+            mainTable.add(collapsibleWidget).expand();
+            mainTable.row();
         }
     }
+
+    private Table crateTitleTable(String title, CollapsibleWidget collapsibleWidget) {
+        VisTable header = new VisTable();
+        header.setTouchable(Touchable.enabled);
+        header.setBackground(VisUI.getSkin().getDrawable("expandable-properties-active-bg"));
+        header.add(StandardWidgetsFactory.createLabel(title)).left().expandX().padRight(6).padLeft(8);
+        VisImageButton button = StandardWidgetsFactory.createImageButton("expandable-properties-button");
+        header.add(button).padRight(8);
+        header.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                collapse(header, collapsibleWidget);
+            }
+        });
+        return header;
+    }
+
+    private void collapse(VisTable header, CollapsibleWidget collapsibleWidget) {
+        collapsibleWidget.setCollapsed(!collapsibleWidget.isCollapsed());
+        header.setBackground(VisUI.getSkin().getDrawable("expandable-properties-" + (collapsibleWidget.isCollapsed() ? "inactive" : "active") + "-bg"));
+    }
+
 }

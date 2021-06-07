@@ -19,6 +19,7 @@
 package games.rednblack.editor.controller.commands;
 
 import com.badlogic.ashley.core.Entity;
+
 import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
@@ -48,7 +49,7 @@ public class CreateItemCommand extends EntityModifyRevertibleCommand {
         if (serializedEntity != null) {
             EntityFactory factory = Sandbox.getInstance().sceneControl.sceneLoader.getEntityFactory();
             Entity parentEntity = Sandbox.getInstance().getCurrentViewingEntity();
-            entity =  EntityUtils.getEntityFromJson(serializedEntity, entityType, factory, parentEntity);
+            entity = EntityUtils.getEntityFromJson(serializedEntity, entityType, factory, parentEntity);
             serializedEntity = null;
         }
 

@@ -27,11 +27,10 @@ import games.rednblack.h2d.common.ResourcePayloadObject;
 
 public class AtlasImageResource extends BoxItemResource {
 
-
     private final Image payloadImg;
     private final ResourcePayloadObject payload;
 
-    public AtlasImageResource(AtlasRegion region) {
+    public AtlasImageResource(String atlasName, AtlasRegion region) {
         Image img = new Image(region);
         if (img.getWidth() > thumbnailSize || img.getHeight() > thumbnailSize) {
             // resizing is needed
@@ -54,11 +53,12 @@ public class AtlasImageResource extends BoxItemResource {
 
         addActor(img);
 
-        setRightClickEvent(UIResourcesBoxMediator.ATLAS_IMAGE_RIGHT_CLICK, region.name);
+        String name = atlasName + "|" + region.name;//a var needs to pass two, only way..
+        setRightClickEvent(UIResourcesBoxMediator.ATLAS_IMAGE_RIGHT_CLICK, name);
 
         payloadImg = new Image(region);
         payload = new ResourcePayloadObject();
-        payload.name = region.name;
+        payload.name = name;
         payload.className = getClass().getName();
     }
 

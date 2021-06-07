@@ -34,6 +34,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.UIDraggablePanel;
@@ -119,7 +120,7 @@ public class ImportPanel extends UIDraggablePanel {
     public boolean checkDropRegionHit(Vector2 mousePos) {
         Vector2 pos = Sandbox.getInstance().getUIStage().getViewport().unproject(mousePos);
         pos = dropRegion.stageToLocalCoordinates(pos);
-        if(dropRegion.hit(pos.x, pos.y, false) != null) {
+        if (dropRegion.hit(pos.x, pos.y, false) != null) {
             return true;
         }
 
@@ -170,7 +171,7 @@ public class ImportPanel extends UIDraggablePanel {
         errorLabel.clearActions();
 
         String typeText = typeNames.get(type);
-        if(count > 1) typeText+=" (" + count + ")";
+        if (count > 1) typeText += " (" + count + ")";
 
         mainTable.add(new VisLabel("Currently importing: " + typeText)).left();
         mainTable.row().padBottom(5);
@@ -184,7 +185,7 @@ public class ImportPanel extends UIDraggablePanel {
 
     private void initDropListeners(VisTextButton browseBtn) {
         browseBtn.addListener(new ClickListener() {
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 facade.sendNotification(BROWSE_BTN_CLICKED);
             }
         });
@@ -192,16 +193,16 @@ public class ImportPanel extends UIDraggablePanel {
 
     public void showError(int type) {
         String text = "";
-        if(type == ImportUtils.TYPE_UNSUPPORTED || type == ImportUtils.TYPE_UNKNOWN) {
-            text = "unsupported file type/types";
+        if (type == ImportUtils.TYPE_UNSUPPORTED || type == ImportUtils.TYPE_UNKNOWN) {
+            text = "Unsupported file type/types/size";
         }
-        if(type == ImportUtils.TYPE_MIXED) {
+        if (type == ImportUtils.TYPE_MIXED) {
             text = "Multiple import types, please use one";
         }
         switch (type) {
             case ImportUtils.TYPE_UNSUPPORTED:
             case ImportUtils.TYPE_UNKNOWN:
-                text = "Unsupported file type/types";
+                text = "Unsupported file type/types/size";
                 break;
             case ImportUtils.TYPE_MIXED:
                 text = "Multiple import types, please use one";
