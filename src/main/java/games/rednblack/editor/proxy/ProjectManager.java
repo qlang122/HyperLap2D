@@ -440,6 +440,10 @@ public class ProjectManager extends Proxy {
         if (!currentProjectVO.projectMainExportPath.isEmpty()) {
             exportPacks(currentProjectVO.projectMainExportPath);
         }
+        exportAtlasImage(defaultBuildPath);
+        if (!currentProjectVO.projectMainExportPath.isEmpty()) {
+            exportAtlasImage(currentProjectVO.projectMainExportPath);
+        }
         exportAnimations(defaultBuildPath);
         if (!currentProjectVO.projectMainExportPath.isEmpty()) {
             exportAnimations(currentProjectVO.projectMainExportPath);
@@ -570,15 +574,33 @@ public class ProjectManager extends Proxy {
     }
 
     private void exportSpriterAnimationForResolution(String res, String targetPath) {
-        String spineSrcPath = currentProjectPath + "/assets/" + res + File.separator + "spriter-animations";
+        String srcPath = currentProjectPath + "/assets/" + res + File.separator + "spriter-animations";
         try {
-            FileUtils.forceMkdir(new File(targetPath + File.separator + res + File.separator + "spriter_animations"));
-            File fileSrc = new File(spineSrcPath);
-            String finalTarget = targetPath + File.separator + res + File.separator + "spriter_animations";
+            String expPath = targetPath + File.separator + res + File.separator + "spriter_animations";
+            FileUtils.forceMkdir(new File(expPath));
+            File fileSrc = new File(srcPath);
 
-            File fileTargetSprite = new File(finalTarget);
+            File fileTargetSprite = new File(expPath);
 
             FileUtils.copyDirectory(fileSrc, fileTargetSprite);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportAtlasImage(String targetPath) {
+        String srcPath = currentProjectPath + File.separator + ATLAS_IMAGE_DIR_PATH;
+        try {
+            String expPath = targetPath + File.separator + "orig" + File.separator + "atlas_images";
+            FileUtils.forceMkdir(new File(expPath));
+
+            File srcFile = new File(srcPath);
+            for (File file : srcFile.listFiles()) {
+                String name = file.getName().toLowerCase();
+                if (name.endsWith(".atlas") || name.endsWith(".png")) {
+                    FileUtils.copyFile(file, new File(expPath + File.separator + name));
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

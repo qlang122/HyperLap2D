@@ -38,22 +38,25 @@ public class ImageAsset extends Asset {
 
     @Override
     protected boolean matchMimeType(FileHandle file) {
-        try {
-            BufferedImage sourceImg = ImageIO.read(new FileInputStream(file.file()));
-            int width = sourceImg.getWidth();
-            int height = sourceImg.getHeight();
-            TexturePacker.Settings settings = projectManager.getTexturePackerSettings();
-            if (width >= settings.maxWidth || height >= settings.maxHeight) {
-                Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-                        "\nImage width and height can't be max " + settings.maxWidth + "x" + settings.maxHeight
-                                + " and X edge padding " + settings.paddingX + "*" + settings.paddingY + ":\n"
-                                + file.file().getName()).padBottom(20).pack();
-                return false;
+        boolean isPng = file.extension().equalsIgnoreCase("png");
+        if (isPng) {
+            try {
+                BufferedImage sourceImg = ImageIO.read(new FileInputStream(file.file()));
+                int width = sourceImg.getWidth();
+                int height = sourceImg.getHeight();
+                TexturePacker.Settings settings = projectManager.getTexturePackerSettings();
+                if (width >= settings.maxWidth || height >= settings.maxHeight) {
+                    Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
+                            "\nImage width and height can't be max " + settings.maxWidth + "x" + settings.maxHeight
+                                    + " and X edge padding " + settings.paddingX + "*" + settings.paddingY + ":\n"
+                                    + file.file().getName()).padBottom(20).pack();
+                    return false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return file.extension().equalsIgnoreCase("png");
+        return isPng;
     }
 
     @Override

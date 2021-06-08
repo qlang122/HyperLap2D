@@ -53,7 +53,7 @@ public class AtlasImageResource extends BoxItemResource {
 
         addActor(img);
 
-        String name = atlasName + "|" + region.name;//a var needs to pass two, only way..
+        String name = atlasName + "/" + region.name;//a var needs to pass two, only way..
         setRightClickEvent(UIResourcesBoxMediator.ATLAS_IMAGE_RIGHT_CLICK, name);
 
         payloadImg = new Image(region);

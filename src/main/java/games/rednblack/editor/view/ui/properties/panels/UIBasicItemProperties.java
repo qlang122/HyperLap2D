@@ -144,6 +144,7 @@ public class UIBasicItemProperties extends UIItemProperties {
         row().padTop(6);
         add(StandardWidgetsFactory.createLabel("Scale:")).padRight(3).left();
         linkScaleButton = StandardWidgetsFactory.createImageButton("library-link-button");
+        linkScaleButton.setChecked(true);
 //        add(getAsTable("X:", scaleXValue, "Y:", scaleYValue, linkScaleButton)).left();
         add(getAsHorizontal("X:", scaleXValue, "Y:", scaleYValue, linkScaleButton)).colspan(2).left();
         row().padTop(6);

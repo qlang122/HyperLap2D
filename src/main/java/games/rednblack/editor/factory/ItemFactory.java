@@ -98,7 +98,7 @@ public class ItemFactory implements IFactory {
 
     @Override
     public boolean createAtlasImage(String names, Vector2 position) {
-        String[] strs = names.split("\\|");
+        String[] strs = names.split("/");
         AtlasImageVO vo = new AtlasImageVO();
         vo.atlasName = strs[0];
         vo.imageName = strs[1];
@@ -127,7 +127,7 @@ public class ItemFactory implements IFactory {
     }
 
     public boolean createAtlas9Patch(String names, Vector2 position) {
-        String[] strs = names.split("\\|");
+        String[] strs = names.split("/");
         Image9patchVO vo = new Image9patchVO();
         vo.atlasName = strs[0];
         vo.imageName = strs[1];

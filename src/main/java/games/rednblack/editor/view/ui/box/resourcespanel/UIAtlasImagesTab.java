@@ -64,25 +64,36 @@ public class UIAtlasImagesTab extends UIResourcesTab {
 
     public void setThumbnailBoxes(HashMap<String, Array<DraggableResource>> draggableResources) {
         mainTable.clearChildren();
+        int j = 0;
         for (Map.Entry<String, Array<DraggableResource>> entry : draggableResources.entrySet()) {
             String key = entry.getKey();
             Array<DraggableResource> value = entry.getValue();
 
-            VisTable imagesTable = new VisTable();
-            CollapsibleWidget collapsibleWidget = new CollapsibleWidget(imagesTable);
-            Table titleTable = crateTitleTable(key, collapsibleWidget);
+            if (value.size > 1) {
+                mainTable.row();
+                VisTable imagesTable = new VisTable();
+                CollapsibleWidget collapsibleWidget = new CollapsibleWidget(imagesTable);
+                Table titleTable = crateTitleTable(key, collapsibleWidget);
 
-            for (int i = 0; i < value.size; i++) {
-                DraggableResource draggableResource = value.get(i);
-                imagesTable.add((Actor) draggableResource.getViewComponent()).padRight(5).padBottom(5);
-                if ((i - 7) % 4 == 0) {
-                    imagesTable.row();
+                for (int i = 0; i < value.size; i++) {
+                    DraggableResource draggableResource = value.get(i);
+                    imagesTable.add((Actor) draggableResource.getViewComponent()).padRight(5).padBottom(5);
+                    if ((i - 7) % 4 == 0) {
+                        imagesTable.row();
+                    }
                 }
+                mainTable.add(titleTable).colspan(4).expandX().fillX().padBottom(5);
+                mainTable.row();
+                mainTable.add(collapsibleWidget).colspan(4).expand();
+                mainTable.row();
+            } else {
+                DraggableResource draggableResource = value.get(0);
+                mainTable.add((Actor) draggableResource.getViewComponent()).padRight(5).padBottom(5);
+                if ((j - 7) % 4 == 0) {
+                    mainTable.row();
+                }
+                j++;
             }
-            mainTable.add(titleTable).expandX().fillX().padBottom(7);
-            mainTable.row();
-            mainTable.add(collapsibleWidget).expand();
-            mainTable.row();
         }
     }
 

@@ -39,7 +39,7 @@ public class DeleteAtlasImageResource extends DeleteResourceCommand {
     @Override
     public void doAction() {
         String name = notification.getBody();
-        String[] strs = name.split("\\|");
+        String[] strs = name.split("/");
         String atlasName = strs[0];
         String imageName = strs[1];
 
