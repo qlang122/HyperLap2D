@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +20,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.VisUI;
 import com.talosvfx.talos.runtime.ParticleEffectDescriptor;
@@ -108,19 +108,22 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
         BitmapFont defaultMono = monoGenerator.generateFont(parameter);
         defaultMono.setFixedWidthGlyphs(parameter.characters);
-
         monoGenerator.dispose();
 
-        TextureRegion dejavuRegion = new TextureRegion(new Texture(Gdx.files.internal("style/default-font-32.png")));
-        ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
-        smallDistanceField.setDistanceFieldSmoothing(6);
-        smallDistanceField.getData().setScale(0.35f);
-        ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
-        defaultDistanceField.setDistanceFieldSmoothing(6);
-        defaultDistanceField.getData().setScale(0.4f);
-        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
-        bigDistanceField.setDistanceFieldSmoothing(6);
-        bigDistanceField.getData().setScale(0.5f);
+//        TextureRegion dejavuRegion = new TextureRegion(new Texture(Gdx.files.internal("style/default-font-32.png")));
+//        ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
+        ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/font_cn.fnt"));
+        smallDistanceField.setDistanceFieldSmoothing(1);
+        smallDistanceField.getData().setScale(0.5f);
+//        ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
+        ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/font_cn.fnt"));
+        defaultDistanceField.setDistanceFieldSmoothing(1);
+        defaultDistanceField.getData().setScale(0.55f);
+//        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
+        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/font_cn.fnt"));
+        bigDistanceField.setDistanceFieldSmoothing(1);
+        bigDistanceField.getData().setScale(0.65f);
+
         /* Create the ObjectMap and add the fonts to it */
         ObjectMap<String, Object> fontMap = new ObjectMap<>();
         fontMap.put("small-font", smallDistanceField);

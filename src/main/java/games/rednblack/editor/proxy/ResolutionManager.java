@@ -32,6 +32,7 @@ import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
 import games.rednblack.editor.utils.ImportUtils;
+import games.rednblack.editor.utils.TextureUnpacker;
 import games.rednblack.h2d.common.MsgAPI;
 
 import org.apache.commons.io.FileUtils;
@@ -40,7 +41,6 @@ import org.apache.commons.io.FilenameUtils;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
-import com.badlogic.gdx.tools.texturepacker.TextureUnpacker;
 import com.badlogic.gdx.utils.Array;
 import com.mortennobel.imagescaling.ResampleOp;
 

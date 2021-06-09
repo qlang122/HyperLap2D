@@ -19,6 +19,7 @@
 package games.rednblack.editor.view.ui.properties;
 
 import com.kotcrab.vis.ui.widget.VisTable;
+
 import games.rednblack.editor.HyperLap2DFacade;
 
 /**
@@ -37,6 +38,6 @@ public abstract class UIAbstractProperties extends VisTable {
     }
 
     public String getUpdateEventName() {
-        return getPrefix()+"." + "PROPERTIES_UPDATED";
+        return getPrefix() + "." + "PROPERTIES_UPDATED";
     }
 }
