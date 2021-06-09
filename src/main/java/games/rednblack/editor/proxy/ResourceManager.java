@@ -3,6 +3,7 @@ package games.rednblack.editor.proxy;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -529,6 +530,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         String expectedPath = projectManager.getFreeTypeFontPath() + File.separator + fontName + ".ttf";
         FileHandle expectedFile = Gdx.files.internal(expectedPath);
+
         if (!expectedFile.exists()) {
             // let's check if system fonts fot it
             HashMap<String, String> fonts = fontManager.getFontsMap();
