@@ -14,6 +14,7 @@ import java.util.Map;
 
 import games.rednblack.editor.utils.AppConfig;
 import games.rednblack.editor.utils.NativeDialogs;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -22,7 +23,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.HyperLap2DFacade;
+
 import org.puremvc.java.patterns.proxy.Proxy;
 
 /**
@@ -85,8 +88,7 @@ public class FontManager extends Proxy {
                         + SystemUtils.OS_NAME + " " + SystemUtils.OS_VERSION
                         + " (HyperLap2D v" + AppConfig.getInstance().versionString + ")");
                 result = new String[0];
-            }
-            else {
+            } else {
                 result = new String[resultList.size()];
                 result = resultList.toArray(result);
             }
@@ -115,6 +117,8 @@ public class FontManager extends Proxy {
 
     public void preCacheSystemFontsMap() {
         List<File> fontFiles = getSystemFontFiles();
+
+        systemFontMap.put("Internal", "");//Internal font
 
         for (File file : fontFiles) {
             Font f;
@@ -150,10 +154,11 @@ public class FontManager extends Proxy {
         Array<String> fontNames = new Array<>();
 
         for (Map.Entry<String, String> entry : systemFontMap.entrySet()) {
-            fontNames.add(entry.getKey());
+            if (!"Internal".equals(entry.getKey()))
+                fontNames.add(entry.getKey());
         }
         fontNames.sort(comparator);
-
+        fontNames.insert(0, "Internal");
         return fontNames;
     }
 

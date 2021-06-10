@@ -51,11 +51,16 @@ import org.puremvc.java.patterns.proxy.Proxy;
 import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProjectManager extends Proxy {
     private static final String TAG = ProjectManager.class.getCanonicalName();
@@ -73,6 +78,8 @@ public class ProjectManager extends Proxy {
     public static final String PARTICLE_DIR_PATH = "assets/orig/particles";
     public static final String TALOS_VFX_DIR_PATH = "assets/orig/talos-vfx";
     public static final String SHADER_DIR_PATH = "assets/shaders";
+
+    public static final String DEFAULT_FONT = "style/default-font-cn.fnt";
 
     public ProjectVO currentProjectVO;
     public ProjectInfoVO currentProjectInfoVO;
@@ -476,6 +483,7 @@ public class ProjectManager extends Proxy {
         String srcPath = currentProjectPath + "/assets/orig";
         FileHandle origDirectoryHandle = Gdx.files.absolute(srcPath);
         FileHandle stylesDirectory = origDirectoryHandle.child("styles");
+        if (!stylesDirectory.exists()) return;
         File fileTarget = new File(targetPath + "/" + stylesDirectory.name());
         try {
             FileUtils.copyDirectory(stylesDirectory.file(), fileTarget);
@@ -488,6 +496,7 @@ public class ProjectManager extends Proxy {
         String srcPath = currentProjectPath + "/assets";
         FileHandle origDirectoryHandle = Gdx.files.absolute(srcPath);
         FileHandle shadersDirectory = origDirectoryHandle.child("shaders");
+        if (!shadersDirectory.exists()) return;
         File fileTarget = new File(targetPath + "/" + shadersDirectory.name());
         try {
             FileUtils.copyDirectory(shadersDirectory.file(), fileTarget);
@@ -500,6 +509,7 @@ public class ProjectManager extends Proxy {
         String srcPath = currentProjectPath + "/assets/orig";
         FileHandle origDirectoryHandle = Gdx.files.absolute(srcPath);
         FileHandle particlesDirectory = origDirectoryHandle.child("particles");
+        if (!particlesDirectory.exists()) return;
         File fileTarget = new File(targetPath + "/" + particlesDirectory.name());
         try {
             FileUtils.copyDirectory(particlesDirectory.file(), fileTarget);
@@ -512,6 +522,7 @@ public class ProjectManager extends Proxy {
         String srcPath = currentProjectPath + "/assets/orig";
         FileHandle origDirectoryHandle = Gdx.files.absolute(srcPath);
         FileHandle particlesDirectory = origDirectoryHandle.child("talos-vfx");
+        if (!particlesDirectory.exists()) return;
         File fileTarget = new File(targetPath + "/" + particlesDirectory.name());
         try {
             FileUtils.copyDirectory(particlesDirectory.file(), fileTarget);
@@ -524,12 +535,51 @@ public class ProjectManager extends Proxy {
         String srcPath = currentProjectPath + "/assets/orig";
         FileHandle origDirectoryHandle = Gdx.files.absolute(srcPath);
         FileHandle fontsDirectory = origDirectoryHandle.child("freetypefonts");
+        if (!fontsDirectory.exists()) return;
         File fileTarget = new File(targetPath + "/" + fontsDirectory.name());
+        FileHandle charsFile = Gdx.files.internal("freetypefonts/gbk-chars.txt");
+        FileHandle defFontFile = Gdx.files.internal(DEFAULT_FONT);
         try {
             FileUtils.copyDirectory(fontsDirectory.file(), fileTarget);
+            FileUtils.copyFile(charsFile.file(), new File(fontsDirectory.path() + File.separator + charsFile.name()));
+            FileUtils.copyFile(defFontFile.file(), new File(fontsDirectory.path() + File.separator + defFontFile.name()));
+            for (String image : getFntImages(defFontFile)) {
+                File srcFile = new File("style" + File.separator + image);
+                FileUtils.copyFile(srcFile, new File(fontsDirectory.path() + File.separator + image));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Array<String> getFntImages(FileHandle fntFile) {
+        Array<String> array = new Array<>();
+        InputStream read = fntFile.read();
+        InputStreamReader in = new InputStreamReader(read);
+        BufferedReader reader = new BufferedReader(in, 1024);
+        try {
+            Pattern pageP = Pattern.compile("pages=([\\d]+)");
+            Pattern fileP = Pattern.compile("page id=([\\d]+) file=\"([\\w \\+-_\\.]+)\"");
+            int count = 2;
+            while (count-- > 0) {
+                String line = reader.readLine();
+                if (line == null) break;
+                Matcher matcher = pageP.matcher(line);
+                if (matcher.find()) {
+                    count += Integer.parseInt(matcher.group(1));
+                }
+                Matcher matcher1 = fileP.matcher(line);
+                if (matcher1.find()) {
+                    array.add(matcher.group(2));
+                }
+            }
+            reader.close();
+            in.close();
+            read.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return array;
     }
 
     private void exportAnimations(String targetPath) {

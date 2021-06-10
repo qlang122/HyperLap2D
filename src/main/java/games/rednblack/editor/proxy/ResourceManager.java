@@ -3,9 +3,8 @@ package games.rednblack.editor.proxy;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,6 +70,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     private final HashMap<String, TextureAtlas> spriteAnimAtlases = new HashMap<>();
     private final HashMap<String, SpriterAnimData> spriterAnimAtlases = new HashMap<>();
     private final HashMap<String, TextureAtlas> atlasImageAtlases = new HashMap<>();
+    private final HashMap<String, BitmapFont> freeTypeTempBitmapFonts = new HashMap<>();
     private final HashMap<FontSizePair, BitmapFont> bitmapFonts = new HashMap<>();
     private final HashMap<String, ShaderProgram> shaderPrograms = new HashMap<>(1);
 
@@ -101,7 +101,6 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.characters += "⌘⇧⌥\u25CF\u2022";
-        parameter.kerning = true;
         parameter.renderCount = 3;
         parameter.packer = packer;
         parameter.minFilter = Texture.TextureFilter.Linear;
@@ -113,17 +112,17 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
 //        TextureRegion dejavuRegion = new TextureRegion(new Texture(Gdx.files.internal("style/default-font-32.png")));
 //        ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
-        ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/font_cn.fnt"));
-        smallDistanceField.setDistanceFieldSmoothing(1);
-        smallDistanceField.getData().setScale(0.5f);
+        ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
+        smallDistanceField.setDistanceFieldSmoothing(1.5f);
+        smallDistanceField.getData().setScale(Math.round(12 / smallDistanceField.getCapHeight()));//font 12
 //        ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
-        ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/font_cn.fnt"));
-        defaultDistanceField.setDistanceFieldSmoothing(1);
-        defaultDistanceField.getData().setScale(0.55f);
+        ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
+        defaultDistanceField.setDistanceFieldSmoothing(1.5f);
+        defaultDistanceField.getData().setScale(Math.round(14 / smallDistanceField.getCapHeight()));//font 14
 //        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
-        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/font_cn.fnt"));
-        bigDistanceField.setDistanceFieldSmoothing(1);
-        bigDistanceField.getData().setScale(0.65f);
+        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
+        bigDistanceField.setDistanceFieldSmoothing(1.5f);
+        bigDistanceField.getData().setScale(Math.round(16 / smallDistanceField.getCapHeight()));//font 16
 
         /* Create the ObjectMap and add the fonts to it */
         ObjectMap<String, Object> fontMap = new ObjectMap<>();
@@ -441,25 +440,62 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     public void loadCurrentProjectBitmapFonts(String path, String curResolution) {
         bitmapFonts.clear();
+//        freeTypeTempBitmapFonts.clear();
 
         ArrayList<FontSizePair> requiredFonts = getProjectRequiredFontsList();
         for (int i = 0; i < requiredFonts.size(); i++) {
             FontSizePair pair = requiredFonts.get(i);
-            FileHandle fontFile;
+//            if (freeTypeTempBitmapFonts.containsKey(pair.fontName)) {
+//                BitmapFont bitmapFont = freeTypeTempBitmapFonts.get(pair.fontName);
+//                BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
+//                data.setScale(pair.fontSize / bitmapFont.getCapHeight());
+//                ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, bitmapFont.getRegions(), true);
+//                newFont.load(bitmapFont.getData(), null);
+//                bitmapFonts.put(pair, newFont);
+//            } else {
+            if ("Internal".equals(pair.fontName)) {
+                loadInternalFont(pair.fontSize);
+                continue;
+            }
+
             try {
-                fontFile = getTTFSafely(pair.fontName);
+                FileHandle txtFile = Gdx.files.internal("freetypefonts/gbk-chars.txt");
+                String charsTxt = FileUtils.readFileToString(txtFile.file(), "utf-8");
+
+                FileHandle fontFile = getTTFSafely(pair.fontName);
                 FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
                 FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
                 parameter.size = Math.round(pair.fontSize * resolutionManager.getCurrentMul());
                 parameter.packer = fontPacker;
+                parameter.characters = charsTxt;
+                parameter.gamma = 4.0f;
+                parameter.renderCount = 3;
+                parameter.minFilter = Texture.TextureFilter.Linear;
+                parameter.magFilter = Texture.TextureFilter.Linear;
                 BitmapFont font = generator.generateFont(parameter);
                 font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
                 font.setUseIntegerPositions(false);
+                font.setFixedWidthGlyphs(parameter.characters);
+//                    freeTypeTempBitmapFonts.put(pair.fontName, font);
+                generator.dispose();
+
+//                    BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
+//                    data.setScale(pair.fontSize / font.getCapHeight());
+//                    ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, font.getRegions(), true);
+//                    newFont.load(font.getData(), null);
                 bitmapFonts.put(pair, font);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+//            }
         }
+    }
+
+    private void loadInternalFont(int size) {
+        ShadedDistanceFieldFont font = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
+        font.setDistanceFieldSmoothing(1.5f);
+        font.getData().setScale(Math.round(size / font.getCapHeight()));
+        bitmapFonts.put(new FontSizePair("Internal", 20), font);
     }
 
     private void loadCurrentProjectShaders(String path) {
@@ -528,9 +564,8 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         FontManager fontManager = facade.retrieveProxy(FontManager.NAME);
 
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String expectedPath = projectManager.getFreeTypeFontPath() + File.separator + fontName + ".ttf";
+        String expectedPath = projectManager.getFreeTypeFontPath() + File.separator + URLEncoder.encode(fontName, "utf-8") + ".ttf";
         FileHandle expectedFile = Gdx.files.internal(expectedPath);
-
         if (!expectedFile.exists()) {
             // let's check if system fonts fot it
             HashMap<String, String> fonts = fontManager.getFontsMap();
@@ -563,7 +598,8 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     public boolean isFontLoaded(String shortName, int fontSize) {
-        return bitmapFonts.containsKey(new FontSizePair(shortName, fontSize));
+        FontSizePair key = new FontSizePair(shortName, fontSize);
+        return bitmapFonts.containsKey(key);
     }
 
     public void prepareEmbeddingFont(String fontfamily, int fontSize) {
@@ -573,16 +609,53 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
             return;
         }
 
+//        if (freeTypeTempBitmapFonts.containsKey(fontfamily)) {
+//            BitmapFont bitmapFont = freeTypeTempBitmapFonts.get(fontfamily);
+//            BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
+//            data.setScale(fontSize / bitmapFont.getCapHeight());
+//            ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, bitmapFont.getRegions(), true);
+//            newFont.load(bitmapFont.getData(), null);
+//            bitmapFonts.put(new FontSizePair(fontfamily, fontSize), newFont);
+//        } else {
+
+        if ("Internal".equals(fontfamily)) {
+            loadInternalFont(fontSize);
+            return;
+        }
+
         FontManager fontManager = facade.retrieveProxy(FontManager.NAME);
 
+        FileHandle txtFile = Gdx.files.internal("freetypefonts/gbk-chars.txt");
+        String charsTxt = "";
+        try {
+            charsTxt = FileUtils.readFileToString(txtFile.file(), "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = fontSize;
+        parameter.size = Math.round(fontSize * resolutionManager.getCurrentMul());
         parameter.packer = fontPacker;
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontManager.getTTFByName(fontfamily));
+        parameter.characters = charsTxt;
+        parameter.gamma = 4.0f;
+        parameter.renderCount = 3;
+        parameter.minFilter = Texture.TextureFilter.Linear;
+        parameter.magFilter = Texture.TextureFilter.Linear;
+        FileHandle fileHandle = fontManager.getTTFByName(fontfamily);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fileHandle);
         BitmapFont font = generator.generateFont(parameter);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font.setUseIntegerPositions(false);
-        addBitmapFont(fontfamily, parameter.size, font);
+        font.setFixedWidthGlyphs(parameter.characters);
+//            freeTypeTempBitmapFonts.put(fontfamily, font);
+        generator.dispose();
+
+//            BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
+//            data.setScale(fontSize / font.getCapHeight());
+//            ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, font.getRegions(), true);
+//            newFont.load(font.getData(), null);
+        addBitmapFont(fontfamily, fontSize, font);
+//        }
     }
 
     public HashMap<String, SpineAnimData> getProjectSpineAnimationsList() {
