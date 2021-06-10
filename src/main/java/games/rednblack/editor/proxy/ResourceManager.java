@@ -114,15 +114,15 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 //        ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
         ShadedDistanceFieldFont smallDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
         smallDistanceField.setDistanceFieldSmoothing(1.5f);
-        smallDistanceField.getData().setScale(Math.round(12 / smallDistanceField.getCapHeight()));//font 12
+        smallDistanceField.getData().setScale(9.0f / smallDistanceField.getCapHeight());//font 9
 //        ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
         ShadedDistanceFieldFont defaultDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
         defaultDistanceField.setDistanceFieldSmoothing(1.5f);
-        defaultDistanceField.getData().setScale(Math.round(14 / smallDistanceField.getCapHeight()));//font 14
+        defaultDistanceField.getData().setScale(10.0f / defaultDistanceField.getCapHeight());//font 10
 //        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
         ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
         bigDistanceField.setDistanceFieldSmoothing(1.5f);
-        bigDistanceField.getData().setScale(Math.round(16 / smallDistanceField.getCapHeight()));//font 16
+        bigDistanceField.getData().setScale(12.0f / bigDistanceField.getCapHeight());//font 12
 
         /* Create the ObjectMap and add the fonts to it */
         ObjectMap<String, Object> fontMap = new ObjectMap<>();
@@ -258,7 +258,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         FileHandle file = Gdx.files.internal(sceneDataManager.getCurrProjectScenePathByName(name));
         Json json = new Json();
         json.setIgnoreUnknownFields(true);
-        return json.fromJson(SceneVO.class, file.readString());
+        return json.fromJson(SceneVO.class, file.readString("utf-8"));
     }
 
     public void loadCurrentProjectData(String projectPath, String curResolution) {
@@ -494,7 +494,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     private void loadInternalFont(int size) {
         ShadedDistanceFieldFont font = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
         font.setDistanceFieldSmoothing(1.5f);
-        font.getData().setScale(Math.round(size / font.getCapHeight()));
+        font.getData().setScale(size / font.getCapHeight());
         bitmapFonts.put(new FontSizePair("Internal", 20), font);
     }
 
@@ -564,7 +564,8 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         FontManager fontManager = facade.retrieveProxy(FontManager.NAME);
 
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String expectedPath = projectManager.getFreeTypeFontPath() + File.separator + URLEncoder.encode(fontName, "utf-8") + ".ttf";
+        String name = URLEncoder.encode(new String(fontName.getBytes(), "utf-8"), "utf-8");
+        String expectedPath = projectManager.getFreeTypeFontPath() + File.separator + name + ".ttf";
         FileHandle expectedFile = Gdx.files.internal(expectedPath);
         if (!expectedFile.exists()) {
             // let's check if system fonts fot it

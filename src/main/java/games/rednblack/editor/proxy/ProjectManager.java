@@ -53,6 +53,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -543,7 +544,7 @@ public class ProjectManager extends Proxy {
             FileUtils.copyDirectory(fontsDirectory.file(), fileTarget);
             FileUtils.copyFile(charsFile.file(), new File(fontsDirectory.path() + File.separator + charsFile.name()));
             FileUtils.copyFile(defFontFile.file(), new File(fontsDirectory.path() + File.separator + defFontFile.name()));
-            for (String image : getFntImages(defFontFile)) {
+            for (String image : getFntImages(defFontFile.read())) {
                 File srcFile = new File("style" + File.separator + image);
                 FileUtils.copyFile(srcFile, new File(fontsDirectory.path() + File.separator + image));
             }
@@ -552,12 +553,12 @@ public class ProjectManager extends Proxy {
         }
     }
 
-    private Array<String> getFntImages(FileHandle fntFile) {
+    public Array<String> getFntImages(InputStream inputStream) {
         Array<String> array = new Array<>();
-        InputStream read = fntFile.read();
-        InputStreamReader in = new InputStreamReader(read);
-        BufferedReader reader = new BufferedReader(in, 1024);
         try {
+            InputStreamReader in = new InputStreamReader(inputStream, "utf-8");
+            BufferedReader reader = new BufferedReader(in, 1024);
+
             Pattern pageP = Pattern.compile("pages=([\\d]+)");
             Pattern fileP = Pattern.compile("page id=([\\d]+) file=\"([\\w \\+-_\\.]+)\"");
             int count = 2;
@@ -566,16 +567,16 @@ public class ProjectManager extends Proxy {
                 if (line == null) break;
                 Matcher matcher = pageP.matcher(line);
                 if (matcher.find()) {
-                    count += Integer.parseInt(matcher.group(1));
+                    if (matcher.groupCount() > 0) count += Integer.parseInt(matcher.group(1));
                 }
                 Matcher matcher1 = fileP.matcher(line);
                 if (matcher1.find()) {
-                    array.add(matcher.group(2));
+                    if (matcher1.groupCount() > 1) array.add(matcher1.group(2));
                 }
             }
             reader.close();
             in.close();
-            read.close();
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
