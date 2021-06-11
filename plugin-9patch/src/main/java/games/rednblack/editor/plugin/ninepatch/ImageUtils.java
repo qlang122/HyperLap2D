@@ -3,6 +3,7 @@ package games.rednblack.editor.plugin.ninepatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -20,9 +21,11 @@ public class ImageUtils {
     private static final String OUTPUT_TYPE = "png";
 
 
-    /** Returns the pads, or null if the image had no pads or the pads match the splits. Pads are an int[4] that has left, right,
-     * top, bottom. */
-    public int[] getPads (BufferedImage image, String name, int[] splits) {
+    /**
+     * Returns the pads, or null if the image had no pads or the pads match the splits. Pads are an int[4] that has left, right,
+     * top, bottom.
+     */
+    public int[] getPads(BufferedImage image, String name, int[] splits) {
         WritableRaster raster = image.getRaster();
 
         int bottom = raster.getHeight() - 1;
@@ -72,7 +75,7 @@ public class ImageUtils {
             }
         }
 
-        int[] pads = new int[] {startX, endX, startY, endY};
+        int[] pads = new int[]{startX, endX, startY, endY};
 
         if (splits != null && Arrays.equals(pads, splits)) {
             return null;
@@ -81,9 +84,11 @@ public class ImageUtils {
         return pads;
     }
 
-    /** Returns the splits, or null if the image had no splits or the splits were only a single region. Splits are an int[4] that
-     * has left, right, top, bottom. */
-    public int[] getSplits (BufferedImage image, String name) {
+    /**
+     * Returns the splits, or null if the image had no splits or the splits were only a single region. Splits are an int[4] that
+     * has left, right, top, bottom.
+     */
+    public int[] getSplits(BufferedImage image, String name) {
         WritableRaster raster = image.getRaster();
 
         int startX = getSplitPoint(raster, name, 1, 0, true, true);
@@ -114,14 +119,16 @@ public class ImageUtils {
             endY = raster.getHeight() - 2;
         }
 
-        return new int[] {startX, endX, startY, endY};
+        return new int[]{startX, endX, startY, endY};
     }
 
-    /** Hunts for the start or end of a sequence of split pixels. Begins searching at (startX, startY) then follows along the x or y
+    /**
+     * Hunts for the start or end of a sequence of split pixels. Begins searching at (startX, startY) then follows along the x or y
      * axis (depending on value of xAxis) for the first non-transparent pixel if startPoint is true, or the first transparent pixel
      * if startPoint is false. Returns 0 if none found, as 0 is considered an invalid split point being in the outer border which
-     * will be stripped. */
-    static private int getSplitPoint (WritableRaster raster, String name, int startX, int startY, boolean startPoint, boolean xAxis) {
+     * will be stripped.
+     */
+    static private int getSplitPoint(WritableRaster raster, String name, int startX, int startY, boolean startPoint, boolean xAxis) {
         int[] rgba = new int[4];
 
         int next = xAxis ? startX : startY;
@@ -151,24 +158,24 @@ public class ImageUtils {
 
     public BufferedImage extractImage(TextureAtlas.TextureAtlasData atlas, String regionName, int[] splits) {
         for (TextureAtlas.TextureAtlasData.Region region : atlas.getRegions()) {
-            if(region.name.equals(regionName)) {
+            if (region.name.equals(regionName)) {
                 TextureAtlas.TextureAtlasData.Page page = region.page;
                 BufferedImage img = null;
                 try {
                     img = ImageIO.read(page.textureFile.file());
                 } catch (IOException e) {
-
+                    e.printStackTrace();
                 }
                 int[] pad = {0, 0, 0, 0};
-                region.names = new String[] {"split", "pad"};
-                region.values = new int[][] {splits, pad};
+                region.names = new String[]{"split", "pad"};
+                region.values = new int[][]{splits, pad};
                 return extractNinePatch(img, region);
             }
         }
         return null;
     }
 
-    private BufferedImage extractImage (BufferedImage page, TextureAtlas.TextureAtlasData.Region region, int padding) {
+    private BufferedImage extractImage(BufferedImage page, TextureAtlas.TextureAtlasData.Region region, int padding) {
         BufferedImage splitImage = null;
 
         // get the needed part of the page and rotate if needed
@@ -199,7 +206,7 @@ public class ImageUtils {
     }
 
 
-    private BufferedImage extractNinePatch (BufferedImage page, TextureAtlas.TextureAtlasData.Region region) {
+    private BufferedImage extractNinePatch(BufferedImage page, TextureAtlas.TextureAtlasData.Region region) {
         BufferedImage splitImage = extractImage(page, region, NINEPATCH_PADDING);
         Graphics2D g2 = splitImage.createGraphics();
         g2.setColor(Color.BLACK);

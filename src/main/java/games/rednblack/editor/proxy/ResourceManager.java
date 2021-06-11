@@ -122,7 +122,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 //        ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal("style/default-font-32.fnt"), dejavuRegion);
         ShadedDistanceFieldFont bigDistanceField = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
         bigDistanceField.setDistanceFieldSmoothing(1.5f);
-        bigDistanceField.getData().setScale(12.0f / bigDistanceField.getCapHeight());//font 12
+        bigDistanceField.getData().setScale(11.0f / bigDistanceField.getCapHeight());//font 12
 
         /* Create the ObjectMap and add the fonts to it */
         ObjectMap<String, Object> fontMap = new ObjectMap<>();
@@ -181,6 +181,10 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     public TextureAtlas getTextureAtlas() {
         return currentProjectAtlas;
+    }
+
+    public TextureAtlas getAtlasImagesAtlas(String atlasName) {
+        return atlasImageAtlases.get(atlasName);
     }
 
     @Override
@@ -440,19 +444,10 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
 
     public void loadCurrentProjectBitmapFonts(String path, String curResolution) {
         bitmapFonts.clear();
-//        freeTypeTempBitmapFonts.clear();
 
         ArrayList<FontSizePair> requiredFonts = getProjectRequiredFontsList();
         for (int i = 0; i < requiredFonts.size(); i++) {
             FontSizePair pair = requiredFonts.get(i);
-//            if (freeTypeTempBitmapFonts.containsKey(pair.fontName)) {
-//                BitmapFont bitmapFont = freeTypeTempBitmapFonts.get(pair.fontName);
-//                BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
-//                data.setScale(pair.fontSize / bitmapFont.getCapHeight());
-//                ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, bitmapFont.getRegions(), true);
-//                newFont.load(bitmapFont.getData(), null);
-//                bitmapFonts.put(pair, newFont);
-//            } else {
             if ("Internal".equals(pair.fontName)) {
                 loadInternalFont(pair.fontSize);
                 continue;
@@ -476,18 +471,12 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
                 font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
                 font.setUseIntegerPositions(false);
                 font.setFixedWidthGlyphs(parameter.characters);
-//                    freeTypeTempBitmapFonts.put(pair.fontName, font);
                 generator.dispose();
 
-//                    BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
-//                    data.setScale(pair.fontSize / font.getCapHeight());
-//                    ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, font.getRegions(), true);
-//                    newFont.load(font.getData(), null);
                 bitmapFonts.put(pair, font);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            }
         }
     }
 
@@ -495,7 +484,7 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         ShadedDistanceFieldFont font = new ShadedDistanceFieldFont(Gdx.files.internal(ProjectManager.DEFAULT_FONT));
         font.setDistanceFieldSmoothing(1.5f);
         font.getData().setScale(size / font.getCapHeight());
-        bitmapFonts.put(new FontSizePair("Internal", 20), font);
+        bitmapFonts.put(new FontSizePair("Internal", size), font);
     }
 
     private void loadCurrentProjectShaders(String path) {
@@ -610,15 +599,6 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
             return;
         }
 
-//        if (freeTypeTempBitmapFonts.containsKey(fontfamily)) {
-//            BitmapFont bitmapFont = freeTypeTempBitmapFonts.get(fontfamily);
-//            BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
-//            data.setScale(fontSize / bitmapFont.getCapHeight());
-//            ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, bitmapFont.getRegions(), true);
-//            newFont.load(bitmapFont.getData(), null);
-//            bitmapFonts.put(new FontSizePair(fontfamily, fontSize), newFont);
-//        } else {
-
         if ("Internal".equals(fontfamily)) {
             loadInternalFont(fontSize);
             return;
@@ -648,15 +628,9 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font.setUseIntegerPositions(false);
         font.setFixedWidthGlyphs(parameter.characters);
-//            freeTypeTempBitmapFonts.put(fontfamily, font);
         generator.dispose();
 
-//            BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
-//            data.setScale(fontSize / font.getCapHeight());
-//            ShadedDistanceFieldFont newFont = new ShadedDistanceFieldFont(data, font.getRegions(), true);
-//            newFont.load(font.getData(), null);
         addBitmapFont(fontfamily, fontSize, font);
-//        }
     }
 
     public HashMap<String, SpineAnimData> getProjectSpineAnimationsList() {

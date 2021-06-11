@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.view.stage.UIStage;
 import games.rednblack.h2d.common.IItemCommand;
@@ -35,7 +36,9 @@ import games.rednblack.h2d.common.plugins.H2DPlugin;
 import games.rednblack.h2d.common.plugins.PluginAPI;
 import games.rednblack.h2d.common.proxy.CursorManager;
 import games.rednblack.h2d.common.view.tools.Tool;
+
 import com.kotcrab.vis.ui.widget.VisImageButton;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.PluginItemCommand;
 import games.rednblack.editor.factory.ItemFactory;
@@ -55,6 +58,7 @@ import games.rednblack.h2d.common.vo.CursorData;
 import games.rednblack.h2d.common.vo.EditorConfigVO;
 import games.rednblack.h2d.common.vo.ProjectVO;
 import games.rednblack.h2d.common.vo.SceneConfigVO;
+
 import org.puremvc.java.interfaces.IFacade;
 import org.puremvc.java.patterns.proxy.Proxy;
 
@@ -84,7 +88,7 @@ public class PluginManager extends Proxy implements PluginAPI {
     }
 
     public void initPlugin(H2DPlugin plugin) {
-        if(plugins.contains(plugin)) return;
+        if (plugins.contains(plugin)) return;
 
         registerPlugin(plugin);
         plugin.setAPI(this);
@@ -92,7 +96,7 @@ public class PluginManager extends Proxy implements PluginAPI {
     }
 
     public void dropDownActionSets(Set<Entity> selectedEntities, Array<String> actionsSet) {
-        for(H2DPlugin plugin: plugins) {
+        for (H2DPlugin plugin : plugins) {
             plugin.onDropDownOpen(selectedEntities, actionsSet);
         }
     }
@@ -112,6 +116,12 @@ public class PluginManager extends Proxy implements PluginAPI {
     public TextureAtlas getProjectTextureAtlas() {
         ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
         return resourceManager.getTextureAtlas();
+    }
+
+    @Override
+    public TextureAtlas getAtlasImageAtlas(String atlasName) {
+        ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
+        return resourceManager.getAtlasImagesAtlas(atlasName);
     }
 
     @Override
