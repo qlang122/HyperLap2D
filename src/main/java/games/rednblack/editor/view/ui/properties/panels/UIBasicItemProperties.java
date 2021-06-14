@@ -33,6 +33,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.*;
 
+import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.event.ButtonToNotificationListener;
 import games.rednblack.editor.utils.runtime.EntityUtils;
 import games.rednblack.h2d.common.view.ui.widget.TintButton;
@@ -71,6 +72,7 @@ public class UIBasicItemProperties extends UIItemProperties {
     private VisTextField scaleYValue;
     private VisCheckBox flipY;
     private VisCheckBox flipX;
+    private VisCheckBox visible;
     private TintButton tintColorComponent;
     private VisTextField rotationValue;
     private VisTextButton customVarsButton;
@@ -112,6 +114,7 @@ public class UIBasicItemProperties extends UIItemProperties {
         scaleYValue = StandardWidgetsFactory.createValidableTextField(floatValidator);
         flipY = StandardWidgetsFactory.createCheckBox("Flip Y");
         flipX = StandardWidgetsFactory.createCheckBox("Flip X");
+        visible = StandardWidgetsFactory.createCheckBox("Visible");
         tintColorComponent = StandardWidgetsFactory.createTintButton();
         rotationValue = StandardWidgetsFactory.createValidableTextField(floatValidator);
         customVarsButton = new VisTextButton("Custom Vars");
@@ -144,7 +147,6 @@ public class UIBasicItemProperties extends UIItemProperties {
         row().padTop(6);
         add(StandardWidgetsFactory.createLabel("Scale:")).padRight(3).left();
         linkScaleButton = StandardWidgetsFactory.createImageButton("library-link-button");
-        linkScaleButton.setChecked(true);
 //        add(getAsTable("X:", scaleXValue, "Y:", scaleYValue, linkScaleButton)).left();
         add(getAsHorizontal("X:", scaleXValue, "Y:", scaleYValue, linkScaleButton)).colspan(2).left();
         row().padTop(6);
@@ -155,6 +157,7 @@ public class UIBasicItemProperties extends UIItemProperties {
         row().padTop(6);
         add(flipX);
         add(flipY);
+        add(visible);
         row();
         addSeparator().padTop(9).padBottom(6).colspan(3);
         add(StandardWidgetsFactory.createLabel("Add additional components:", Align.left)).fillX().colspan(3);
@@ -310,6 +313,14 @@ public class UIBasicItemProperties extends UIItemProperties {
         this.flipX.setChecked(flipX);
     }
 
+    public boolean getIsVisible() {
+        return visible.isChecked();
+    }
+
+    public void setIsVisible(boolean visible) {
+        this.visible.setChecked(visible);
+    }
+
     public Color getTintColor() {
         return tintColorComponent.getColorValue();
     }
@@ -320,6 +331,10 @@ public class UIBasicItemProperties extends UIItemProperties {
 
     public boolean isXYScaleLinked() {
         return linkScaleButton.isChecked();
+    }
+
+    public void setXYScaleLinked(boolean value) {
+        linkScaleButton.setChecked(value);
     }
 
     @Override
@@ -339,6 +354,7 @@ public class UIBasicItemProperties extends UIItemProperties {
         scaleYValue.addListener(new LinkedScaleChangeListener(scaleXValue));
         flipY.addListener(new CheckBoxChangeListener(getUpdateEventName()));
         flipX.addListener(new CheckBoxChangeListener(getUpdateEventName()));
+        visible.addListener(new CheckBoxChangeListener(getUpdateEventName()));
         rotationValue.addListener(new KeyboardListener(getUpdateEventName()));
 
         tintColorComponent.addListener(new ClickListener() {
@@ -347,6 +363,7 @@ public class UIBasicItemProperties extends UIItemProperties {
                 facade.sendNotification(TINT_COLOR_BUTTON_CLICKED, tintColorComponent.getColorValue(), null);
             }
         });
+        linkScaleButton.addListener(new ButtonToNotificationListener(getUpdateEventName()));
         customVarsButton.addListener(new ButtonToNotificationListener(CUSTOM_VARS_BUTTON_CLICKED));
         tagsButton.addListener(new ButtonToNotificationListener(TAGS_BUTTON_CLICKED));
         addComponentButton.addListener(new ButtonToNotificationListener(ADD_COMPONENT_BUTTON_CLICKED));

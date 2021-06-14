@@ -24,12 +24,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+
 import games.rednblack.editor.renderer.components.label.TypingLabelComponent;
 import games.rednblack.editor.renderer.components.light.LightBodyComponent;
 import games.rednblack.h2d.common.view.ui.widget.HyperLapColorPicker;
 import games.rednblack.h2d.common.MsgAPI;
+
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.AddComponentToItemCommand;
 import games.rednblack.editor.controller.commands.AddToLibraryCommand;
@@ -41,6 +44,7 @@ import games.rednblack.editor.utils.runtime.ComponentCloner;
 import games.rednblack.editor.utils.runtime.EntityUtils;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.ui.properties.UIItemPropertiesMediator;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.puremvc.java.interfaces.INotification;
@@ -127,7 +131,7 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
                 break;
             case UIBasicItemProperties.LINKING_CHANGED:
                 boolean isLinked = notification.getBody();
-                if(!isLinked) {
+                if (!isLinked) {
                     facade.sendNotification(MsgAPI.ACTION_ADD_TO_LIBRARY, AddToLibraryCommand.payloadUnLink(observableReference));
                 } else {
                     facade.sendNotification(MsgAPI.SHOW_ADD_LIBRARY_DIALOG, observableReference);
@@ -136,10 +140,11 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
             case UIBasicItemProperties.ADD_COMPONENT_BUTTON_CLICKED:
                 try {
                     Class<? extends Component> componentClass = componentClassMap.get(viewComponent.getSelectedComponent());
-                    if(componentClass == null) break;
+                    if (componentClass == null) break;
                     Component component = ClassReflection.newInstance(componentClass);
                     facade.sendNotification(MsgAPI.ACTION_ADD_COMPONENT, AddComponentToItemCommand.payload(observableReference, component));
-                } catch (ReflectionException ignored) {}
+                } catch (ReflectionException ignored) {
+                }
                 break;
             default:
                 break;
@@ -168,14 +173,14 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
 
     @Override
     protected void translateObservableDataToView(Entity entity) {
-    	transformComponent = ComponentRetriever.get(entity, TransformComponent.class);
-    	mainItemComponent = ComponentRetriever.get(entity, MainItemComponent.class);
-    	dimensionComponent = ComponentRetriever.get(entity, DimensionsComponent.class);
-    	tintComponent = ComponentRetriever.get(entity, TintComponent.class);
+        transformComponent = ComponentRetriever.get(entity, TransformComponent.class);
+        mainItemComponent = ComponentRetriever.get(entity, MainItemComponent.class);
+        dimensionComponent = ComponentRetriever.get(entity, DimensionsComponent.class);
+        tintComponent = ComponentRetriever.get(entity, TintComponent.class);
 
-    	int entityType = EntityUtils.getType(observableReference);
-        if(entityType == EntityFactory.COMPOSITE_TYPE) {
-            if(mainItemComponent.libraryLink!= null && mainItemComponent.libraryLink.length() > 0) {
+        int entityType = EntityUtils.getType(observableReference);
+        if (entityType == EntityFactory.COMPOSITE_TYPE) {
+            if (mainItemComponent.libraryLink != null && mainItemComponent.libraryLink.length() > 0) {
                 viewComponent.setLinkage(true, mainItemComponent.libraryLink);
             } else {
                 viewComponent.setLinkage(false, "not in library");
@@ -203,6 +208,8 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
         viewComponent.setTintColor(tintComponent.color);
         viewComponent.setFlipX(transformComponent.flipX);
         viewComponent.setFlipY(transformComponent.flipY);
+        viewComponent.setXYScaleLinked(transformComponent.isXYScaleLinked);
+        viewComponent.setIsVisible(mainItemComponent.visible);
 
         // non existent components
         Array<String> componentsToAddList = new Array<>();
@@ -210,7 +217,7 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
             String componentName = entry.getKey();
             Class<? extends Component> componentClass = entry.getValue();
             Component component = entity.getComponent(componentClass);
-            if(component == null) {
+            if (component == null) {
                 componentsToAddList.add(componentName);
             }
         }
@@ -219,16 +226,17 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
 
     @Override
     protected void translateViewToItemData() {
-    	Entity entity  = observableReference;
+        Entity entity = observableReference;
 
         transformComponent = ComponentCloner.get(ComponentRetriever.get(entity, TransformComponent.class));
         mainItemComponent = ComponentCloner.get(ComponentRetriever.get(entity, MainItemComponent.class));
         dimensionComponent = ComponentCloner.get(ComponentRetriever.get(entity, DimensionsComponent.class));
         tintComponent = ComponentCloner.get(ComponentRetriever.get(entity, TintComponent.class));
 
-    	mainItemComponent.itemIdentifier = viewComponent.getIdBoxValue();
-    	transformComponent.x = NumberUtils.toFloat(viewComponent.getXValue(), transformComponent.x);
-    	transformComponent.y = NumberUtils.toFloat(viewComponent.getYValue(), transformComponent.y);
+        mainItemComponent.itemIdentifier = viewComponent.getIdBoxValue();
+        mainItemComponent.visible = viewComponent.getIsVisible();
+        transformComponent.x = NumberUtils.toFloat(viewComponent.getXValue(), transformComponent.x);
+        transformComponent.y = NumberUtils.toFloat(viewComponent.getYValue(), transformComponent.y);
 
         dimensionComponent.width = NumberUtils.toFloat(viewComponent.getWidthValue());
         dimensionComponent.height = NumberUtils.toFloat(viewComponent.getHeightValue());
@@ -239,10 +247,11 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
         }
 
         transformComponent.rotation = NumberUtils.toFloat(viewComponent.getRotationValue(), transformComponent.rotation);
-    	transformComponent.scaleX = NumberUtils.toFloat(viewComponent.getScaleXValue(), transformComponent.scaleX);
-    	transformComponent.scaleY = NumberUtils.toFloat(viewComponent.getScaleYValue(), transformComponent.scaleY);
-    	transformComponent.flipY = viewComponent.getFlipY();
-    	transformComponent.flipX = viewComponent.getFlipX();
+        transformComponent.scaleX = NumberUtils.toFloat(viewComponent.getScaleXValue(), transformComponent.scaleX);
+        transformComponent.scaleY = NumberUtils.toFloat(viewComponent.getScaleYValue(), transformComponent.scaleY);
+        transformComponent.flipY = viewComponent.getFlipY();
+        transformComponent.flipX = viewComponent.getFlipX();
+        transformComponent.isXYScaleLinked = viewComponent.isXYScaleLinked();
         Color color = viewComponent.getTintColor();
         tintComponent.color.set(color);
 
