@@ -37,7 +37,9 @@ import games.rednblack.editor.utils.runtime.EntityUtils;
 import games.rednblack.editor.view.SceneControlMediator;
 import games.rednblack.editor.view.ui.FollowersUIMediator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -485,65 +487,160 @@ public class ItemSelector {
         moveCommandBuilder.execute();
     }
 
-    public void alignSelectionsDistributeVertically(Entity relativeTo) {
-        if (relativeTo == null) return;
-
-        EntityBounds bounds = new EntityBounds(relativeTo);
-        final float relativeToY = bounds.getVisualY();
-        final float relativeToHeight = bounds.getVisualHeight();
-        final float relativeCenterY = relativeToY + relativeToHeight / 2;
-
+    public void alignSelectionsDistributeVertically() {
         moveCommandBuilder.clear();
 
-        float distance = 0;
-        for (Entity entity : currentSelection) {
-            if (entity == relativeTo) continue;
-            EntityBounds entityBounds = new EntityBounds(entity);
-
-            final float cY = entityBounds.getY() - entityBounds.getVisualHeight() / 2;
-            distance = Math.max(Math.abs(relativeCenterY - cY), distance);
-        }
-        int i = 1;
         final int size = currentSelection.size();
-        final float mean = distance / size;
+        if (size <= 2) return;
 
+        final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+
+        float min = 0;
+        float max = 0;
+        Entity minEntity = temp.get(0);
+        Entity maxEntity = temp.get(0);
         for (Entity entity : currentSelection) {
-            if (entity == relativeTo) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+            final float cY = entityBounds.getVisualY() + entityBounds.getVisualHeight() / 2;
+            if (cY < min) {
+                min = cY;
+                minEntity = entity;
+            }
+            if (cY > max) {
+                maxEntity = entity;
+                max = cY;
+            }
+        }
+
+        final float mean = Math.abs(max - min) / (size - 1);
+        Iterator<Entity> entitys = currentSelection.iterator();
+        int i = 0;
+        while (i++ < size - 1) {
+            Entity entity = entitys.next();
+            if (entity == minEntity || entity == maxEntity) continue;
             EntityBounds entityBounds = new EntityBounds(entity);
 
-            moveCommandBuilder.setY(entity, relativeCenterY + mean * i - entityBounds.getY());
-            i++;
+            moveCommandBuilder.setY(entity, min + mean * i - entityBounds.getVisualHeight() / 2);
         }
         moveCommandBuilder.execute();
     }
 
-    public void alignSelectionsDistributeHorizontally(Entity relativeTo) {
-        if (relativeTo == null) return;
-
-        EntityBounds bounds = new EntityBounds(relativeTo);
-        final float relativeToX = bounds.getVisualX();
-        final float relativeToWidth = bounds.getVisualWidth();
-        final float relativeCenterX = relativeToX + relativeToWidth / 2;
-
+    public void alignSelectionsDistributeTopBottom(boolean toHighestY) {
         moveCommandBuilder.clear();
-
-        float distance = 0;
-        for (Entity entity : currentSelection) {
-            if (entity == relativeTo) continue;
-            EntityBounds entityBounds = new EntityBounds(entity);
-
-            final float cX = entityBounds.getX() - entityBounds.getVisualWidth() / 2;
-            distance = Math.max(Math.abs(relativeCenterX - cX), distance);
-        }
-        int i = 1;
         final int size = currentSelection.size();
-        final float mean = distance / size;
+        if (size <= 2) return;
+
+        final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+
+        float min = 0;
+        float max = 0;
+        Entity minEntity = temp.get(0);
+        Entity maxEntity = temp.get(0);
         for (Entity entity : currentSelection) {
-            if (entity == relativeTo) continue;
             EntityBounds entityBounds = new EntityBounds(entity);
 
-            moveCommandBuilder.setX(entity, relativeCenterX + mean * i - entityBounds.getX());
-            i++;
+            final float deltaY = entityBounds.getY() + ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight();
+            if (deltaY < min) {
+                min = deltaY;
+                minEntity = entity;
+            }
+            if (deltaY > max) {
+                maxEntity = entity;
+                max = deltaY;
+            }
+        }
+
+        final float mean = Math.abs(max - min) / (size - 1);
+        Iterator<Entity> entitys = currentSelection.iterator();
+        int i = 0;
+        while (i++ < size - 1) {
+            Entity entity = entitys.next();
+            if (entity == minEntity || entity == maxEntity) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            if (toHighestY)
+                moveCommandBuilder.setY(entity, max - mean * i - ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight());
+            else
+                moveCommandBuilder.setY(entity, min + mean * i - ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight());
+        }
+        moveCommandBuilder.execute();
+    }
+
+    public void alignSelectionsDistributeHorizontally() {
+        moveCommandBuilder.clear();
+        final int size = currentSelection.size();
+        if (size <= 2) return;
+
+        final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+
+        float min = 0;
+        float max = 0;
+        Entity minEntity = temp.get(0);
+        Entity maxEntity = temp.get(0);
+        for (Entity entity : currentSelection) {
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            final float cX = entityBounds.getVisualX() - entityBounds.getVisualWidth() / 2;
+            if (cX < min) {
+                min = cX;
+                minEntity = entity;
+            }
+            if (cX > max) {
+                maxEntity = entity;
+                max = cX;
+            }
+        }
+
+        final float mean = Math.abs(max - min) / (size - 1);
+        Iterator<Entity> entitys = currentSelection.iterator();
+        int i = 0;
+        while (i++ < size - 1) {
+            Entity entity = entitys.next();
+            if (entity == minEntity || entity == maxEntity) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            moveCommandBuilder.setX(entity, min + mean * i - entityBounds.getVisualWidth() / 2);
+        }
+        moveCommandBuilder.execute();
+    }
+
+    public void alignSelectionsDistributeLeftRight(boolean toHighestX) {
+        moveCommandBuilder.clear();
+        final int size = currentSelection.size();
+        if (size <= 2) return;
+
+        final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+
+        float min = 0;
+        float max = 0;
+        Entity minEntity = temp.get(0);
+        Entity maxEntity = temp.get(0);
+        for (Entity entity : currentSelection) {
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            final float deltaX = entityBounds.getVisualX() + ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth();
+            if (deltaX < min) {
+                min = deltaX;
+                minEntity = entity;
+            }
+            if (deltaX > max) {
+                maxEntity = entity;
+                max = deltaX;
+            }
+        }
+
+        final float mean = Math.abs(max - min) / (size - 1);
+        Iterator<Entity> entitys = currentSelection.iterator();
+        int i = 0;
+        while (i++ < size - 1) {
+            Entity entity = entitys.next();
+            if (entity == minEntity || entity == maxEntity) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            if (toHighestX)
+                moveCommandBuilder.setX(entity, max - mean * i - ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth());
+            else
+                moveCommandBuilder.setX(entity, min + mean * i - ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth());
         }
         moveCommandBuilder.execute();
     }
@@ -592,22 +689,22 @@ public class ItemSelector {
     public void alignSelectionsDistribute(int align) {
         switch (align) {
             case Align.top:
-//                alignSelectionsDistributeTop(get(bottommostItem));
+                alignSelectionsDistributeTopBottom(true);
                 break;
             case Align.left:
-//                alignSelectionsDistributeLeft(get(rightmostItem));
+                alignSelectionsDistributeLeftRight(false);
                 break;
             case Align.bottom:
-//                alignSelectionsDistributeBottom(get(topmostItem));
+                alignSelectionsDistributeTopBottom(false);
                 break;
             case Align.right:
-//                alignSelectionsDistributeRight(get(leftmostItem));
+                alignSelectionsDistributeLeftRight(true);
                 break;
             case Align.center | Align.left:
-                alignSelectionsDistributeHorizontally(get(broadestItem));
+                alignSelectionsDistributeHorizontally();
                 break;
             case Align.center | Align.bottom:
-                alignSelectionsDistributeVertically(get(highestItem));
+                alignSelectionsDistributeVertically();
                 break;
         }
     }

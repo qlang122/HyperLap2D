@@ -53,7 +53,13 @@ public class UIAlignBoxMediator extends PanelMediator<UIAlignBox> {
                 UIAlignBox.ALIGN_AT_EDGE_TOP_BTN_CLICKED,
                 UIAlignBox.ALIGN_AT_EDGE_LEFT_BTN_CLICKED,
                 UIAlignBox.ALIGN_AT_EDGE_BOTTOM_BTN_CLICKED,
-                UIAlignBox.ALIGN_AT_EDGE_RIGHT_BTN_CLICKED
+                UIAlignBox.ALIGN_AT_EDGE_RIGHT_BTN_CLICKED,
+                UIAlignBox.ALIGN_DIS_LEFT_BTN_CLICKED,
+                UIAlignBox.ALIGN_DIS_TOP_BTN_CLICKED,
+                UIAlignBox.ALIGN_DIS_RIGHT_BTN_CLICKED,
+                UIAlignBox.ALIGN_DIS_BOTTOM_BTN_CLICKED,
+                UIAlignBox.ALIGN_DIS_HORIZONTAL_BTN_CLICKED,
+                UIAlignBox.ALIGN_DIS_VERTICAL_BTN_CLICKED
         }).flatMap(Stream::of).toArray(String[]::new);
     }
 
@@ -107,7 +113,7 @@ public class UIAlignBoxMediator extends PanelMediator<UIAlignBox> {
                 align = Align.left;
                 alignFunctionName = "alignSelectionsDistribute";
                 break;
-            case UIAlignBox.ALIGN_DIS_EDGE_TOP_BTN_CLICKED:
+            case UIAlignBox.ALIGN_DIS_TOP_BTN_CLICKED:
                 align = Align.top;
                 alignFunctionName = "alignSelectionsDistribute";
                 break;

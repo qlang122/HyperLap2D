@@ -63,7 +63,7 @@ public class UIAlignBox extends UICollapsibleBox {
     private static final int ALIGN_DIS_LEFT = 10;
     public static final String ALIGN_DIS_LEFT_BTN_CLICKED = prefix + ALIGN_DIS_LEFT;
     private static final int ALIGN_DIS_TOP = 11;
-    public static final String ALIGN_DIS_EDGE_TOP_BTN_CLICKED = prefix + ALIGN_DIS_TOP;
+    public static final String ALIGN_DIS_TOP_BTN_CLICKED = prefix + ALIGN_DIS_TOP;
     private static final int ALIGN_DIS_RIGHT = 12;
     public static final String ALIGN_DIS_RIGHT_BTN_CLICKED = prefix + ALIGN_DIS_RIGHT;
     private static final int ALIGN_DIS_BOTTOM = 13;
@@ -169,7 +169,7 @@ public class UIAlignBox extends UICollapsibleBox {
                     notification = ALIGN_DIS_LEFT_BTN_CLICKED;
                     break;
                 case ALIGN_DIS_TOP:
-                    notification = ALIGN_DIS_EDGE_TOP_BTN_CLICKED;
+                    notification = ALIGN_DIS_TOP_BTN_CLICKED;
                     break;
                 case ALIGN_DIS_RIGHT:
                     notification = ALIGN_DIS_RIGHT_BTN_CLICKED;
