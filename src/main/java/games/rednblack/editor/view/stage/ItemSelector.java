@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
+
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
@@ -50,12 +51,16 @@ import java.util.stream.Collectors;
  */
 public class ItemSelector {
 
-    /** commands reference */
+    /**
+     * commands reference
+     */
     private Sandbox sandbox;
 
     private SceneControlMediator sceneControl;
 
-    /** list of current selected panels */
+    /**
+     * list of current selected panels
+     */
     private Set<Entity> currentSelection = new HashSet<>();
 
     private FollowersUIMediator followersUIMediator;
@@ -82,7 +87,7 @@ public class ItemSelector {
      * @return one selected item
      */
     public Entity getSelectedItem() {
-        if(currentSelection.size() > 0) {
+        if (currentSelection.size() > 0) {
             return currentSelection.iterator().next();
         }
 
@@ -90,18 +95,18 @@ public class ItemSelector {
     }
 
     /**
-    public SelectionRectangle getSelectedItemSelectionRectangle() {
-        ArrayList<SelectionRectangle> items = new ArrayList<SelectionRectangle>();
-        for (SelectionRectangle value : currentSelection.values()) {
-            items.add(value);
-            break;
-        }
-        if(items.size() > 0) {
-            return items.get(0);
-        }
+     public SelectionRectangle getSelectedItemSelectionRectangle() {
+     ArrayList<SelectionRectangle> items = new ArrayList<SelectionRectangle>();
+     for (SelectionRectangle value : currentSelection.values()) {
+     items.add(value);
+     break;
+     }
+     if(items.size() > 0) {
+     return items.get(0);
+     }
 
-        return null;
-    }
+     return null;
+     }
      */
 
     /**
@@ -192,12 +197,13 @@ public class ItemSelector {
     }
 
 
-     /**
+    /**
      * Finds all panels that are on particular layer and selects them
+     *
      * @param name of the layer
      */
     public void selectItemsByLayerName(String name) {
-    	//TODO fix and uncomment
+        //TODO fix and uncomment
 //        ArrayList<Entity> itemsArr = new ArrayList<Entity>();
 //        for (int i = 0; i < sceneControl.getCurrentScene().getItems().size(); i++) {
 //            if (sceneControl.getCurrentScene().getItems().get(i).getDataVO().layerName.equals(name)) {
@@ -210,7 +216,8 @@ public class ItemSelector {
 
     /**
      * sets selection to particular item
-     * @param item to select
+     *
+     * @param item         to select
      * @param removeOthers if set to true this item will become the only selection, otherwise will be added to existing
      */
     public void setSelection(Entity item, boolean removeOthers) {
@@ -225,6 +232,7 @@ public class ItemSelector {
 
     /**
      * adds to selection a list of items
+     *
      * @param items list of panels to select
      */
     public void addSelections(Set<Entity> items) {
@@ -239,13 +247,14 @@ public class ItemSelector {
 
     /**
      * set selection to a list of items
-     * @param items list of panels to select
+     *
+     * @param items    list of panels to select
      * @param alsoShow if false, selection will remain hidden at this moment
      */
     public void setSelections(Set<Entity> items, boolean alsoShow) {
         currentSelection.clear();
 
-        if(items == null) {
+        if (items == null) {
             HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_SELECTION_CHANGED, currentSelection);
             return;
         }
@@ -262,6 +271,7 @@ public class ItemSelector {
 
     /**
      * remove selection to a list of items
+     *
      * @param items list of panels to remove selection
      */
     public void releaseSelections(Set<Entity> items) {
@@ -272,6 +282,7 @@ public class ItemSelector {
 
     /**
      * Un-selects item
+     *
      * @param item to un-select
      */
     public void releaseSelection(Entity item) {
@@ -294,23 +305,22 @@ public class ItemSelector {
      * Selects all panels on currently active scene
      */
     public HashSet<Entity> getAllFreeItems() {
-    	NodeComponent nodeComponent = ComponentRetriever.get(sandbox.getCurrentViewingEntity(), NodeComponent.class);
-		SnapshotArray<Entity> childrenEntities = nodeComponent.children;
+        NodeComponent nodeComponent = ComponentRetriever.get(sandbox.getCurrentViewingEntity(), NodeComponent.class);
+        SnapshotArray<Entity> childrenEntities = nodeComponent.children;
 
         Entity[] array = childrenEntities.toArray();
         HashSet<Entity> result = new HashSet<>(Arrays.asList(array));
 
-        for (Iterator<Entity> i = result.iterator(); i.hasNext();) {
+        for (Iterator<Entity> i = result.iterator(); i.hasNext(); ) {
             Entity element = i.next();
             LayerItemVO layerItemVO = EntityUtils.getEntityLayer(element);
-            if(layerItemVO != null && layerItemVO.isLocked) {
+            if (layerItemVO != null && layerItemVO.isLocked) {
                 i.remove();
             }
         }
 
         return result;
     }
-
 
 
     /************************ Manipulate selected panels  ******************************/
@@ -328,16 +338,16 @@ public class ItemSelector {
     }
 
     public void alignSelectionsByX(Entity relativeTo, boolean toHighestX) {
-    	if (relativeTo == null) return;
+        if (relativeTo == null) return;
 
         EntityBounds bounds = new EntityBounds(relativeTo);
-        final float relativeToX = (toHighestX)? (bounds.getVisualRightX()) : bounds.getVisualX();
+        final float relativeToX = (toHighestX) ? (bounds.getVisualRightX()) : bounds.getVisualX();
 
         moveCommandBuilder.clear();
         for (Entity entity : currentSelection) {
             EntityBounds entityBounds = new EntityBounds(entity);
             final float deltaX = entityBounds.getX() - entityBounds.getVisualX();
-            final float visualX = relativeToX - ((toHighestX)? 1 : 0) * entityBounds.getVisualWidth();
+            final float visualX = relativeToX - ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth();
 
             moveCommandBuilder.setX(entity, visualX + deltaX);
         }
@@ -345,16 +355,16 @@ public class ItemSelector {
     }
 
     public void alignSelectionsByY(Entity relativeTo, boolean toHighestY) {
-    	if (relativeTo == null) return;
+        if (relativeTo == null) return;
 
         EntityBounds bounds = new EntityBounds(relativeTo);
-        final float relativeToY = (toHighestY)? bounds.getVisualTopY() : bounds.getVisualY();
+        final float relativeToY = (toHighestY) ? bounds.getVisualTopY() : bounds.getVisualY();
 
         moveCommandBuilder.clear();
         for (Entity entity : currentSelection) {
             EntityBounds entityBounds = new EntityBounds(entity);
             final float deltaY = entityBounds.getY() - entityBounds.getVisualY();
-            final float visualY = relativeToY - ((toHighestY)? 1 : 0) * entityBounds.getVisualHeight();
+            final float visualY = relativeToY - ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight();
 
             moveCommandBuilder.setY(entity, visualY + deltaY);
         }
@@ -430,7 +440,7 @@ public class ItemSelector {
             final float deltaY = entityBounds.getY() - entityBounds.getVisualY();
             final float visualY = relativeToY - entityBounds.getVisualHeight();
 
-             moveCommandBuilder.setY(entity, visualY + deltaY);
+            moveCommandBuilder.setY(entity, visualY + deltaY);
         }
         moveCommandBuilder.execute();
     }
@@ -471,6 +481,69 @@ public class ItemSelector {
             final float visualX = relativeToX + (relativeToWidth - entityBounds.getVisualWidth()) / 2;
 
             moveCommandBuilder.setX(entity, visualX + deltaX);
+        }
+        moveCommandBuilder.execute();
+    }
+
+    public void alignSelectionsDistributeVertically(Entity relativeTo) {
+        if (relativeTo == null) return;
+
+        EntityBounds bounds = new EntityBounds(relativeTo);
+        final float relativeToY = bounds.getVisualY();
+        final float relativeToHeight = bounds.getVisualHeight();
+        final float relativeCenterY = relativeToY + relativeToHeight / 2;
+
+        moveCommandBuilder.clear();
+
+        float distance = 0;
+        for (Entity entity : currentSelection) {
+            if (entity == relativeTo) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            final float cY = entityBounds.getY() - entityBounds.getVisualHeight() / 2;
+            distance = Math.max(Math.abs(relativeCenterY - cY), distance);
+        }
+        int i = 1;
+        final int size = currentSelection.size();
+        final float mean = distance / size;
+
+        for (Entity entity : currentSelection) {
+            if (entity == relativeTo) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            moveCommandBuilder.setY(entity, relativeCenterY + mean * i - entityBounds.getY());
+            i++;
+        }
+        moveCommandBuilder.execute();
+    }
+
+    public void alignSelectionsDistributeHorizontally(Entity relativeTo) {
+        if (relativeTo == null) return;
+
+        EntityBounds bounds = new EntityBounds(relativeTo);
+        final float relativeToX = bounds.getVisualX();
+        final float relativeToWidth = bounds.getVisualWidth();
+        final float relativeCenterX = relativeToX + relativeToWidth / 2;
+
+        moveCommandBuilder.clear();
+
+        float distance = 0;
+        for (Entity entity : currentSelection) {
+            if (entity == relativeTo) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            final float cX = entityBounds.getX() - entityBounds.getVisualWidth() / 2;
+            distance = Math.max(Math.abs(relativeCenterX - cX), distance);
+        }
+        int i = 1;
+        final int size = currentSelection.size();
+        final float mean = distance / size;
+        for (Entity entity : currentSelection) {
+            if (entity == relativeTo) continue;
+            EntityBounds entityBounds = new EntityBounds(entity);
+
+            moveCommandBuilder.setX(entity, relativeCenterX + mean * i - entityBounds.getX());
+            i++;
         }
         moveCommandBuilder.execute();
     }
@@ -516,8 +589,32 @@ public class ItemSelector {
         }
     }
 
+    public void alignSelectionsDistribute(int align) {
+        switch (align) {
+            case Align.top:
+//                alignSelectionsDistributeTop(get(bottommostItem));
+                break;
+            case Align.left:
+//                alignSelectionsDistributeLeft(get(rightmostItem));
+                break;
+            case Align.bottom:
+//                alignSelectionsDistributeBottom(get(topmostItem));
+                break;
+            case Align.right:
+//                alignSelectionsDistributeRight(get(leftmostItem));
+                break;
+            case Align.center | Align.left:
+                alignSelectionsDistributeHorizontally(get(broadestItem));
+                break;
+            case Align.center | Align.bottom:
+                alignSelectionsDistributeVertically(get(highestItem));
+                break;
+        }
+    }
+
     /**
      * Moves selected panels by specified values in both directions
+     *
      * @param x
      * @param y
      */
@@ -534,7 +631,7 @@ public class ItemSelector {
 
     public boolean selectionIsComposite() {
 
-        if(currentSelection.isEmpty()) return false;
+        if (currentSelection.isEmpty()) return false;
 
         Entity entity = currentSelection.stream().findFirst().get();
         NodeComponent nodeComponent = entity.getComponent(NodeComponent.class);

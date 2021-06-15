@@ -23,8 +23,10 @@ import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
 import com.badlogic.gdx.utils.Align;
+
 import games.rednblack.editor.view.stage.ItemSelector;
 import games.rednblack.editor.view.stage.Sandbox;
+
 import org.puremvc.java.interfaces.INotification;
 
 /**
@@ -100,6 +102,30 @@ public class UIAlignBoxMediator extends PanelMediator<UIAlignBox> {
             case UIAlignBox.ALIGN_AT_EDGE_RIGHT_BTN_CLICKED:
                 align = Align.right;
                 alignFunctionName = "alignSelectionsAtEdge";
+                break;
+            case UIAlignBox.ALIGN_DIS_LEFT_BTN_CLICKED:
+                align = Align.left;
+                alignFunctionName = "alignSelectionsDistribute";
+                break;
+            case UIAlignBox.ALIGN_DIS_EDGE_TOP_BTN_CLICKED:
+                align = Align.top;
+                alignFunctionName = "alignSelectionsDistribute";
+                break;
+            case UIAlignBox.ALIGN_DIS_RIGHT_BTN_CLICKED:
+                align = Align.right;
+                alignFunctionName = "alignSelectionsDistribute";
+                break;
+            case UIAlignBox.ALIGN_DIS_BOTTOM_BTN_CLICKED:
+                align = Align.bottom;
+                alignFunctionName = "alignSelectionsDistribute";
+                break;
+            case UIAlignBox.ALIGN_DIS_HORIZONTAL_BTN_CLICKED:
+                align = Align.center | Align.left;
+                alignFunctionName = "alignSelectionsDistribute";
+                break;
+            case UIAlignBox.ALIGN_DIS_VERTICAL_BTN_CLICKED:
+                align = Align.center | Align.bottom;
+                alignFunctionName = "alignSelectionsDistribute";
                 break;
             default:
                 return;

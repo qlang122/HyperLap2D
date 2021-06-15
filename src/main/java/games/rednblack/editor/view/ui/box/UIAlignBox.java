@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 
@@ -58,7 +59,21 @@ public class UIAlignBox extends UICollapsibleBox {
     private static final int ALIGN_AT_EDGE_RIGHT = 9;
     public static final String ALIGN_AT_EDGE_RIGHT_BTN_CLICKED = prefix + ALIGN_AT_EDGE_RIGHT;
 
-    //
+    //Distribute
+    private static final int ALIGN_DIS_LEFT = 10;
+    public static final String ALIGN_DIS_LEFT_BTN_CLICKED = prefix + ALIGN_DIS_LEFT;
+    private static final int ALIGN_DIS_TOP = 11;
+    public static final String ALIGN_DIS_EDGE_TOP_BTN_CLICKED = prefix + ALIGN_DIS_TOP;
+    private static final int ALIGN_DIS_RIGHT = 12;
+    public static final String ALIGN_DIS_RIGHT_BTN_CLICKED = prefix + ALIGN_DIS_RIGHT;
+    private static final int ALIGN_DIS_BOTTOM = 13;
+    public static final String ALIGN_DIS_BOTTOM_BTN_CLICKED = prefix + ALIGN_DIS_BOTTOM;
+    private static final int ALIGN_DIS_HORIZONTAL = 14;
+    public static final String ALIGN_DIS_HORIZONTAL_BTN_CLICKED = prefix + ALIGN_DIS_HORIZONTAL;
+    private static final int ALIGN_DIS_VERTICAL = 15;
+    public static final String ALIGN_DIS_VERTICAL_BTN_CLICKED = prefix + ALIGN_DIS_VERTICAL;
+
+
     private final HyperLap2DFacade faced;
 
     public UIAlignBox() {
@@ -77,7 +92,7 @@ public class UIAlignBox extends UICollapsibleBox {
         alignButtonsTable.row().padTop(6);
         alignButtonsTable.add("Center:").padRight(8).right();
         alignButtonsTable.add(createAlignButton("align-center-vertical", ALIGN_CENTER_VERTICAL, "Vertical")).padRight(4).left();
-        alignButtonsTable.add(createAlignButton("align-center-horisontal", ALIGN_CENTER_HORIZONTAL, "Horizontal")).expandX().left().colspan(3);
+        alignButtonsTable.add(createAlignButton("align-center-horizontal", ALIGN_CENTER_HORIZONTAL, "Horizontal")).expandX().left().colspan(3);
         //
         alignButtonsTable.row().padTop(6);
         alignButtonsTable.add("At Edge:").padRight(8).right();
@@ -86,6 +101,17 @@ public class UIAlignBox extends UICollapsibleBox {
         alignButtonsTable.add(createAlignButton("align-edge-left", ALIGN_AT_EDGE_RIGHT, "Right")).padRight(4).left();
         alignButtonsTable.add(createAlignButton("align-edge-down", ALIGN_AT_EDGE_TOP, "Top")).expandX().left();
         //
+        alignButtonsTable.row().padTop(6);
+        alignButtonsTable.add("Others:").padRight(8).right();
+        alignButtonsTable.add(createAlignButton("align-distribute-left", ALIGN_DIS_LEFT, "Distribute Left")).padRight(4).left();
+        alignButtonsTable.add(createAlignButton("align-distribute-top", ALIGN_DIS_TOP, "Distribute Top")).padRight(4).left();
+        alignButtonsTable.add(createAlignButton("align-distribute-right", ALIGN_DIS_RIGHT, "Distribute Right")).padRight(4).left();
+        alignButtonsTable.add(createAlignButton("align-distribute-bottom", ALIGN_DIS_BOTTOM, "Distribute Bottom")).expandX().left();
+        alignButtonsTable.row().padTop(6);
+        alignButtonsTable.add("").padRight(8).right();
+        alignButtonsTable.add(createAlignButton("align-distribute-horizontal", ALIGN_DIS_HORIZONTAL, "Distribute Horizontal")).padRight(4).left();
+        alignButtonsTable.add(createAlignButton("align-distribute-vertical", ALIGN_DIS_VERTICAL, "Distribute Vertical")).expandX().left();
+
         createCollapsibleWidget(alignButtonsTable);
     }
 
@@ -138,6 +164,24 @@ public class UIAlignBox extends UICollapsibleBox {
                     break;
                 case ALIGN_AT_EDGE_RIGHT:
                     notification = ALIGN_AT_EDGE_RIGHT_BTN_CLICKED;
+                    break;
+                case ALIGN_DIS_LEFT:
+                    notification = ALIGN_DIS_LEFT_BTN_CLICKED;
+                    break;
+                case ALIGN_DIS_TOP:
+                    notification = ALIGN_DIS_EDGE_TOP_BTN_CLICKED;
+                    break;
+                case ALIGN_DIS_RIGHT:
+                    notification = ALIGN_DIS_RIGHT_BTN_CLICKED;
+                    break;
+                case ALIGN_DIS_BOTTOM:
+                    notification = ALIGN_DIS_BOTTOM_BTN_CLICKED;
+                    break;
+                case ALIGN_DIS_HORIZONTAL:
+                    notification = ALIGN_DIS_HORIZONTAL_BTN_CLICKED;
+                    break;
+                case ALIGN_DIS_VERTICAL:
+                    notification = ALIGN_DIS_VERTICAL_BTN_CLICKED;
                     break;
             }
             HyperLap2DFacade facade = HyperLap2DFacade.getInstance();

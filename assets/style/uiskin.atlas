@@ -3,10 +3,22 @@ uiskin.png
 	filter: Linear, Linear
 action-up
 	bounds: 506, 76, 15, 15
-align-center-horisontal
+align-center-horizontal
 	bounds: 450, 8, 18, 18
 align-center-vertical
 	bounds: 664, 61, 18, 18
+align-distribute-bottom
+	bounds: 854, 59, 17, 18
+align-distribute-horizontal
+	bounds: 873, 59, 17, 18
+align-distribute-left
+	bounds: 902, 49, 17, 18
+align-distribute-right
+	bounds: 921, 49, 17, 18
+align-distribute-top
+	bounds: 1006, 85, 17, 18
+align-distribute-vertical
+	bounds: 1006, 65, 17, 18
 align-edge-down
 	bounds: 684, 61, 18, 18
 align-edge-left
@@ -26,11 +38,11 @@ align-simple-up
 animation-up
 	bounds: 523, 76, 15, 15
 arrow
-	bounds: 648, 20, 13, 15
+	bounds: 650, 18, 13, 15
 arrow-down
-	bounds: 682, 44, 13, 15
+	bounds: 738, 44, 13, 15
 arrow-over
-	bounds: 697, 44, 13, 15
+	bounds: 753, 44, 13, 15
 border
 	bounds: 463, 1, 5, 5
 	split: 2, 2, 2, 2
@@ -48,99 +60,99 @@ border-textfield
 	split: 5, 5, 2, 2
 	pad: 5, 5, 1, 1
 box-colapse-off
-	bounds: 624, 1, 11, 11
+	bounds: 841, 45, 11, 11
 box-colapse-on
-	bounds: 854, 28, 11, 11
+	bounds: 676, 15, 11, 11
 btn-play-first
 	bounds: 304, 29, 24, 24
 btn-play-last
 	bounds: 950, 103, 24, 24
-btn-play-prev
+btn-play-next
 	bounds: 976, 103, 24, 24
 btn-play-pause
 	bounds: 483, 50, 24, 24
-btn-play-next
+btn-play-prev
 	bounds: 330, 20, 24, 24
 btn-play-start
 	bounds: 356, 20, 24, 24
 button
-	bounds: 617, 35, 12, 20
+	bounds: 608, 13, 12, 20
 	split: 5, 5, 5, 4
 	pad: 5, 5, 2, 2
 button-dark
-	bounds: 882, 57, 12, 20
+	bounds: 566, 8, 12, 20
 	split: 5, 5, 5, 4
 	pad: 4, 4, 3, 3
 button-dark-down
-	bounds: 854, 57, 12, 20
+	bounds: 565, 30, 12, 20
 	split: 5, 5, 5, 4
 	pad: 4, 4, 3, 3
 button-dark-over
-	bounds: 868, 57, 12, 20
+	bounds: 552, 6, 12, 20
 	split: 5, 5, 5, 4
 	pad: 4, 4, 4, 3
 button-down
-	bounds: 1011, 83, 12, 20
+	bounds: 579, 30, 12, 20
 	split: 5, 5, 5, 4
 	pad: 5, 5, 2, 2
 button-flat-red
-	bounds: 552, 8, 12, 20
+	bounds: 607, 35, 12, 20
 	split: 3, 3, 3, 4
 button-flat-red-down
-	bounds: 1011, 61, 12, 20
+	bounds: 580, 8, 12, 20
 	split: 3, 3, 3, 4
 button-flat-red-over
-	bounds: 552, 30, 12, 20
+	bounds: 593, 35, 12, 20
 	split: 3, 3, 3, 4
 button-over
-	bounds: 566, 30, 12, 20
+	bounds: 621, 35, 12, 20
 	split: 5, 5, 5, 4
 	pad: 5, 5, 2, 2
 button-panel-bg
-	bounds: 566, 8, 12, 20
+	bounds: 635, 35, 12, 20
 	split: 5, 5, 5, 4
 	pad: 4, 4, 1, 1
 button-red
-	bounds: 631, 37, 12, 18
+	bounds: 622, 15, 12, 18
 	split: 5, 5, 4, 3
 	pad: 4, 4, 1, 1
 button-resource
-	bounds: 603, 35, 12, 20
+	bounds: 594, 13, 12, 20
 	split: 5, 5, 5, 4
 	pad: 4, 4, 1, 1
 button-resource-over
-	bounds: 589, 35, 12, 20
+	bounds: 649, 35, 12, 20
 	split: 5, 5, 5, 4
 	pad: 4, 4, 1, 1
 button-window-bg
-	bounds: 645, 37, 12, 18
+	bounds: 636, 15, 12, 18
 	split: 5, 5, 4, 3
 	pad: 4, 4, 1, 1
 close-node
-	bounds: 840, 44, 12, 12
+	bounds: 622, 1, 12, 12
 close-node-hover
-	bounds: 775, 31, 12, 12
+	bounds: 636, 1, 12, 12
 close-node-pressed
-	bounds: 789, 31, 12, 12
+	bounds: 955, 45, 12, 12
 color-picker-bar-selector
-	bounds: 831, 29, 7, 14
+	bounds: 832, 45, 7, 14
 color-picker-cross
-	bounds: 568, 1, 5, 5
+	bounds: 582, 1, 5, 5
 color-picker-selector-horizontal
-	bounds: 434, 1, 3, 1
+	bounds: 414, 1, 3, 1
 color-picker-selector-vertical
-	bounds: 587, 1, 1, 3
+	bounds: 1022, 111, 1, 3
 console-background
 	bounds: 330, 46, 64, 81
 	split: 23, 22, 42, 23
 	pad: 16, 15, 20, 15
 cursor
-	bounds: 840, 58, 1, 1
+	bounds: 841, 58, 1, 1
 default-pane
 	bounds: 583, 100, 5, 3
 	split: 1, 1, 1, 1
 default-pane-noborder
-	bounds: 1022, 113, 1, 1
+	bounds: 683, 1, 1, 1
 	split: 0, 0, 0, 0
 default-select
 	bounds: 892, 103, 27, 24
@@ -156,33 +168,33 @@ dropHere
 expand-icon
 	bounds: 384, 2, 16, 16
 expandable-properties-active-bg
-	bounds: 652, 1, 4, 17
+	bounds: 934, 30, 4, 17
 	split: 1, 2, 0, 17
 expandable-properties-collapse-off
 	bounds: 294, 22, 7, 7
 expandable-properties-collapse-on
-	bounds: 896, 57, 7, 7
+	bounds: 703, 19, 7, 7
 expandable-properties-inactive-bg
-	bounds: 659, 37, 4, 18
+	bounds: 697, 8, 4, 18
 	split: 1, 2, 0, 18
 icon-animation
 	bounds: 398, 28, 22, 22
 icon-arrow-left
-	bounds: 896, 66, 6, 11
+	bounds: 998, 90, 6, 11
 icon-arrow-right
-	bounds: 867, 28, 6, 11
+	bounds: 689, 15, 6, 11
 icon-close
 	bounds: 422, 28, 22, 22
 icon-close-panel
 	bounds: 1002, 105, 18, 22
 icon-close-small
-	bounds: 803, 31, 12, 12
+	bounds: 985, 41, 12, 12
 icon-close-white
 	bounds: 950, 83, 22, 18
 icon-composite
 	bounds: 446, 28, 22, 22
 icon-composite2
-	bounds: 712, 45, 14, 14
+	bounds: 768, 45, 14, 14
 icon-drive
 	bounds: 303, 5, 22, 22
 icon-file-audio
@@ -222,7 +234,7 @@ icon-lock-active
 icon-lock-inactive
 	bounds: 736, 81, 22, 22
 icon-new-layer
-	bounds: 637, 3, 13, 15
+	bounds: 940, 42, 13, 15
 icon-particle
 	bounds: 760, 81, 22, 22
 icon-particle-over
@@ -232,7 +244,7 @@ icon-particle-white
 icon-refresh
 	bounds: 832, 81, 22, 22
 icon-root
-	bounds: 728, 45, 14, 14
+	bounds: 784, 45, 14, 14
 icon-spine
 	bounds: 856, 79, 22, 22
 icon-spriter
@@ -242,15 +254,15 @@ icon-star
 icon-star-outline
 	bounds: 945, 59, 22, 22
 icon-trash
-	bounds: 886, 40, 13, 15
+	bounds: 940, 25, 13, 15
 icon-trash-disabled
-	bounds: 697, 27, 13, 15
+	bounds: 955, 28, 13, 15
 icon-trash-over
-	bounds: 712, 28, 13, 15
+	bounds: 970, 38, 13, 15
 icon-unlink-active
-	bounds: 590, 18, 15, 15
+	bounds: 1006, 48, 15, 15
 icon-unlink-inactive
-	bounds: 590, 1, 15, 15
+	bounds: 650, 1, 15, 15
 icon-visible-off
 	bounds: 969, 55, 22, 22
 icon-visible-on
@@ -268,21 +280,21 @@ icon-zoomout-disabled
 icon-zoomout-over
 	bounds: 365, 1, 17, 17
 image-up
-	bounds: 607, 18, 15, 15
+	bounds: 670, 44, 15, 15
 images-up
-	bounds: 607, 1, 15, 15
+	bounds: 687, 44, 15, 15
 layer-bg
-	bounds: 901, 36, 5, 19
+	bounds: 999, 34, 5, 19
 	split: 2, 2, 0, 19
 layer-bg-over
-	bounds: 624, 14, 5, 19
+	bounds: 663, 35, 5, 19
 	split: 2, 2, 0, 19
 library-up
-	bounds: 631, 20, 15, 15
+	bounds: 704, 44, 15, 15
 list-selection
 	bounds: 589, 61, 1, 1
 list-selection-white
-	bounds: 439, 1, 1, 1
+	bounds: 419, 1, 1, 1
 logo
 	bounds: 53, 1, 23, 23
 menu-bg
@@ -298,28 +310,28 @@ menu-bg-up
 	bounds: 525, 50, 14, 24
 	split: 2, 2, 0, 24
 menu-item
-	bounds: 1006, 64, 3, 3
+	bounds: 665, 30, 3, 3
 	split: 1, 1, 1, 1
 menu-item-disabled
 	bounds: 945, 83, 3, 3
 	split: 1, 1, 1, 1
 menu-item-down
-	bounds: 1006, 74, 3, 3
+	bounds: 940, 64, 3, 3
 	split: 1, 1, 1, 1
 menu-item-over
-	bounds: 1006, 69, 3, 3
+	bounds: 940, 59, 3, 3
 	split: 1, 1, 1, 1
 origin-anchor
 	bounds: 252, 20, 9, 9
 padded-list-selection
-	bounds: 575, 1, 10, 3
+	bounds: 552, 1, 10, 3
 	split: 4, 4, 1, 1
 	pad: 4, 4, 0, 0
 panel
 	bounds: 470, 14, 11, 36
 	split: 3, 3, 33, 2
 particle-up
-	bounds: 665, 44, 15, 15
+	bounds: 721, 44, 15, 15
 pin
 	bounds: 506, 93, 36, 34
 popup-menu
@@ -330,75 +342,75 @@ progressbar
 progressbar-filled
 	bounds: 1022, 122, 1, 5
 progressbar-filled-vertical
-	bounds: 402, 1, 5, 1
+	bounds: 998, 79, 5, 1
 progressbar-vertical
-	bounds: 409, 1, 5, 1
+	bounds: 676, 1, 5, 1
 scroll
-	bounds: 658, 3, 5, 6
+	bounds: 712, 20, 5, 6
 	split: 2, 2, 2, 2
 scroll-horizontal
-	bounds: 552, 1, 6, 5
+	bounds: 566, 1, 6, 5
 	split: 2, 2, 0, 5
 	pad: -1, -1, 2, 2
 scroll-knob-horizontal
-	bounds: 560, 1, 6, 5
+	bounds: 574, 1, 6, 5
 	split: 2, 2, 0, 5
 	pad: -1, -1, 2, 2
 scroll-knob-vertical
-	bounds: 893, 32, 5, 6
+	bounds: 686, 1, 5, 6
 	split: 2, 2, 2, 2
 select-box-list-bg
-	bounds: 1022, 110, 1, 1
+	bounds: 1022, 108, 1, 1
 select-box-list-bg-white
-	bounds: 589, 58, 1, 1
+	bounds: 1022, 105, 1, 1
 select-down
-	bounds: 673, 22, 7, 4
+	bounds: 703, 13, 7, 4
 select-up
-	bounds: 682, 22, 7, 4
+	bounds: 719, 22, 7, 4
 selection
-	bounds: 442, 1, 1, 1
+	bounds: 589, 58, 1, 1
 selection-anchor
 	bounds: 263, 20, 9, 9
 separator
-	bounds: 1022, 107, 1, 1
+	bounds: 422, 1, 1, 1
 separator-menu
-	bounds: 445, 1, 1, 1
+	bounds: 425, 1, 1, 1
 separator-tool
-	bounds: 904, 66, 1, 1
+	bounds: 428, 1, 1, 1
 tree-over
-	bounds: 904, 66, 1, 1
+	bounds: 428, 1, 1, 1
 separator-vertical
-	bounds: 303, 2, 1, 1
+	bounds: 431, 1, 1, 1
 slider
 	bounds: 589, 70, 1, 4
 slider-knob
 	bounds: 993, 55, 11, 22
 slider-knob-disabled
-	bounds: 998, 79, 11, 22
-slider-knob-down
 	bounds: 539, 26, 11, 22
-slider-knob-over
+slider-knob-down
 	bounds: 539, 2, 11, 22
+slider-knob-over
+	bounds: 552, 28, 11, 22
 slider-vertical
-	bounds: 416, 1, 4, 1
+	bounds: 886, 56, 4, 1
 splash_logo
 	bounds: 252, 55, 76, 72
 splitpane
-	bounds: 422, 1, 4, 1
+	bounds: 402, 1, 4, 1
 splitpane-over
-	bounds: 428, 1, 4, 1
+	bounds: 408, 1, 4, 1
 splitpane-vertical
 	bounds: 1022, 116, 1, 4
 splitpane-vertical-over
 	bounds: 589, 64, 1, 4
 static-text
-	bounds: 580, 29, 7, 21
+	bounds: 667, 1, 7, 21
 	split: 3, 3, 0, 21
 sticky-note
 	bounds: 544, 100, 37, 27
 	split: 14, 13, 10, 11
 sub-menu
-	bounds: 658, 11, 4, 7
+	bounds: 712, 11, 4, 7
 sub-menu-bg
 	bounds: 499, 17, 14, 31
 	split: 2, 2, 0, 31
@@ -406,28 +418,28 @@ tab-active
 	bounds: 844, 58, 8, 21
 	split: 3, 3, 2, 1
 tab-inactive
-	bounds: 580, 6, 8, 21
+	bounds: 892, 56, 8, 21
 	split: 3, 3, 2, 1
 textfield
-	bounds: 776, 45, 14, 14
+	bounds: 670, 28, 14, 14
 	split: 2, 2, 3, 2
 textfield-light
-	bounds: 760, 45, 14, 14
+	bounds: 816, 45, 14, 14
 	split: 3, 3, 4, 3
 textfield-light-over
-	bounds: 744, 45, 14, 14
+	bounds: 800, 45, 14, 14
 	split: 3, 3, 4, 3
 textfield-over
-	bounds: 744, 45, 14, 14
+	bounds: 800, 45, 14, 14
 	split: 2, 2, 3, 2
 thumbnail
-	bounds: 631, 14, 4, 4
+	bounds: 728, 22, 4, 4
 	split: 1, 2, 1, 2
 thumbnail-over
 	bounds: 246, 20, 4, 4
 	split: 1, 2, 1, 2
 tint-border
-	bounds: 885, 32, 6, 6
+	bounds: 998, 82, 6, 6
 	split: 2, 2, 2, 2
 tool-align
 	bounds: 78, 1, 22, 23
@@ -444,7 +456,7 @@ tool-sphericlight
 tool-transform
 	bounds: 222, 1, 22, 23
 toolbar-bg
-	bounds: 663, 22, 8, 4
+	bounds: 686, 9, 8, 4
 	split: 1, 2, 1, 1
 toolbar-down
 	bounds: 274, 20, 8, 9
@@ -453,47 +465,47 @@ toolbar-normal
 	bounds: 284, 20, 8, 9
 	split: 2, 2, 3, 3
 toolbar-over
-	bounds: 875, 30, 8, 9
+	bounds: 676, 4, 8, 9
 	split: 2, 2, 3, 3
 tooltip-bg
-	bounds: 1006, 59, 3, 3
+	bounds: 664, 56, 3, 3
 	split: 1, 1, 1, 1
 touchpad-knob
 	bounds: 640, 57, 22, 22
 tree-minus
-	bounds: 817, 31, 12, 12
+	bounds: 1006, 34, 12, 12
 tree-plus
-	bounds: 840, 30, 12, 12
+	bounds: 970, 24, 12, 12
 tree-selection
-	bounds: 664, 15, 5, 5
+	bounds: 589, 1, 5, 5
 	split: 2, 2, 2, 2
 	pad: 1, 1, 1, 1
 vis-blue
-	bounds: 398, 25, 1, 1
+	bounds: 434, 1, 1, 1
 vis-check
-	bounds: 792, 45, 14, 14
+	bounds: 686, 28, 14, 14
 vis-check-down
-	bounds: 808, 45, 14, 14
+	bounds: 702, 28, 14, 14
 vis-check-over
-	bounds: 824, 45, 14, 14
+	bounds: 718, 28, 14, 14
 vis-check-tick
-	bounds: 854, 41, 14, 14
+	bounds: 734, 28, 14, 14
 vis-check-tick-disabled
-	bounds: 870, 41, 14, 14
+	bounds: 750, 28, 14, 14
 vis-radio
-	bounds: 665, 28, 14, 14
+	bounds: 854, 43, 14, 14
 vis-radio-down
-	bounds: 681, 28, 14, 14
+	bounds: 870, 43, 14, 14
 vis-radio-over
-	bounds: 727, 29, 14, 14
+	bounds: 886, 40, 14, 14
 vis-radio-tick
-	bounds: 743, 29, 14, 14
+	bounds: 902, 33, 14, 14
 vis-radio-tick-disabled
-	bounds: 759, 29, 14, 14
+	bounds: 918, 33, 14, 14
 vis-red
-	bounds: 540, 90, 1, 1
+	bounds: 437, 1, 1, 1
 white
-	bounds: 691, 23, 3, 3
+	bounds: 1020, 43, 3, 3
 window
 	bounds: 470, 76, 34, 51
 	split: 16, 16, 29, 20
@@ -522,7 +534,7 @@ window-action-restore-normal
 window-action-restore-pressed
 	bounds: 828, 105, 33, 22
 window-bg
-	bounds: 969, 80, 1, 1
+	bounds: 440, 1, 1, 1
 window-noborder
 	bounds: 921, 93, 27, 34
 	split: 5, 4, 26, 3

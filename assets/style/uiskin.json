@@ -557,11 +557,11 @@
       checked: toolbar-down,
       imageUp: tool-mesh
     },
-    align-center-horisontal: {
+    align-center-horizontal: {
       down: toolbar-down,
       up: toolbar-normal,
       over: toolbar-over,
-      imageUp: align-center-horisontal
+      imageUp: align-center-horizontal
     },
     align-center-vertical: {
       down: toolbar-down,
@@ -616,6 +616,42 @@
       up: toolbar-normal,
       over: toolbar-over,
       imageUp: align-edge-left
+    },
+    align-distribute-left: {
+      down: toolbar-down,
+      up: toolbar-normal,
+      over: toolbar-over,
+      imageUp: align-distribute-left
+    },
+    align-distribute-top: {
+      down: toolbar-down,
+      up: toolbar-normal,
+      over: toolbar-over,
+      imageUp: align-distribute-top
+    },
+    align-distribute-right: {
+      down: toolbar-down,
+      up: toolbar-normal,
+      over: toolbar-over,
+      imageUp: align-distribute-right
+    },
+    align-distribute-bottom: {
+      down: toolbar-down,
+      up: toolbar-normal,
+      over: toolbar-over,
+      imageUp: align-distribute-bottom
+    },
+    align-distribute-horizontal: {
+      down: toolbar-down,
+      up: toolbar-normal,
+      over: toolbar-over,
+      imageUp: align-distribute-horizontal
+    },
+    align-distribute-vertical: {
+      down: toolbar-down,
+      up: toolbar-normal,
+      over: toolbar-over,
+      imageUp: align-distribute-vertical
     },
     expandable-properties-button: {
       imageUp: expandable-properties-collapse-on,
