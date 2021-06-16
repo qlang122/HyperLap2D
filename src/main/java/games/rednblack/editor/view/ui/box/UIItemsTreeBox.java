@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Selection;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -148,8 +147,8 @@ public class UIItemsTreeBox extends UICollapsibleBox {
         if (parentNodeComponent == null) {
             name = Sandbox.getInstance().sceneControl.getCurrentSceneVO().sceneName;
             style = "default";
-        } else if (mainItemComponent.itemIdentifier != null && !mainItemComponent.itemIdentifier.isEmpty()) {
-            name = mainItemComponent.itemIdentifier;
+        } else if (mainItemComponent.id != null && !mainItemComponent.id.isEmpty()) {
+            name = mainItemComponent.id;
             style = "default";
         } else {
             style = "greyed";

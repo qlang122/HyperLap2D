@@ -32,7 +32,7 @@ public class UpdateCompositeDataCommand extends EntityModifyRevertibleCommand {
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
 
         if (!transformComponent.renderToFBO) {
-            String tag = ComponentRetriever.get(entity, MainItemComponent.class).itemIdentifier;
+            String tag = ComponentRetriever.get(entity, MainItemComponent.class).id;
             sandbox.getSceneControl().sceneLoader.getFrameBufferManager().dispose(tag);
         }
     }
@@ -49,7 +49,7 @@ public class UpdateCompositeDataCommand extends EntityModifyRevertibleCommand {
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ITEM_DATA_UPDATED, entity);
 
         if (!transformComponent.renderToFBO) {
-            String tag = ComponentRetriever.get(entity, MainItemComponent.class).itemIdentifier;
+            String tag = ComponentRetriever.get(entity, MainItemComponent.class).id;
             sandbox.getSceneControl().sceneLoader.getFrameBufferManager().dispose(tag);
         }
     }

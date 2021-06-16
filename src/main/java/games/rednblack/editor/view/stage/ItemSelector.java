@@ -490,158 +490,142 @@ public class ItemSelector {
     public void alignSelectionsDistributeVertically() {
         moveCommandBuilder.clear();
 
-        final int size = currentSelection.size();
+        final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+        final int size = temp.size();
         if (size <= 2) return;
 
-        final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+        temp.sort((o1, o2) -> {
+            EntityBounds eb1 = new EntityBounds(o1);
+            EntityBounds eb2 = new EntityBounds(o2);
+            final float cY1 = eb1.getVisualY() + eb1.getVisualHeight() / 2;
+            final float cY2 = eb2.getVisualY() + eb2.getVisualHeight() / 2;
+            return Float.compare(cY1, cY2);
+        });
 
-        float min = 0;
-        float max = 0;
         Entity minEntity = temp.get(0);
-        Entity maxEntity = temp.get(0);
-        for (Entity entity : currentSelection) {
-            EntityBounds entityBounds = new EntityBounds(entity);
-            final float cY = entityBounds.getVisualY() + entityBounds.getVisualHeight() / 2;
-            if (cY < min) {
-                min = cY;
-                minEntity = entity;
-            }
-            if (cY > max) {
-                maxEntity = entity;
-                max = cY;
-            }
-        }
+        Entity maxEntity = temp.get(size - 1);
 
+        EntityBounds ebMin = new EntityBounds(minEntity);
+        EntityBounds ebMax = new EntityBounds(maxEntity);
+        final float min = ebMin.getVisualY() + ebMin.getVisualHeight() / 2;
+        final float max = ebMax.getVisualY() + ebMax.getVisualHeight() / 2;
         final float mean = Math.abs(max - min) / (size - 1);
-        Iterator<Entity> entitys = currentSelection.iterator();
-        int i = 0;
-        while (i++ < size - 1) {
-            Entity entity = entitys.next();
-            if (entity == minEntity || entity == maxEntity) continue;
-            EntityBounds entityBounds = new EntityBounds(entity);
 
-            moveCommandBuilder.setY(entity, min + mean * i - entityBounds.getVisualHeight() / 2);
+        for (int i = 1; i < temp.size() - 1; i++) {
+            Entity entity = temp.get(i);
+            EntityBounds entityBounds = new EntityBounds(entity);
+            final float deltaY = entityBounds.getY() - entityBounds.getVisualY();
+            moveCommandBuilder.setY(entity, min + mean * i - entityBounds.getVisualHeight() / 2 + deltaY);
         }
         moveCommandBuilder.execute();
     }
 
     public void alignSelectionsDistributeTopBottom(boolean toHighestY) {
         moveCommandBuilder.clear();
-        final int size = currentSelection.size();
-        if (size <= 2) return;
 
         final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+        final int size = temp.size();
+        if (size <= 2) return;
 
-        float min = 0;
-        float max = 0;
+        temp.sort((o1, o2) -> {
+            EntityBounds eb1 = new EntityBounds(o1);
+            EntityBounds eb2 = new EntityBounds(o2);
+            final float cX1 = eb1.getVisualY() + eb1.getVisualHeight() / 2;
+            final float cX2 = eb2.getVisualY() + eb2.getVisualHeight() / 2;
+            return Float.compare(cX1, cX2);
+        });
+
         Entity minEntity = temp.get(0);
-        Entity maxEntity = temp.get(0);
-        for (Entity entity : currentSelection) {
-            EntityBounds entityBounds = new EntityBounds(entity);
+        Entity maxEntity = temp.get(size - 1);
 
-            final float deltaY = entityBounds.getY() + ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight();
-            if (deltaY < min) {
-                min = deltaY;
-                minEntity = entity;
-            }
-            if (deltaY > max) {
-                maxEntity = entity;
-                max = deltaY;
-            }
-        }
+        EntityBounds ebMin = new EntityBounds(minEntity);
+        EntityBounds ebMax = new EntityBounds(maxEntity);
+        final float min = ebMin.getVisualY() + ((toHighestY) ? 1 : 0) * ebMin.getVisualHeight();
+        final float max = ebMax.getVisualY() + ((toHighestY) ? 1 : 0) * ebMax.getVisualHeight();
 
         final float mean = Math.abs(max - min) / (size - 1);
-        Iterator<Entity> entitys = currentSelection.iterator();
-        int i = 0;
-        while (i++ < size - 1) {
-            Entity entity = entitys.next();
-            if (entity == minEntity || entity == maxEntity) continue;
-            EntityBounds entityBounds = new EntityBounds(entity);
 
+        for (int i = 1; i < temp.size() - 1; i++) {
+            Entity entity = temp.get(i);
+            EntityBounds entityBounds = new EntityBounds(entity);
+            final float deltaY = entityBounds.getY() - entityBounds.getVisualY();
             if (toHighestY)
-                moveCommandBuilder.setY(entity, max - mean * i - ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight());
+                moveCommandBuilder.setY(entity, max - mean * i - ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight() + deltaY);
             else
-                moveCommandBuilder.setY(entity, min + mean * i - ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight());
+                moveCommandBuilder.setY(entity, min + mean * i - ((toHighestY) ? 1 : 0) * entityBounds.getVisualHeight() + deltaY);
         }
         moveCommandBuilder.execute();
     }
 
     public void alignSelectionsDistributeHorizontally() {
         moveCommandBuilder.clear();
-        final int size = currentSelection.size();
-        if (size <= 2) return;
 
         final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+        final int size = temp.size();
+        if (size <= 2) return;
 
-        float min = 0;
-        float max = 0;
+        temp.sort((o1, o2) -> {
+            EntityBounds eb1 = new EntityBounds(o1);
+            EntityBounds eb2 = new EntityBounds(o2);
+            final float cX1 = eb1.getVisualX() + eb1.getVisualWidth() / 2;
+            final float cX2 = eb2.getVisualX() + eb2.getVisualWidth() / 2;
+            return Float.compare(cX1, cX2);
+        });
+
         Entity minEntity = temp.get(0);
-        Entity maxEntity = temp.get(0);
-        for (Entity entity : currentSelection) {
-            EntityBounds entityBounds = new EntityBounds(entity);
+        Entity maxEntity = temp.get(size - 1);
 
-            final float cX = entityBounds.getVisualX() - entityBounds.getVisualWidth() / 2;
-            if (cX < min) {
-                min = cX;
-                minEntity = entity;
-            }
-            if (cX > max) {
-                maxEntity = entity;
-                max = cX;
-            }
-        }
-
+        EntityBounds ebMin = new EntityBounds(minEntity);
+        EntityBounds ebMax = new EntityBounds(maxEntity);
+        final float min = ebMin.getVisualX() + ebMin.getVisualWidth() / 2;
+        final float max = ebMax.getVisualX() + ebMax.getVisualWidth() / 2;
         final float mean = Math.abs(max - min) / (size - 1);
-        Iterator<Entity> entitys = currentSelection.iterator();
-        int i = 0;
-        while (i++ < size - 1) {
-            Entity entity = entitys.next();
-            if (entity == minEntity || entity == maxEntity) continue;
-            EntityBounds entityBounds = new EntityBounds(entity);
 
-            moveCommandBuilder.setX(entity, min + mean * i - entityBounds.getVisualWidth() / 2);
+        for (int i = 1; i < temp.size() - 1; i++) {
+            Entity entity = temp.get(i);
+            EntityBounds entityBounds = new EntityBounds(entity);
+            final float deltaX = entityBounds.getX() - entityBounds.getVisualX();
+            moveCommandBuilder.setX(entity, min + mean * i - entityBounds.getVisualWidth() / 2 + deltaX);
         }
         moveCommandBuilder.execute();
     }
 
     public void alignSelectionsDistributeLeftRight(boolean toHighestX) {
         moveCommandBuilder.clear();
-        final int size = currentSelection.size();
-        if (size <= 2) return;
 
         final ArrayList<Entity> temp = new ArrayList<>(currentSelection);
+        final int size = temp.size();
+        if (size <= 2) return;
 
-        float min = 0;
-        float max = 0;
+        temp.sort((o1, o2) -> {
+            EntityBounds eb1 = new EntityBounds(o1);
+            EntityBounds eb2 = new EntityBounds(o2);
+            final float cX1 = eb1.getVisualX() + eb1.getVisualWidth() / 2;
+            final float cX2 = eb2.getVisualX() + eb2.getVisualWidth() / 2;
+            return Float.compare(cX1, cX2);
+        });
+
         Entity minEntity = temp.get(0);
-        Entity maxEntity = temp.get(0);
-        for (Entity entity : currentSelection) {
-            EntityBounds entityBounds = new EntityBounds(entity);
+        Entity maxEntity = temp.get(size - 1);
 
-            final float deltaX = entityBounds.getVisualX() + ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth();
-            if (deltaX < min) {
-                min = deltaX;
-                minEntity = entity;
-            }
-            if (deltaX > max) {
-                maxEntity = entity;
-                max = deltaX;
-            }
-        }
+        EntityBounds ebMin = new EntityBounds(minEntity);
+        EntityBounds ebMax = new EntityBounds(maxEntity);
+
+        final float min = ebMin.getVisualX() + ((toHighestX) ? 1 : 0) * ebMin.getVisualWidth();
+        final float max = ebMax.getVisualX() + ((toHighestX) ? 1 : 0) * ebMax.getVisualWidth();
 
         final float mean = Math.abs(max - min) / (size - 1);
-        Iterator<Entity> entitys = currentSelection.iterator();
-        int i = 0;
-        while (i++ < size - 1) {
-            Entity entity = entitys.next();
-            if (entity == minEntity || entity == maxEntity) continue;
-            EntityBounds entityBounds = new EntityBounds(entity);
 
+        for (int i = 1; i < temp.size() - 1; i++) {
+            Entity entity = temp.get(i);
+            EntityBounds entityBounds = new EntityBounds(entity);
+            final float deltaX = entityBounds.getX() - entityBounds.getVisualX();
             if (toHighestX)
-                moveCommandBuilder.setX(entity, max - mean * i - ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth());
+                moveCommandBuilder.setX(entity, max - mean * i - ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth() + deltaX);
             else
-                moveCommandBuilder.setX(entity, min + mean * i - ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth());
+                moveCommandBuilder.setX(entity, min + mean * i - ((toHighestX) ? 1 : 0) * entityBounds.getVisualWidth() + deltaX);
         }
+
         moveCommandBuilder.execute();
     }
 

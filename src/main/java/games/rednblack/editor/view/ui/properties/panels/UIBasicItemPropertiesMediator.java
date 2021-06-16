@@ -196,7 +196,7 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
         }
 
         viewComponent.setItemType(EntityUtils.getType(entity), mainItemComponent.uniqueId);
-        viewComponent.setIdBoxValue(mainItemComponent.itemIdentifier);
+        viewComponent.setIdBoxValue(mainItemComponent.id);
         viewComponent.setXValue(String.format(Locale.ENGLISH, "%.2f", transformComponent.x));
         viewComponent.setYValue(String.format(Locale.ENGLISH, "%.2f", transformComponent.y));
 
@@ -233,7 +233,7 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
         dimensionComponent = ComponentCloner.get(ComponentRetriever.get(entity, DimensionsComponent.class));
         tintComponent = ComponentCloner.get(ComponentRetriever.get(entity, TintComponent.class));
 
-        mainItemComponent.itemIdentifier = viewComponent.getIdBoxValue();
+        mainItemComponent.id = viewComponent.getIdBoxValue();
         mainItemComponent.visible = viewComponent.getIsVisible();
         transformComponent.x = NumberUtils.toFloat(viewComponent.getXValue(), transformComponent.x);
         transformComponent.y = NumberUtils.toFloat(viewComponent.getYValue(), transformComponent.y);

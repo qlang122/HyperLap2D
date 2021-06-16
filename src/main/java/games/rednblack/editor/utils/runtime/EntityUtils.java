@@ -87,8 +87,8 @@ public class EntityUtils {
             return Sandbox.getInstance().sceneControl.getCurrentSceneVO().sceneName;
 
         MainItemComponent mainItemComponent = ComponentRetriever.get(entity, MainItemComponent.class);
-        if (mainItemComponent.itemIdentifier != null && !mainItemComponent.itemIdentifier.isEmpty()) {
-            return mainItemComponent.itemIdentifier;
+        if (mainItemComponent.id != null && !mainItemComponent.id.isEmpty()) {
+            return mainItemComponent.id;
         } else {
             int type = EntityUtils.getType(entity);
             String name = itemTypeNameMap.get(type);
