@@ -93,7 +93,7 @@ public class UISpriterAnimationItemPropertiesMediator extends UIItemPropertiesMe
     @Override
     protected void translateObservableDataToView(Entity entity) {
         objectComponent = ComponentRetriever.get(entity, SpriterObjectComponent.class);
-        dataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
+//        dataComponent = ComponentRetriever.get(entity, SpriterDataComponent.class);
 
         Array<String> animations = new Array<>();
         for (Animation animation : objectComponent.getAnimations()) {
@@ -101,8 +101,8 @@ public class UISpriterAnimationItemPropertiesMediator extends UIItemPropertiesMe
         }
 
         viewComponent.setAnimations(animations);
-        viewComponent.setSelectedAnimation(dataComponent.currentAnimationName);
-        viewComponent.setCanAnimationLooping(dataComponent.isLooping);
+        viewComponent.setSelectedAnimation(objectComponent.currentAnimationName);
+        viewComponent.setCanAnimationLooping(objectComponent.isLooping());
         viewComponent.changePlayBtnStage(objectComponent.isPlaying());
     }
 
