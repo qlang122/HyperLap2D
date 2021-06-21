@@ -1,7 +1,10 @@
 package games.rednblack.editor.plugin.tiled.tools.drawStrategy;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import games.rednblack.editor.plugin.tiled.TiledPlugin;
+import games.rednblack.editor.plugin.tiled.data.TileVO;
 import games.rednblack.editor.renderer.components.TextureRegionComponent;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.h2d.common.command.ReplaceRegionCommandBuilder;
@@ -22,9 +25,11 @@ public class ImageDrawStrategy extends BasicDrawStrategy {
             return;
         }
 
-        IFactory itemFactory =  tiledPlugin.getAPI().getItemFactory();
+        IFactory itemFactory = tiledPlugin.getAPI().getItemFactory();
         temp.set(x, y);
-        if (itemFactory.createSimpleImage(tiledPlugin.getSelectedTileName(), temp)) {
+
+        TileVO vo = tiledPlugin.getSelectedTile();
+        if (itemFactory.createSimpleImage(vo.regionName, vo.index, temp)) {
             Entity imageEntity = itemFactory.getCreatedEntity();
             postProcessEntity(imageEntity, x, y, row, column);
         }
@@ -37,10 +42,12 @@ public class ImageDrawStrategy extends BasicDrawStrategy {
         TextureRegionComponent textureRegionComponent = ComponentRetriever.get(entity, TextureRegionComponent.class);
         if (textureRegionComponent != null && textureRegionComponent.regionName != null) {
             // there is already other tile under this one
-            if (!textureRegionComponent.regionName.equals(tiledPlugin.getSelectedTileName())) {
-                String region = tiledPlugin.getSelectedTileName();
+            TileVO vo = tiledPlugin.getSelectedTile();
+            if (!textureRegionComponent.regionName.equals(vo.regionName)) {
+                String region = vo.regionName;
                 replaceRegionCommandBuilder.begin(entity);
-                replaceRegionCommandBuilder.setRegion(tiledPlugin.getAPI().getSceneLoader().getRm().getTextureRegion(region));
+                TextureRegion textureRegion = tiledPlugin.getAPI().getSceneLoader().getRm().getTextureRegion(region, textureRegionComponent.index);
+                replaceRegionCommandBuilder.setRegion(textureRegion);
                 replaceRegionCommandBuilder.setRegionName(region);
                 replaceRegionCommandBuilder.execute(tiledPlugin.facade);
             }

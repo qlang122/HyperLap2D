@@ -79,16 +79,16 @@ public class ResourcesManager {
         return textureCache.get(name);
     }
 
-    public TextureRegion getTextureRegion(String name, int type) {
-        TextureRegion region = textureAtlas.findRegion(name); // try to get region from plugin assets
+    public TextureRegion getTextureRegion(String name, int index, int type) {
+        TextureRegion region = textureAtlas.findRegion(name, index); // try to get region from plugin assets
         if (region == null) { // take the region from hyperlap assets
             switch (type) {
                 case EntityFactory.IMAGE_TYPE:
-                    region = tiledPlugin.getAPI().getSceneLoader().getRm().getTextureRegion(name);
+                    region = tiledPlugin.getAPI().getSceneLoader().getRm().getTextureRegion(name, index);
                     break;
                 case EntityFactory.ATLAS_IMAGE_TYPE:
                     String[] strs = name.split("/");
-                    region = tiledPlugin.getAPI().getSceneLoader().getRm().getAtlasImagesTextureRegion(strs[0], strs[1]);
+                    region = tiledPlugin.getAPI().getSceneLoader().getRm().getAtlasImagesTextureRegion(strs[0], strs[1], index);
                     break;
                 case EntityFactory.SPRITE_TYPE:
                     region = tiledPlugin.getAPI().getSceneLoader().getRm().getSpriteAnimation(name).getRegions().get(0);

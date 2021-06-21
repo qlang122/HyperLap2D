@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import games.rednblack.editor.data.ImageData;
 import games.rednblack.editor.view.ui.box.UIResourcesBoxMediator;
 import games.rednblack.h2d.common.ResourcePayloadObject;
 
@@ -53,12 +54,16 @@ public class AtlasImageResource extends BoxItemResource {
 
         addActor(img);
 
-        String name = atlasName + "/" + region.name;//a var needs to pass two, only way..
+        String name = region.name;
         setRightClickEvent(UIResourcesBoxMediator.ATLAS_IMAGE_RIGHT_CLICK, name);
 
+        ImageData extra = new ImageData();
+        extra.atlasName = atlasName;
+        extra.index = region.index;
         payloadImg = new Image(region);
-        payload = new ResourcePayloadObject();
+        payload = new ResourcePayloadObject<ImageData>();
         payload.name = name;
+        payload.extra = extra;
         payload.className = getClass().getName();
     }
 

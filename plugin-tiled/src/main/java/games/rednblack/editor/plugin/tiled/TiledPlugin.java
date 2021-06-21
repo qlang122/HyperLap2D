@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
+
 import games.rednblack.editor.plugin.tiled.data.TileVO;
 import games.rednblack.editor.plugin.tiled.manager.ResourcesManager;
 import games.rednblack.editor.plugin.tiled.offset.OffsetPanel;
@@ -43,6 +44,7 @@ import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.renderer.utils.CustomVariables;
 import games.rednblack.h2d.common.MenuAPI;
 import games.rednblack.h2d.common.plugins.H2DPluginAdapter;
+
 import net.mountainblade.modular.annotations.Implementation;
 
 import java.util.Set;
@@ -55,15 +57,15 @@ public class TiledPlugin extends H2DPluginAdapter {
 
     //-------notifications---------//
     public static final String CLASS_NAME = "games.rednblack.editor.plugin.tiled";
-    public static final String TILE_ADDED                     = CLASS_NAME + ".TILE_ADDED";
-    public static final String TILE_SELECTED                  = CLASS_NAME + ".TILE_SELECTED";
-    public static final String OPEN_DROP_DOWN                 = CLASS_NAME + ".OPEN_DROP_DOWN";
-    public static final String GRID_CHANGED                   = CLASS_NAME + ".GRID_CHANGED";
-    public static final String IMPORT_TILESET_PANEL_OPEN      = CLASS_NAME + ".IMPORT_TILESET_PANEL_OPEN";
-    public static final String ACTION_DELETE_TILE             = CLASS_NAME + ".ACTION_DELETE_TILE";
-    public static final String ACTION_SET_OFFSET              = CLASS_NAME + ".ACTION_SET_OFFSET";
-    public static final String ACTION_OPEN_OFFSET_PANEL       = CLASS_NAME + ".ACTION_OPEN_OFFSET_PANEL";
-    public static final String TILE_GRID_OFFSET_ADDED         = CLASS_NAME + ".TILE_GRID_OFFSET_ADDED";
+    public static final String TILE_ADDED = CLASS_NAME + ".TILE_ADDED";
+    public static final String TILE_SELECTED = CLASS_NAME + ".TILE_SELECTED";
+    public static final String OPEN_DROP_DOWN = CLASS_NAME + ".OPEN_DROP_DOWN";
+    public static final String GRID_CHANGED = CLASS_NAME + ".GRID_CHANGED";
+    public static final String IMPORT_TILESET_PANEL_OPEN = CLASS_NAME + ".IMPORT_TILESET_PANEL_OPEN";
+    public static final String ACTION_DELETE_TILE = CLASS_NAME + ".ACTION_DELETE_TILE";
+    public static final String ACTION_SET_OFFSET = CLASS_NAME + ".ACTION_SET_OFFSET";
+    public static final String ACTION_OPEN_OFFSET_PANEL = CLASS_NAME + ".ACTION_OPEN_OFFSET_PANEL";
+    public static final String TILE_GRID_OFFSET_ADDED = CLASS_NAME + ".TILE_GRID_OFFSET_ADDED";
     public static final String ACTION_SET_GRID_SIZE_FROM_ITEM = CLASS_NAME + ".ACTION_SET_GRID_SIZE_FROM_ITEM";
     public static final String ACTION_SET_GRID_SIZE_FROM_LIST = CLASS_NAME + ".ACTION_SET_GRID_SIZE_FROM_LIST";
     //-------end--------//
@@ -109,7 +111,7 @@ public class TiledPlugin extends H2DPluginAdapter {
         tileAddButtonStyle.down = skin.getDrawable("toolbar-down");
         tileAddButtonStyle.checked = skin.getDrawable("toolbar-down");
         tileAddButtonStyle.over = skin.getDrawable("toolbar-over");
-        tileAddButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tilebrush", -1));
+        tileAddButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tilebrush", -1, -1));
         pluginAPI.addTool(DrawTileTool.NAME, tileAddButtonStyle, true, drawTileTool);
 
         VisImageButton.VisImageButtonStyle tileDeleteButtonStyle = new VisImageButton.VisImageButtonStyle();
@@ -117,7 +119,7 @@ public class TiledPlugin extends H2DPluginAdapter {
         tileDeleteButtonStyle.down = skin.getDrawable("toolbar-down");
         tileDeleteButtonStyle.checked = skin.getDrawable("toolbar-down");
         tileDeleteButtonStyle.over = skin.getDrawable("toolbar-over");
-        tileDeleteButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tileeraser", -1));
+        tileDeleteButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tileeraser", -1, -1));
         pluginAPI.addTool(DeleteTileTool.NAME, tileDeleteButtonStyle, false, deleteTileTool);
 
         pluginAPI.setDropDownItemName(ACTION_SET_GRID_SIZE_FROM_ITEM, "Set tile grid size");
@@ -127,7 +129,7 @@ public class TiledPlugin extends H2DPluginAdapter {
 
     @Override
     public void onDropDownOpen(Set<Entity> selectedEntities, Array<String> actionsSet) {
-        if(selectedEntities.size() == 1) {
+        if (selectedEntities.size() == 1) {
             actionsSet.add(ACTION_SET_GRID_SIZE_FROM_ITEM);
         }
     }
@@ -144,7 +146,7 @@ public class TiledPlugin extends H2DPluginAdapter {
 
     public Entity getPluginEntityWithParams(int row, int column) {
         for (Entity entity : pluginAPI.getProjectEntities()) {
-            if(!isTile(entity)) continue;
+            if (!isTile(entity)) continue;
             boolean isEntityVisible = pluginAPI.isEntityVisible(entity);
             if (!isEntityVisible || !isOnCurrentSelectedLayer(entity)) continue;
 
@@ -193,12 +195,12 @@ public class TiledPlugin extends H2DPluginAdapter {
         return entityZComponent.layerName.equals(pluginAPI.getCurrentSelectedLayerName());
     }
 
-    public void setSelectedTileName (String regionName) {
+    public void setSelectedTileName(String regionName) {
         selectedTileVO.regionName = regionName;
     }
 
-    public String getSelectedTileName() {
-        return selectedTileVO.regionName;
+    public TileVO getSelectedTile() {
+        return selectedTileVO;
     }
 
     public int getSelectedTileType() {
@@ -209,7 +211,7 @@ public class TiledPlugin extends H2DPluginAdapter {
         return selectedTileVO.gridOffset;
     }
 
-    public void setSelectedTileGridOffset (Vector2 gridOffset) {
+    public void setSelectedTileGridOffset(Vector2 gridOffset) {
         selectedTileVO.gridOffset = gridOffset;
     }
 

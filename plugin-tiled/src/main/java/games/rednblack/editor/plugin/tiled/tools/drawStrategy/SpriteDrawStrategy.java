@@ -3,7 +3,9 @@ package games.rednblack.editor.plugin.tiled.tools.drawStrategy;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.plugin.tiled.TiledPlugin;
+import games.rednblack.editor.plugin.tiled.data.TileVO;
 import games.rednblack.editor.renderer.components.sprite.SpriteAnimationComponent;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.h2d.common.command.ReplaceSpriteAnimationCommandBuilder;
@@ -24,10 +26,10 @@ public class SpriteDrawStrategy extends BasicDrawStrategy {
             return;
         }
 
-        IFactory itemFactory =  tiledPlugin.getAPI().getItemFactory();
+        IFactory itemFactory = tiledPlugin.getAPI().getItemFactory();
         temp.set(x, y);
 
-        if (itemFactory.createSpriteAnimation(tiledPlugin.getSelectedTileName(), temp)) {
+        if (itemFactory.createSpriteAnimation(tiledPlugin.getSelectedTile().regionName, temp)) {
             Entity imageEntity = itemFactory.getCreatedEntity();
             postProcessEntity(imageEntity, x, y, row, column);
         }
@@ -39,11 +41,12 @@ public class SpriteDrawStrategy extends BasicDrawStrategy {
 
         SpriteAnimationComponent spriteAnimationComponent = ComponentRetriever.get(entity, SpriteAnimationComponent.class);
 
-        if (!spriteAnimationComponent.animationName.equals(tiledPlugin.getSelectedTileName())) {
-            Array<TextureAtlas.AtlasRegion> regions = getRegions(tiledPlugin.getSelectedTileName());
+        TileVO vo = tiledPlugin.getSelectedTile();
+        if (!spriteAnimationComponent.animationName.equals(vo.regionName)) {
+            Array<TextureAtlas.AtlasRegion> regions = getRegions(vo.regionName);
 
             replaceSpriteAnimationCommandBuilder.begin(entity);
-            replaceSpriteAnimationCommandBuilder.setAnimationName(tiledPlugin.getSelectedTileName());
+            replaceSpriteAnimationCommandBuilder.setAnimationName(vo.regionName);
             replaceSpriteAnimationCommandBuilder.setRegion(regions);
             replaceSpriteAnimationCommandBuilder.execute(tiledPlugin.facade);
         }
@@ -53,8 +56,8 @@ public class SpriteDrawStrategy extends BasicDrawStrategy {
         // filtering regions by name
         Array<TextureAtlas.AtlasRegion> allRegions = tiledPlugin.getAPI().getSceneLoader().getRm().getSpriteAnimation(filter).getRegions();
         Array<TextureAtlas.AtlasRegion> regions = new Array<>();
-        for(TextureAtlas.AtlasRegion region: allRegions) {
-            if(region.name.contains(filter)) {
+        for (TextureAtlas.AtlasRegion region : allRegions) {
+            if (region.name.contains(filter)) {
                 regions.add(region);
             }
         }

@@ -42,7 +42,7 @@ public class DraggableResource extends DragAndDrop implements Comparable<Draggab
 
     protected final Sandbox sandbox;
     private final DraggableResourceView viewComponent;
-    private BiFunction<String, Vector2, Boolean> factoryFunction;
+    private BiFunction<ResourcePayloadObject, Vector2, Boolean> factoryFunction;
 
     public DraggableResource(DraggableResourceView viewComponent) {
         this.viewComponent = viewComponent;
@@ -102,14 +102,14 @@ public class DraggableResource extends DragAndDrop implements Comparable<Draggab
         ResourceManager resourceManager = HyperLap2DFacade.getInstance().retrieveProxy(ResourceManager.NAME);
 
         vector2.sub(resourcePayloadObject.xOffset / resourceManager.getProjectVO().pixelToWorld, resourcePayloadObject.yOffset / resourceManager.getProjectVO().pixelToWorld);
-        factoryFunction.apply(resourcePayloadObject.name, vector2);
+        factoryFunction.apply(resourcePayloadObject, vector2);
     }
 
     public DraggableResourceView getViewComponent() {
         return viewComponent;
     }
 
-    public void setFactoryFunction(BiFunction<String, Vector2, Boolean> factoryFunction) {
+    public void setFactoryFunction(BiFunction<ResourcePayloadObject, Vector2, Boolean> factoryFunction) {
         this.factoryFunction = factoryFunction;
     }
 

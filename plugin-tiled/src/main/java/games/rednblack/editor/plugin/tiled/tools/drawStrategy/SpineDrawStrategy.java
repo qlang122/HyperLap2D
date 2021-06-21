@@ -4,14 +4,13 @@ import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
+
 import games.rednblack.editor.plugin.tiled.TiledPlugin;
+import games.rednblack.editor.plugin.tiled.data.TileVO;
 import games.rednblack.editor.renderer.components.SpineDataComponent;
-import games.rednblack.editor.renderer.components.sprite.SpriteAnimationComponent;
-import games.rednblack.editor.renderer.components.sprite.SpriteAnimationStateComponent;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.h2d.common.command.ReplaceSpineCommandBuilder;
 import games.rednblack.h2d.common.factory.IFactory;
-import games.rednblack.h2d.extention.spine.SpineObjectComponent;
 
 public class SpineDrawStrategy extends BasicDrawStrategy {
 
@@ -29,10 +28,11 @@ public class SpineDrawStrategy extends BasicDrawStrategy {
             return;
         }
 
-        IFactory itemFactory =  tiledPlugin.getAPI().getItemFactory();
+        IFactory itemFactory = tiledPlugin.getAPI().getItemFactory();
         temp.set(x, y);
 
-        if (itemFactory.createSpineAnimation(tiledPlugin.getSelectedTileName(), temp)) {
+        TileVO vo = tiledPlugin.getSelectedTile();
+        if (itemFactory.createSpineAnimation(vo.regionName, temp)) {
             Entity imageEntity = itemFactory.getCreatedEntity();
             postProcessEntity(imageEntity, x, y, row, column);
         }
@@ -43,9 +43,10 @@ public class SpineDrawStrategy extends BasicDrawStrategy {
         if (!checkValidTile(entity)) return;
 
         SpineDataComponent spineDataComponent = ComponentRetriever.get(entity, SpineDataComponent.class);
-        if (!spineDataComponent.animationName.equals(tiledPlugin.getSelectedTileName())) {
+        TileVO vo = tiledPlugin.getSelectedTile();
+        if (!spineDataComponent.animationName.equals(vo.regionName)) {
             replaceSpineCommandBuilder.begin(entity);
-            String animName = tiledPlugin.getSelectedTileName();
+            String animName = vo.regionName;
             replaceSpineCommandBuilder.setAnimationName(animName);
             SkeletonJson skeletonJson = new SkeletonJson(tiledPlugin.getAPI().getSceneLoader().getRm().getSkeletonAtlas(animName));
             replaceSpineCommandBuilder.setSkeletonJson(skeletonJson);

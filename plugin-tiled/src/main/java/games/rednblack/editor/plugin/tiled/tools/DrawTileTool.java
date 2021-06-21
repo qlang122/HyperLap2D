@@ -11,7 +11,6 @@ import games.rednblack.editor.plugin.tiled.tools.drawStrategy.IDrawStrategy;
 import games.rednblack.editor.plugin.tiled.tools.drawStrategy.ImageDrawStrategy;
 import games.rednblack.editor.plugin.tiled.tools.drawStrategy.SpineDrawStrategy;
 import games.rednblack.editor.plugin.tiled.tools.drawStrategy.SpriteDrawStrategy;
-import games.rednblack.editor.renderer.components.TextureRegionComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
@@ -170,7 +169,7 @@ public class DrawTileTool implements Tool {
     }
 
     private void drawTile(float x, float y) {
-        if (tiledPlugin.getSelectedTileName().equals("")) return;
+        if (tiledPlugin.getSelectedTile().regionName.equals("")) return;
 
         float newX = MathUtils.floor(x / gridWidth) * gridWidth + tiledPlugin.getSelectedTileGridOffset().x;
         float newY = MathUtils.floor(y / gridHeight) * gridHeight + tiledPlugin.getSelectedTileGridOffset().y;

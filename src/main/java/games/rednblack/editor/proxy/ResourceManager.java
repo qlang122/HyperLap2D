@@ -155,8 +155,8 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     @Override
-    public TextureRegion getTextureRegion(String name) {
-        TextureRegion reg = currentProjectAtlas.findRegion(name);
+    public TextureRegion getTextureRegion(String name, int index) {
+        TextureRegion reg = currentProjectAtlas.findRegion(name, index);
 
         if (reg == null) {
             reg = defaultRegion;
@@ -166,13 +166,13 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     }
 
     @Override
-    public TextureRegion getAtlasImagesTextureRegion(String atlasName, String name) {
+    public TextureRegion getAtlasImagesTextureRegion(String atlasName, String name, int index) {
         if (!atlasName.isEmpty() && atlasImageAtlases.containsKey(atlasName)) {
             TextureAtlas textureAtlas = atlasImageAtlases.get(atlasName);
-            return textureAtlas.findRegion(name);
+            return textureAtlas.findRegion(name, index);
         } else {
             for (Map.Entry<String, TextureAtlas> entry : atlasImageAtlases.entrySet()) {
-                TextureAtlas.AtlasRegion region = entry.getValue().findRegion(name);
+                TextureAtlas.AtlasRegion region = entry.getValue().findRegion(name, index);
                 if (region != null) return region;
             }
         }

@@ -23,6 +23,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import games.rednblack.editor.data.ImageData;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.PasteItemsCommand;
@@ -36,6 +37,7 @@ import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.stage.tools.TextTool;
 import games.rednblack.editor.view.ui.box.UILayerBoxMediator;
+import games.rednblack.h2d.common.ResourcePayloadObject;
 import games.rednblack.h2d.common.factory.IFactory;
 
 import java.util.HashMap;
@@ -85,9 +87,21 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
-    public boolean createSimpleImage(String regionName, Vector2 position) {
+    public boolean createSimpleImage(String name, int index, Vector2 position) {
+        ImageData extra = new ImageData();
+        extra.index = index;
+        ResourcePayloadObject payload = new ResourcePayloadObject();
+        payload.name = name;
+        payload.extra = extra;
+        return createSimpleImage(payload, position);
+    }
+
+    @Override
+    public boolean createSimpleImage(ResourcePayloadObject payload, Vector2 position) {
+        ImageData extra = (ImageData) payload.extra;
         SimpleImageVO vo = new SimpleImageVO();
-        vo.imageName = regionName;
+        vo.imageName = payload.name;
+        vo.index = extra.index;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -97,11 +111,12 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
-    public boolean createAtlasImage(String names, Vector2 position) {
-        String[] strs = names.split("/");
+    public boolean createAtlasImage(ResourcePayloadObject payload, Vector2 position) {
+        ImageData extra = (ImageData) payload.extra;
         AtlasImageVO vo = new AtlasImageVO();
-        vo.atlasName = strs[0];
-        vo.imageName = strs[1];
+        vo.atlasName = extra == null ? "" : extra.atlasName;
+        vo.imageName = payload.name;
+        vo.index = extra == null ? -1 : extra.index;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -115,9 +130,11 @@ public class ItemFactory implements IFactory {
         return createdEntity;
     }
 
-    public boolean create9Patch(String regionName, Vector2 position) {
+    public boolean create9Patch(ResourcePayloadObject payload, Vector2 position) {
+        ImageData extra = (ImageData) payload.extra;
         Image9patchVO vo = new Image9patchVO();
-        vo.imageName = regionName;
+        vo.imageName = payload.name;
+        vo.index = extra == null ? -1 : extra.index;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -126,11 +143,12 @@ public class ItemFactory implements IFactory {
         return true;
     }
 
-    public boolean createAtlas9Patch(String names, Vector2 position) {
-        String[] strs = names.split("/");
+    public boolean createAtlas9Patch(ResourcePayloadObject payload, Vector2 position) {
+        ImageData extra = (ImageData) payload.extra;
         Image9patchVO vo = new Image9patchVO();
-        vo.atlasName = strs[0];
-        vo.imageName = strs[1];
+        vo.atlasName = extra == null ? "" : extra.atlasName;
+        vo.imageName = payload.name;
+        vo.index = extra == null ? -1 : extra.index;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntityAtlas9Patch(sandbox.getCurrentViewingEntity(), vo);
@@ -140,9 +158,16 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
-    public boolean createSpriteAnimation(String animationName, Vector2 position) {
+    public boolean createSpriteAnimation(String name, Vector2 position) {
+        ResourcePayloadObject payload = new ResourcePayloadObject();
+        payload.name = name;
+        return createSpriteAnimation(payload, position);
+    }
+
+    @Override
+    public boolean createSpriteAnimation(ResourcePayloadObject payload, Vector2 position) {
         SpriteAnimationVO vo = new SpriteAnimationVO();
-        vo.animationName = animationName;
+        vo.animationName = payload.name;
         vo.playMode = 2;
 
         if (!setEssentialData(vo, position)) return false;
@@ -153,9 +178,16 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
-    public boolean createSpineAnimation(String animationName, Vector2 position) {
+    public boolean createSpineAnimation(String name, Vector2 position) {
+        ResourcePayloadObject payload = new ResourcePayloadObject();
+        payload.name = name;
+        return createSpineAnimation(payload, position);
+    }
+
+    @Override
+    public boolean createSpineAnimation(ResourcePayloadObject payload, Vector2 position) {
         SpineVO vo = new SpineVO();
-        vo.animationName = animationName;
+        vo.animationName = payload.name;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -165,9 +197,9 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
-    public boolean createSpriterAnimation(String animationName, Vector2 position) {
+    public boolean createSpriterAnimation(ResourcePayloadObject payload, Vector2 position) {
         SpriterVO vo = new SpriterVO();
-        vo.animationName = animationName;
+        vo.animationName = payload.name;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -191,11 +223,11 @@ public class ItemFactory implements IFactory {
     }
 
     @Override
-    public boolean createItemFromLibrary(String libraryName, Vector2 position) {
+    public boolean createItemFromLibrary(ResourcePayloadObject payload, Vector2 position) {
         ProjectManager projectManager = HyperLap2DFacade.getInstance().retrieveProxy(ProjectManager.NAME);
         HashMap<String, CompositeItemVO> libraryItems = projectManager.currentProjectInfoVO.libraryItems;
 
-        CompositeItemVO itemVO = libraryItems.get(libraryName);
+        CompositeItemVO itemVO = libraryItems.get(payload.name);
         itemVO.uniqueId = -1;
         PasteItemsCommand.forceIdChange(itemVO.composite);
         createdEntity = createCompositeItem(itemVO, position);
@@ -204,7 +236,7 @@ public class ItemFactory implements IFactory {
 
         //adding library name
         MainItemComponent mainItemComponent = ComponentRetriever.get(createdEntity, MainItemComponent.class);
-        mainItemComponent.libraryLink = libraryName;
+        mainItemComponent.libraryLink = payload.name;
 
         HyperLap2DFacade.getInstance().sendNotification(MsgAPI.ACTION_CREATE_ITEM, createdEntity);
 
