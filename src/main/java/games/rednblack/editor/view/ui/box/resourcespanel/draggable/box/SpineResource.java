@@ -22,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import games.rednblack.h2d.common.ResourcePayloadObject;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.renderer.data.SpineVO;
@@ -88,6 +89,7 @@ public class SpineResource extends BoxItemResource {
 
         payload = new ResourcePayloadObject();
         payload.name = animationName;
+        payload.tip = animationName;
         payload.className = getClass().getName();
         setWidth(thumbnailSize);
         setHeight(thumbnailSize);

@@ -26,6 +26,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+
 import games.rednblack.editor.plugin.tiled.data.TileVO;
 import games.rednblack.editor.plugin.tiled.manager.ResourcesManager;
 import games.rednblack.editor.plugin.tiled.view.tabs.GridTilesTab;
@@ -34,6 +35,8 @@ import games.rednblack.h2d.common.UIDraggablePanel;
 import games.rednblack.h2d.common.view.ui.widget.imagetabbedpane.ImageTab;
 import games.rednblack.h2d.common.view.ui.widget.imagetabbedpane.ImageTabbedPane;
 import games.rednblack.h2d.common.view.ui.widget.imagetabbedpane.ImageTabbedPaneListener;
+import games.rednblack.h2d.common.vo.ResourceExtraData;
+
 import org.puremvc.java.interfaces.IFacade;
 
 /**
@@ -68,9 +71,7 @@ public class TiledPanel extends UIDraggablePanel {
         facade = tiledPlugin.facade;
 
         mainTable = new VisTable();
-        add(mainTable)
-                .padLeft(-2)
-                .padRight(2);
+        add(mainTable).padLeft(-2).padRight(2);
 
         tabTable = new VisTable();
     }
@@ -88,15 +89,12 @@ public class TiledPanel extends UIDraggablePanel {
 
         tabTable.clear();
         paneTable.row();
-        paneTable.add(tabTable)
-                .left()
-                .top()
-                .row();
+        paneTable.add(tabTable).left().top().row();
 
         tabbedPane.addListener(new ImageTabbedPaneListener() {
 
             @Override
-            public void switchedTab (ImageTab tab) {
+            public void switchedTab(ImageTab tab) {
                 if (tab == null) {
                     return;
                 }
@@ -158,8 +156,8 @@ public class TiledPanel extends UIDraggablePanel {
         settingsTab.resetGridCategory();
     }
 
-    public void addTile(String tileName, int type) {
-        tilesTab.addTile(tileName, type);
+    public void addTile(String tileName, String atlasName, int regionIndex, int type) {
+        tilesTab.addTile(tileName, atlasName, regionIndex, type);
     }
 
     public void selectTile(TileVO tileVO) {
@@ -188,9 +186,7 @@ public class TiledPanel extends UIDraggablePanel {
         float width = GridTilesTab.isDrop ? DROP_WIDTH : GRID_WIDTH;
         float height = GridTilesTab.isDrop ? DROP_HEIGHT : GRID_HEIGHT;
         tabTable.clear();
-        tabTable.add(tilesTab.getContentTable())
-                .width(width)
-                .height(height);
+        tabTable.add(tilesTab.getContentTable()).width(width).height(height);
         tabTable.pack();
         pack();
     }

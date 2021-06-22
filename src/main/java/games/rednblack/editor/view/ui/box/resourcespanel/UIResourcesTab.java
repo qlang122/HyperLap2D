@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextField;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 import games.rednblack.h2d.common.view.ui.widget.imagetabbedpane.ImageTab;
@@ -56,7 +57,7 @@ public abstract class UIResourcesTab extends ImageTab {
         visTextField.setTextFieldListener(new VisTextField.TextFieldListener() {
             @Override
             public void keyTyped(VisTextField textField, char c) {
-                searchString    =   textField.getText();
+                searchString = textField.getText();
                 HyperLap2DFacade facade = HyperLap2DFacade.getInstance();
                 facade.sendNotification(SEARCH);
             }

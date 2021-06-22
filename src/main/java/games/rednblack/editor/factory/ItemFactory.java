@@ -23,7 +23,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import games.rednblack.editor.data.ImageData;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.controller.commands.PasteItemsCommand;
@@ -39,6 +38,7 @@ import games.rednblack.editor.view.stage.tools.TextTool;
 import games.rednblack.editor.view.ui.box.UILayerBoxMediator;
 import games.rednblack.h2d.common.ResourcePayloadObject;
 import games.rednblack.h2d.common.factory.IFactory;
+import games.rednblack.h2d.common.vo.ResourceExtraData;
 
 import java.util.HashMap;
 
@@ -88,8 +88,8 @@ public class ItemFactory implements IFactory {
 
     @Override
     public boolean createSimpleImage(String name, int index, Vector2 position) {
-        ImageData extra = new ImageData();
-        extra.index = index;
+        ResourceExtraData extra = new ResourceExtraData();
+        extra.value3 = index;
         ResourcePayloadObject payload = new ResourcePayloadObject();
         payload.name = name;
         payload.extra = extra;
@@ -98,10 +98,10 @@ public class ItemFactory implements IFactory {
 
     @Override
     public boolean createSimpleImage(ResourcePayloadObject payload, Vector2 position) {
-        ImageData extra = (ImageData) payload.extra;
+        ResourceExtraData extra = (ResourceExtraData) payload.extra;
         SimpleImageVO vo = new SimpleImageVO();
         vo.imageName = payload.name;
-        vo.index = extra.index;
+        vo.index = extra == null ? -1 : (int) extra.value3;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -112,11 +112,11 @@ public class ItemFactory implements IFactory {
 
     @Override
     public boolean createAtlasImage(ResourcePayloadObject payload, Vector2 position) {
-        ImageData extra = (ImageData) payload.extra;
+        ResourceExtraData extra = (ResourceExtraData) payload.extra;
         AtlasImageVO vo = new AtlasImageVO();
-        vo.atlasName = extra == null ? "" : extra.atlasName;
+        vo.atlasName = extra == null ? "" : (String) extra.value2;
         vo.imageName = payload.name;
-        vo.index = extra == null ? -1 : extra.index;
+        vo.index = extra == null ? -1 : (int) extra.value3;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -131,10 +131,10 @@ public class ItemFactory implements IFactory {
     }
 
     public boolean create9Patch(ResourcePayloadObject payload, Vector2 position) {
-        ImageData extra = (ImageData) payload.extra;
+        ResourceExtraData extra = (ResourceExtraData) payload.extra;
         Image9patchVO vo = new Image9patchVO();
         vo.imageName = payload.name;
-        vo.index = extra == null ? -1 : extra.index;
+        vo.index = extra == null ? -1 : (int) extra.value3;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntity(sandbox.getCurrentViewingEntity(), vo);
@@ -144,11 +144,11 @@ public class ItemFactory implements IFactory {
     }
 
     public boolean createAtlas9Patch(ResourcePayloadObject payload, Vector2 position) {
-        ImageData extra = (ImageData) payload.extra;
+        ResourceExtraData extra = (ResourceExtraData) payload.extra;
         Image9patchVO vo = new Image9patchVO();
-        vo.atlasName = extra == null ? "" : extra.atlasName;
+        vo.atlasName = extra == null ? "" : (String) extra.value2;
         vo.imageName = payload.name;
-        vo.index = extra == null ? -1 : extra.index;
+        vo.index = extra == null ? -1 : (int) extra.value3;
 
         if (!setEssentialData(vo, position)) return false;
         createdEntity = entityFactory.createEntityAtlas9Patch(sandbox.getCurrentViewingEntity(), vo);
@@ -274,8 +274,8 @@ public class ItemFactory implements IFactory {
         return entity;
     }
 
-    public boolean tryCreateParticleItem(String particleName, Vector2 position) {
-        Entity entity = createParticleItem(particleName, position);
+    public boolean tryCreateParticleItem(ResourcePayloadObject payload, Vector2 position) {
+        Entity entity = createParticleItem(payload.name, position);
 
        /* DimensionsComponent dimensionsComponent = ComponentRetriever.get(entity, DimensionsComponent.class);
         float boundBoxSize = 10f;
@@ -297,8 +297,8 @@ public class ItemFactory implements IFactory {
         return entity;
     }
 
-    public boolean tryCreateTalosItem(String particleName, Vector2 position) {
-        Entity entity = createTalosItem(particleName, position);
+    public boolean tryCreateTalosItem(ResourcePayloadObject payload, Vector2 position) {
+        Entity entity = createTalosItem(payload.name, position);
 
        /* DimensionsComponent dimensionsComponent = ComponentRetriever.get(entity, DimensionsComponent.class);
         float boundBoxSize = 10f;

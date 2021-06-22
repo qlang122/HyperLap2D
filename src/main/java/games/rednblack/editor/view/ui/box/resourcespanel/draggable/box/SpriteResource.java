@@ -21,6 +21,7 @@ package games.rednblack.editor.view.ui.box.resourcespanel.draggable.box;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import games.rednblack.h2d.common.ResourcePayloadObject;
 import games.rednblack.editor.renderer.data.SpriteAnimationVO;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
@@ -62,8 +63,8 @@ public class SpriteResource extends BoxItemResource {
         }
 
         // put it in middle
-        animThumb.setX((getWidth() - animThumb.getWidth()*animThumb.getScaleX()) / 2f);
-        animThumb.setY((getHeight() - animThumb.getHeight()*animThumb.getScaleY()) / 2f);
+        animThumb.setX((getWidth() - animThumb.getWidth() * animThumb.getScaleX()) / 2f);
+        animThumb.setY((getHeight() - animThumb.getHeight() * animThumb.getScaleY()) / 2f);
         animThumb.setPaused(false);
 
 
@@ -84,6 +85,7 @@ public class SpriteResource extends BoxItemResource {
         payloadActor = new SpriteAnimationActor(animationName, rm);
         payload = new ResourcePayloadObject();
         payload.name = animationName;
+        payload.tip = animationName;
         payload.className = getClass().getName();
 
         setHeight(thumbnailSize);

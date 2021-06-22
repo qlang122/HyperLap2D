@@ -29,7 +29,7 @@ public class ImageDrawStrategy extends BasicDrawStrategy {
         temp.set(x, y);
 
         TileVO vo = tiledPlugin.getSelectedTile();
-        if (itemFactory.createSimpleImage(vo.regionName, vo.index, temp)) {
+        if (itemFactory.createSimpleImage(vo.regionName, vo.regionIndex, temp)) {
             Entity imageEntity = itemFactory.getCreatedEntity();
             postProcessEntity(imageEntity, x, y, row, column);
         }
@@ -39,14 +39,14 @@ public class ImageDrawStrategy extends BasicDrawStrategy {
     public void updateTile(Entity entity) {
         if (!checkValidTile(entity)) return;
 
-        TextureRegionComponent textureRegionComponent = ComponentRetriever.get(entity, TextureRegionComponent.class);
-        if (textureRegionComponent != null && textureRegionComponent.regionName != null) {
+        TextureRegionComponent component = ComponentRetriever.get(entity, TextureRegionComponent.class);
+        if (component != null && component.regionName != null) {
             // there is already other tile under this one
             TileVO vo = tiledPlugin.getSelectedTile();
-            if (!textureRegionComponent.regionName.equals(vo.regionName)) {
+            if (!component.regionName.equals(vo.regionName)) {
                 String region = vo.regionName;
                 replaceRegionCommandBuilder.begin(entity);
-                TextureRegion textureRegion = tiledPlugin.getAPI().getSceneLoader().getRm().getTextureRegion(region, textureRegionComponent.index);
+                TextureRegion textureRegion = tiledPlugin.getAPI().getSceneLoader().getRm().getTextureRegion(region, component.index);
                 replaceRegionCommandBuilder.setRegion(textureRegion);
                 replaceRegionCommandBuilder.setRegionName(region);
                 replaceRegionCommandBuilder.execute(tiledPlugin.facade);

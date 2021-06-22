@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.view.ui.widget.actors.basic.PixelRect;
 import games.rednblack.editor.view.stage.Sandbox;
@@ -46,14 +47,15 @@ public abstract class BoxItemResource extends Group implements DraggableResource
         setHeight(thumbnailSize);
     }
 
-    public void setRightClickEvent(String eventName, String payload) {
+    public void setRightClickEvent(String eventName, Object payload) {
         addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchDown(event, x, y, pointer, button);
                 return true;
             }
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                if(button == Input.Buttons.RIGHT) {
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (button == Input.Buttons.RIGHT) {
                     HyperLap2DFacade.getInstance().sendNotification(eventName, payload);
                 }
             }

@@ -59,12 +59,12 @@ public class MainPanelMediator extends Mediator<MainPanel> {
                 break;
             case MainPanel.SAVE_CLICKED:
                 Entity entity = plugin.currEditingEntity;
-                NinePatchComponent ninePatchComponent = ComponentRetriever.get(entity, NinePatchComponent.class);
-                String atlasName = ninePatchComponent.textureAtlasName;
+                NinePatchComponent component = ComponentRetriever.get(entity, NinePatchComponent.class);
+                String atlasName = component.textureAtlasName;
                 if (atlasName.isEmpty())
-                    applyNewSplitsToImage(ninePatchComponent.textureRegionName, viewComponent.getSplits());
+                    applyNewSplitsToImage(component.textureRegionName, component.index, viewComponent.getSplits());
                 else
-                    applyNewSplitsToAtlasImage(atlasName, ninePatchComponent.textureRegionName, viewComponent.getSplits());
+                    applyNewSplitsToAtlasImage(atlasName, component.textureRegionName, component.index, viewComponent.getSplits());
                 viewComponent.hide();
                 break;
         }
@@ -77,9 +77,11 @@ public class MainPanelMediator extends Mediator<MainPanel> {
         TextureRegionComponent textureRegionComponent = ComponentRetriever.get(entity, TextureRegionComponent.class);
         String atlasName = textureRegionComponent.textureAtlasName;
         String regionName = textureRegionComponent.regionName;
+        int regionIndex = textureRegionComponent.index;
         NinePatchComponent ninePatchComponent = plugin.getAPI().getEngine().createComponent(NinePatchComponent.class);
         ninePatchComponent.textureAtlasName = atlasName;
         ninePatchComponent.textureRegionName = regionName;
+        ninePatchComponent.index = regionIndex;
         TextureAtlas.AtlasRegion newRegion = (TextureAtlas.AtlasRegion) textureRegionComponent.region;
         int[] splits = {0, 0, 0, 0};
         int[] pad = {0, 0, 0, 0};
@@ -90,10 +92,12 @@ public class MainPanelMediator extends Mediator<MainPanel> {
 
         if (atlasName.isEmpty()) {
             //remove original image
-            File originalImg = new File(plugin.getAPI().getProjectPath() + "/assets/orig/images/" + regionName + ".png");
+            File originalImg = new File(plugin.getAPI().getProjectPath() + "/assets/orig/images/"
+                    + regionName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".png");
             originalImg.delete();
         } else {
-            File originalImg = new File(plugin.getAPI().getProjectPath() + "/assets/orig/atlas-images/" + atlasName + File.separator + regionName + ".png");
+            File originalImg = new File(plugin.getAPI().getProjectPath() + "/assets/orig/atlas-images/"
+                    + atlasName + File.separator + regionName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".png");
             originalImg.delete();
         }
 
@@ -103,10 +107,10 @@ public class MainPanelMediator extends Mediator<MainPanel> {
         if (atlasName.isEmpty()) {
             //save split data
             addSplitsToImageInAtlas(regionName, splits);
-            applyNewSplitsToImage(regionName, splits);
+            applyNewSplitsToImage(regionName, regionIndex, splits);
         } else {
             addSplitsToAtlasImageInAtlas(atlasName, regionName, splits);
-            applyNewSplitsToAtlasImage(atlasName, regionName, splits);
+            applyNewSplitsToAtlasImage(atlasName, regionName, regionIndex, splits);
         }
 
         // reload
@@ -115,8 +119,8 @@ public class MainPanelMediator extends Mediator<MainPanel> {
 
     private void loadNinePatch() {
         Entity entity = plugin.currEditingEntity;
-        NinePatchComponent ninePatchComponent = ComponentRetriever.get(entity, NinePatchComponent.class);
-        loadRegion(ninePatchComponent.textureAtlasName, ninePatchComponent.textureRegionName);
+        NinePatchComponent component = ComponentRetriever.get(entity, NinePatchComponent.class);
+        loadRegion(component.textureAtlasName, component.textureRegionName, component.index);
         viewComponent.show(plugin.getAPI().getUIStage());
     }
 
@@ -144,19 +148,21 @@ public class MainPanelMediator extends Mediator<MainPanel> {
         writeFile(newContent, test);
     }
 
-    private void applyNewSplitsToImage(String textureRegionName, int[] splits) {
+    private void applyNewSplitsToImage(String textureRegionName, int regionIndex, int[] splits) {
         // first need to modify original image
         String atlasPath = plugin.getAPI().getProjectPath() + "/assets/orig/pack/pack.atlas";
         FileHandle packAtlas = Gdx.files.internal(atlasPath);
         FileHandle imagesDir = Gdx.files.internal(plugin.getAPI().getProjectPath() + "/assets/orig/pack/");
         TextureAtlas.TextureAtlasData atlas = new TextureAtlas.TextureAtlasData(packAtlas, imagesDir, false);
-        BufferedImage finalImage = imageUtils.extractImage(atlas, textureRegionName, splits);
-        imageUtils.saveImage(finalImage, plugin.getAPI().getProjectPath() + "/assets/orig/images/" + textureRegionName + ".9.png");
+        BufferedImage finalImage = imageUtils.extractImage(atlas, textureRegionName, regionIndex, splits);
+        if (finalImage == null) return;
+        imageUtils.saveImage(finalImage, plugin.getAPI().getProjectPath() + "/assets/orig/images/"
+                + textureRegionName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".9.png");
 
         // now need to modify the pack
         String content = packAtlas.readString();
-        int regionIndex = content.indexOf(textureRegionName);
-        int splitStart = content.indexOf("split: ", regionIndex) + "split: ".length();
+        int index = content.indexOf(textureRegionName);
+        int splitStart = content.indexOf("split: ", index) + "split: ".length();
         int splitEnd = content.indexOf("orig: ", splitStart);
         String splitStr = splits[0] + ", " + splits[1] + ", " + splits[2] + ", " + splits[3] + "\n  ";
         String newContent = content.substring(0, splitStart) + splitStr + content.substring(splitEnd, content.length());
@@ -164,19 +170,21 @@ public class MainPanelMediator extends Mediator<MainPanel> {
         writeFile(newContent, test);
     }
 
-    private void applyNewSplitsToAtlasImage(String atlasName, String regionName, int[] splits) {
+    private void applyNewSplitsToAtlasImage(String atlasName, String regionName, int regionIndex, int[] splits) {
         // first need to modify original image
         String atlasPath = plugin.getAPI().getProjectPath() + "/assets/orig/atlas-images/" + atlasName + ".atlas";
         FileHandle packAtlas = Gdx.files.internal(atlasPath);
         FileHandle imagesDir = Gdx.files.internal(plugin.getAPI().getProjectPath() + "/assets/orig/atlas-images/");
         TextureAtlas.TextureAtlasData atlas = new TextureAtlas.TextureAtlasData(packAtlas, imagesDir, false);
-        BufferedImage finalImage = imageUtils.extractImage(atlas, regionName, splits);
-        imageUtils.saveImage(finalImage, imagesDir.path() + File.separator + atlasName + File.separator + regionName + ".9.png");
+        BufferedImage finalImage = imageUtils.extractImage(atlas, regionName, regionIndex, splits);
+        if (finalImage == null) return;
+        imageUtils.saveImage(finalImage, imagesDir.path() + File.separator + atlasName + File.separator
+                + regionName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".9.png");
 
         // now need to modify the pack
         String content = packAtlas.readString();
-        int regionIndex = content.indexOf(regionName);
-        int splitStart = content.indexOf("split: ", regionIndex) + "split: ".length();
+        int index = content.indexOf(regionName);
+        int splitStart = content.indexOf("split: ", index) + "split: ".length();
         int splitEnd = content.indexOf("orig: ", splitStart);
         String splitStr = splits[0] + ", " + splits[1] + ", " + splits[2] + ", " + splits[3] + "\n  ";
         String newContent = content.substring(0, splitStart) + splitStr + content.substring(splitEnd, content.length());
@@ -200,14 +208,14 @@ public class MainPanelMediator extends Mediator<MainPanel> {
         }
     }
 
-    private void loadRegion(String atlasName, String name) {
+    private void loadRegion(String atlasName, String name, int regionIndex) {
         TextureAtlas atlas;
         if (atlasName.isEmpty()) {
             atlas = plugin.getAPI().getProjectTextureAtlas();
         } else atlas = plugin.getAPI().getAtlasImageAtlas(atlasName);
 
         validateNinePatchTextureRegion(atlas.findRegion(name));
-        viewComponent.setTexture(atlas.findRegion(name));
+        viewComponent.setTexture(atlas.findRegion(name, regionIndex));
 
         viewComponent.setListeners(plugin.getAPI().getUIStage());
     }
@@ -225,9 +233,11 @@ public class MainPanelMediator extends Mediator<MainPanel> {
         int[] pad = {0, 0, 0, 0};
         texture.names = new String[]{"split", "pad"};
         texture.values = new int[][]{splits, pad};
+        int regionIndex = texture.index;
 
         //remove original image
-        File originalImg = new File(plugin.getAPI().getProjectPath() + "/assets/orig/images/" + texture.name + ".png");
+        File originalImg = new File(plugin.getAPI().getProjectPath() + "/assets/orig/images/"
+                + texture.name + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".png");
         originalImg.delete();
 
         //save project

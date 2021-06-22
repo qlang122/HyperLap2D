@@ -29,6 +29,7 @@ import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableReso
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResourceView;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.list.ParticleEffectResource;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.list.TalosResource;
+import games.rednblack.h2d.common.ResourcePayloadObject;
 import games.rednblack.h2d.extension.talos.TalosItemType;
 import games.rednblack.h2d.extention.spine.SpineItemType;
 import org.apache.commons.lang3.ArrayUtils;
@@ -90,7 +91,7 @@ public class UIParticleEffectsTabMediator extends UIResourcesTabMediator<UIParti
     }
 
 
-    private void createAnimationResources(Set<String> strings, Class resourceClass, BiFunction<String, Vector2, Boolean> factoryFunction, String searchText) {
+    private void createAnimationResources(Set<String> strings, Class resourceClass, BiFunction<ResourcePayloadObject, Vector2, Boolean> factoryFunction, String searchText) {
         for (String animationName : strings) {
             if (!animationName.contains(searchText)) continue;
             try {

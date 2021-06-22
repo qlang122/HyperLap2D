@@ -156,9 +156,9 @@ public class ImageUtils {
         return 0;
     }
 
-    public BufferedImage extractImage(TextureAtlas.TextureAtlasData atlas, String regionName, int[] splits) {
+    public BufferedImage extractImage(TextureAtlas.TextureAtlasData atlas, String regionName, int regionIndex, int[] splits) {
         for (TextureAtlas.TextureAtlasData.Region region : atlas.getRegions()) {
-            if (region.name.equals(regionName)) {
+            if (region.name.equals(regionName) && region.index == regionIndex) {
                 TextureAtlas.TextureAtlasData.Page page = region.page;
                 BufferedImage img = null;
                 try {

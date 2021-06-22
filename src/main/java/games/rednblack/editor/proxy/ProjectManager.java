@@ -771,40 +771,40 @@ public class ProjectManager extends Proxy {
         return currentProjectPath + File.separator + "assets" + File.separator + "orig" + File.separator + "images";
     }
 
-    private boolean deleteSingleImage(String resolutionName, String imageName) {
+    private boolean deleteSingleImage(String resolutionName, String imageName, int regionIndex) {
         String imagesPath = currentProjectPath + "/assets/" + resolutionName + "/images" + File.separator;
-        String filePath = imagesPath + imageName + ".png";
+        String filePath = imagesPath + imageName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".png";
         if (!(new File(filePath)).delete()) {
-            filePath = imagesPath + imageName + ".9.png";
+            filePath = imagesPath + imageName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".9.png";
             return (new File(filePath)).delete();
         }
         return true;
     }
 
-    public boolean deleteSingleImageForAllResolutions(String imageName) {
+    public boolean deleteSingleImageForAllResolutions(String imageName, int regionIndex) {
         for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
-            if (!deleteSingleImage(resolutionEntryVO.name, imageName))
+            if (!deleteSingleImage(resolutionEntryVO.name, imageName, regionIndex))
                 return false;
         }
-        return deleteSingleImage("orig", imageName);
+        return deleteSingleImage("orig", imageName, regionIndex);
     }
 
-    private boolean deleteAtlasImage(String resolutionName, String atlasName, String imageName) {
+    private boolean deleteAtlasImage(String resolutionName, String atlasName, String imageName, int regionIndex) {
         String imagesPath = currentProjectPath + "/assets/" + resolutionName + "/atlas-images" + File.separator + atlasName;
-        String filePath = imagesPath + File.separator + imageName + ".png";
+        String filePath = imagesPath + File.separator + imageName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".png";
         if (!(new File(filePath)).delete()) {
-            filePath = imagesPath + imageName + ".9.png";
+            filePath = imagesPath + imageName + (regionIndex > 0 ? ("_" + regionIndex) : "") + ".9.png";
             return (new File(filePath)).delete();
         }
         return true;
     }
 
-    public boolean deleteAtlasImageForAllResolutions(String atlasName, String imageName) {
+    public boolean deleteAtlasImageForAllResolutions(String atlasName, String imageName, int regionIndex) {
         for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
-            if (!deleteAtlasImage(resolutionEntryVO.name, atlasName, imageName))
+            if (!deleteAtlasImage(resolutionEntryVO.name, atlasName, imageName, regionIndex))
                 return false;
         }
-        return deleteAtlasImage("orig", atlasName, imageName);
+        return deleteAtlasImage("orig", atlasName, imageName, regionIndex);
     }
 
     public boolean deleteParticle(String particleName) {

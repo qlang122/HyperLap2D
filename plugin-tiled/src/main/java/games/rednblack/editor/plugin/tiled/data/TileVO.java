@@ -10,7 +10,8 @@ import games.rednblack.editor.renderer.factory.EntityFactory;
 public class TileVO {
 
     public String regionName = "";
-    public int index = -1;
+    public String atlasName = "";
+    public int regionIndex = -1;
     public Vector2 gridOffset;
     public int entityType = EntityFactory.IMAGE_TYPE;
 

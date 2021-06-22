@@ -111,7 +111,7 @@ public class TiledPlugin extends H2DPluginAdapter {
         tileAddButtonStyle.down = skin.getDrawable("toolbar-down");
         tileAddButtonStyle.checked = skin.getDrawable("toolbar-down");
         tileAddButtonStyle.over = skin.getDrawable("toolbar-over");
-        tileAddButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tilebrush", -1, -1));
+        tileAddButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tilebrush", "", -1, -1));
         pluginAPI.addTool(DrawTileTool.NAME, tileAddButtonStyle, true, drawTileTool);
 
         VisImageButton.VisImageButtonStyle tileDeleteButtonStyle = new VisImageButton.VisImageButtonStyle();
@@ -119,7 +119,7 @@ public class TiledPlugin extends H2DPluginAdapter {
         tileDeleteButtonStyle.down = skin.getDrawable("toolbar-down");
         tileDeleteButtonStyle.checked = skin.getDrawable("toolbar-down");
         tileDeleteButtonStyle.over = skin.getDrawable("toolbar-over");
-        tileDeleteButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tileeraser", -1, -1));
+        tileDeleteButtonStyle.imageUp = new TextureRegionDrawable(pluginRM.getTextureRegion("tool-tileeraser", "", -1, -1));
         pluginAPI.addTool(DeleteTileTool.NAME, tileDeleteButtonStyle, false, deleteTileTool);
 
         pluginAPI.setDropDownItemName(ACTION_SET_GRID_SIZE_FROM_ITEM, "Set tile grid size");

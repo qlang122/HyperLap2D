@@ -35,6 +35,7 @@ import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.h2d.common.ResourcePayloadObject;
+import games.rednblack.h2d.common.vo.ResourceExtraData;
 
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.mediator.Mediator;
@@ -107,10 +108,20 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
                             return; //only some resources can become a tile!
 
                         String tileName = resourcePayloadObject.name;
-                        if (tiledPlugin.dataToSave.containsTile(tileName)) return;
+                        ResourceExtraData extra = (ResourceExtraData) resourcePayloadObject.extra;
 
-                        tiledPlugin.facade.sendNotification(TiledPlugin.TILE_ADDED, new Object[]{tileName, type});
+                        int regionIndex = -1;
+                        String atlasName = "";
+                        if (extra != null && type == EntityFactory.IMAGE_TYPE)
+                            regionIndex = (int) extra.value3;
+                        else if (extra != null && type == EntityFactory.ATLAS_IMAGE_TYPE) {
+                            atlasName = (String) extra.value2;
+                            regionIndex = (int) extra.value3;
+                        }
 
+                        if (tiledPlugin.dataToSave.containsTile(tileName, regionIndex)) return;
+
+                        tiledPlugin.facade.sendNotification(TiledPlugin.TILE_ADDED, new Object[]{tileName, type, atlasName, regionIndex});
                     }
                 };
                 tiledPlugin.facade.sendNotification(MsgAPI.ADD_TARGET, target);
@@ -122,41 +133,45 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
                 Object[] payload = notification.getBody();
                 tileName = (String) payload[0];
                 int type = (int) payload[1];
-                viewComponent.addTile(tileName, type);
+                String atlasName = (String) payload[2];
+                int regionIndex = (int) payload[3];
 
-                tiledPlugin.dataToSave.addTile(tileName, type);
+                viewComponent.addTile(tileName, atlasName, regionIndex, type);
+
+                tiledPlugin.dataToSave.addTile(tileName, atlasName, regionIndex, type);
                 tiledPlugin.saveDataManager.save();
                 break;
             case TiledPlugin.TILE_SELECTED:
                 viewComponent.selectTile(notification.getBody());
                 break;
             case TiledPlugin.OPEN_DROP_DOWN:
-                tileName = notification.getBody();
+                TileVO vo = notification.getBody();
                 HashMap<String, String> actionsSet = new HashMap<>();
                 actionsSet.put(TiledPlugin.ACTION_SET_GRID_SIZE_FROM_LIST, "Set grid size");
                 actionsSet.put(TiledPlugin.ACTION_DELETE_TILE, "Delete");
                 actionsSet.put(TiledPlugin.ACTION_OPEN_OFFSET_PANEL, "Set offset");
-                tiledPlugin.facade.sendNotification(TiledPlugin.TILE_SELECTED, tiledPlugin.dataToSave.getTile(tileName));
-                tiledPlugin.getAPI().showPopup(actionsSet, tileName);
+                tiledPlugin.facade.sendNotification(TiledPlugin.TILE_SELECTED, tiledPlugin.dataToSave.getTile(vo.regionName, vo.regionIndex));
+                tiledPlugin.getAPI().showPopup(actionsSet, vo);
                 break;
             case MsgAPI.ACTION_DELETE_IMAGE_RESOURCE:
-                tileName = notification.getBody();
-                tiledPlugin.facade.sendNotification(TiledPlugin.ACTION_DELETE_TILE, tileName);
-                break;
             case MsgAPI.ACTION_DELETE_ATLAS_IMAGE_RESOURCE:
-                tileName = notification.getBody();
-                tiledPlugin.facade.sendNotification(TiledPlugin.ACTION_DELETE_TILE, tileName);
+                ResourceExtraData data = notification.getBody();
+                String imageName = data == null ? "" : (String) data.value1;
+                int index = data == null ? -1 : (int) data.value3;
+                TileVO vo1 = new TileVO(imageName);
+                vo1.regionIndex = index;
+                tiledPlugin.facade.sendNotification(TiledPlugin.ACTION_DELETE_TILE, vo1);
                 break;
             case TiledPlugin.ACTION_SET_GRID_SIZE_FROM_LIST:
                 float width = 0;
                 float height = 0;
-                TileVO t = tiledPlugin.dataToSave.getTile(notification.getBody());
+                TileVO t = notification.getBody();
                 if (t.entityType == EntityFactory.SPINE_TYPE) {
                     SpineDrawable spineDrawable = tiledPlugin.pluginRM.getSpineDrawable(t.regionName);
                     width = spineDrawable.width;
                     height = spineDrawable.height;
                 } else {
-                    TextureRegion r = tiledPlugin.pluginRM.getTextureRegion(t.regionName, t.entityType);
+                    TextureRegion r = tiledPlugin.pluginRM.getTextureRegion(t.regionName, t.atlasName, t.regionIndex, t.entityType);
                     width = r.getRegionWidth();
                     height = r.getRegionHeight();
                 }
@@ -165,9 +180,9 @@ public class TiledPanelMediator extends Mediator<TiledPanel> {
                 tiledPlugin.facade.sendNotification(TiledPlugin.GRID_CHANGED);
                 break;
             case TiledPlugin.ACTION_DELETE_TILE:
-                String tn = notification.getBody();
-                if (!tiledPlugin.dataToSave.containsTile(tn)) return;
-                tiledPlugin.dataToSave.removeTile(tn);
+                TileVO vo2 = notification.getBody();
+                if (!tiledPlugin.dataToSave.containsTile(vo2.regionName, vo2.regionIndex)) return;
+                tiledPlugin.dataToSave.removeTile(vo2.regionName, vo2.regionIndex);
                 tiledPlugin.saveDataManager.save();
                 tiledPlugin.setSelectedTileVO(new TileVO());
 

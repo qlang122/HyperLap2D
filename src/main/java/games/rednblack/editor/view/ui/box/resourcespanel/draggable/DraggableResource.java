@@ -93,7 +93,7 @@ public class DraggableResource extends DragAndDrop implements Comparable<Draggab
         }
 
         if (viewComponent instanceof BoxItemResource) {
-            StandardWidgetsFactory.addVisTooltip((Actor) viewComponent, viewComponent.getPayloadData().name);
+            StandardWidgetsFactory.addVisTooltip((Actor) viewComponent, viewComponent.getPayloadData().tip);
         }
     }
 

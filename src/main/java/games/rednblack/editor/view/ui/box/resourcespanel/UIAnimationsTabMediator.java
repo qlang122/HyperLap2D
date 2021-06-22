@@ -31,6 +31,7 @@ import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableReso
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.DraggableResourceView;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.SpineResource;
 import games.rednblack.editor.view.ui.box.resourcespanel.draggable.box.SpriteResource;
+import games.rednblack.h2d.common.ResourcePayloadObject;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.puremvc.java.interfaces.INotification;
@@ -89,7 +90,7 @@ public class UIAnimationsTabMediator extends UIResourcesTabMediator<UIAnimations
         viewComponent.setThumbnailBoxes(animationBoxes);
     }
 
-    private void createAnimationResources(Set<String> strings, Class resourceClass, BiFunction<String, Vector2, Boolean> factoryFunction, String searchText) {
+    private void createAnimationResources(Set<String> strings, Class resourceClass, BiFunction<ResourcePayloadObject, Vector2, Boolean> factoryFunction, String searchText) {
         for (String animationName : strings) {
             if (!animationName.contains(searchText)) continue;
             try {
