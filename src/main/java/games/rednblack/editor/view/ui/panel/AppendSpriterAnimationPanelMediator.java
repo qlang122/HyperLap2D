@@ -53,6 +53,8 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
 
     private final SpriterAppendAsset asset;
 
+    private String beAppendToAnimation;
+
     public AppendSpriterAnimationPanelMediator() {
         super(NAME, new AppendSpriterAnimationPanel());
         asset = new SpriterAppendAsset();
@@ -84,7 +86,8 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
         UIStage uiStage = sandbox.getUIStage();
         switch (notification.getName()) {
             case MsgAPI.SPRITER_APPEND_ANIMATION:
-                String animationName = notification.getBody();
+                beAppendToAnimation = notification.getBody();
+                asset.setNeedAppendAnimation(beAppendToAnimation);
                 viewComponent.show(uiStage);
                 break;
             case AppendSpriterAnimationPanel.BROWSE_BTN_CLICKED:

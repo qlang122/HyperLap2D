@@ -82,8 +82,10 @@ public class SpriterAsset extends Asset {
             String targetPath;
 
             animationDataPath = FilenameUtils.getFullPathNoEndSeparator(sourcePath);
-            targetPath = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.SPRITER_DIR_PATH + File.separator + fileNameWithOutExt;
-            FileHandle atlasFileSource = new FileHandle(animationDataPath + File.separator + fileNameWithOutExt + ".atlas");
+            targetPath = projectManager.getCurrentProjectPath() + File.separator
+                    + ProjectManager.SPRITER_DIR_PATH + File.separator + fileNameWithOutExt;
+            FileHandle atlasFileSource = new FileHandle(animationDataPath + File.separator
+                    + fileNameWithOutExt + ".atlas");
 
             File atlasFileTarget = new File(targetPath + File.separator + fileNameWithOutExt + ".atlas");
 
@@ -100,7 +102,8 @@ public class SpriterAsset extends Asset {
                         FileUtils.copyFile(imgSource.file(), imgTarget);
                     } else {
                         Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-                                "\nCould not find '" + imgSource.name() + "'.\nCheck if the file exists in the same directory.").padBottom(20).pack();
+                                "\nCould not find '" + imgSource.name()
+                                        + "'.\nCheck if the file exists in the same directory.").padBottom(20).pack();
                         return null;
                     }
                 }
@@ -126,7 +129,8 @@ public class SpriterAsset extends Asset {
                 for (File imageFile : new Array.ArrayIterator<>(imageFiles)) {
                     if (!imageFile.exists()) {
                         Dialogs.showErrorDialog(Sandbox.getInstance().getUIStage(),
-                                "\nCould not find " + imageFile.getName() + ".\nCheck if the file exists in the same directory.").padBottom(20).pack();
+                                "\nCould not find " + imageFile.getName()
+                                        + ".\nCheck if the file exists in the same directory.").padBottom(20).pack();
                         return null;
                     }
                 }
