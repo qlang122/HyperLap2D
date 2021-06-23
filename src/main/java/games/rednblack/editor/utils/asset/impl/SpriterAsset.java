@@ -69,7 +69,7 @@ public class SpriterAsset extends Asset {
         }
     }
 
-    private File importExternalAnimationIntoProject(FileHandle animationFileSource, ProgressHandler progressHandler) {
+    protected File importExternalAnimationIntoProject(FileHandle animationFileSource, ProgressHandler progressHandler) {
         try {
             String fileName = animationFileSource.name();
             if (!HyperLap2DUtils.SCML_FILTER.accept(null, fileName)) {
@@ -151,7 +151,7 @@ public class SpriterAsset extends Asset {
         return null;
     }
 
-    private Version getVersion(FileHandle fileHandle) {
+    protected Version getVersion(FileHandle fileHandle) {
         Version version;
 
         String regex = "scml_version *= *\"(\\d+\\.\\d+\\.?\\d*)\"";
@@ -167,7 +167,7 @@ public class SpriterAsset extends Asset {
         return version;
     }
 
-    private ArrayList<String> readAssetFileNames(FileHandle fileHandle) {
+    protected ArrayList<String> readAssetFileNames(FileHandle fileHandle) {
         XmlReader reader = new XmlReader();
         InputStream read = fileHandle.read();
         XmlReader.Element root = reader.parse(read);

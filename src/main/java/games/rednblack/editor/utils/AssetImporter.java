@@ -18,7 +18,7 @@ import java.io.File;
 public class AssetImporter {
 
     private static AssetImporter sInstance;
-    private ImportPanelMediator.AssetsImportProgressHandler progressHandler;
+    private ProgressHandler progressHandler;
     private ImportPanel viewComponent;
 
     private final Array<Asset> assetDescriptors = new Array<>();
@@ -46,7 +46,7 @@ public class AssetImporter {
 
     }
 
-    public void setProgressHandler(ImportPanelMediator.AssetsImportProgressHandler handler) {
+    public void setProgressHandler(ProgressHandler handler) {
         progressHandler = handler;
     }
 
