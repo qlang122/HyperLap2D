@@ -10,7 +10,6 @@ import games.rednblack.editor.utils.asset.Asset;
 import games.rednblack.editor.utils.asset.impl.*;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.ui.panel.ImportPanel;
-import games.rednblack.editor.view.ui.panel.ImportPanelMediator;
 import games.rednblack.h2d.common.ProgressHandler;
 
 import java.io.File;

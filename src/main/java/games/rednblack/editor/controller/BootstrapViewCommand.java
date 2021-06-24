@@ -29,6 +29,7 @@ import games.rednblack.editor.view.ui.box.*;
 import games.rednblack.editor.view.ui.box.bottom.*;
 import games.rednblack.editor.view.ui.dialog.*;
 import games.rednblack.editor.view.ui.panel.*;
+
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.command.SimpleCommand;
 
@@ -48,12 +49,12 @@ public class BootstrapViewCommand extends SimpleCommand {
         facade.registerMediator(new UIWindowActionMediator());
 
         facade.registerMediator(new UICompositeHierarchyMediator());
-		facade.registerMediator(new UISceneBoxMediator());
+        facade.registerMediator(new UISceneBoxMediator());
         facade.registerMediator(new UIGridBoxMediator());
         facade.registerMediator(new UIResolutionBoxMediator());
         facade.registerMediator(new UIZoomBoxMediator());
         facade.registerMediator(new UIToolBoxMediator());
-		facade.registerMediator(new UILivePreviewBoxMediator());
+        facade.registerMediator(new UILivePreviewBoxMediator());
 
         facade.registerMediator(new RulersUIMediator());
         facade.registerMediator(new FollowersUIMediator());
@@ -74,6 +75,7 @@ public class BootstrapViewCommand extends SimpleCommand {
         facade.registerMediator(new TagsPanelMediator());
         facade.registerMediator(new EditSpriteAnimationPanelMediator());
         facade.registerMediator(new ShaderUniformsPanelMediator());
+        facade.registerMediator(new AppendSpriterAnimationPanelMediator());
 
         // Dialogs
         facade.registerMediator(new LoadingBarDialogMediator());
