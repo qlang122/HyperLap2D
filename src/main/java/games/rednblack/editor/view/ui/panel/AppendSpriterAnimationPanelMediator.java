@@ -31,6 +31,7 @@ import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.mediator.Mediator;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -89,13 +90,16 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
                 beAppendToAnimation = notification.getBody();
                 asset.setNeedAppendAnimation(beAppendToAnimation);
                 viewComponent.show(uiStage);
+                viewComponent.setAnimations(asset.getCanAppendAnimationsName());
                 break;
             case AppendSpriterAnimationPanel.BROWSE_BTN_CLICKED:
                 showFileChoose();
                 break;
             case AppendSpriterAnimationPanel.CHOICE_BTN_CLICKED:
                 String name = notification.getBody();
-
+                ArrayList<String> names = new ArrayList<>(1);
+                names.add(name);
+                asset.importAsset(names, progressHandler);
                 break;
             case MsgAPI.ACTION_FILES_DROPPED:
                 ImportPanel.DropBundle bundle = notification.getBody();
@@ -202,7 +206,8 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
                 ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
                 projectManager.openProjectAndLoadAllData(projectManager.getCurrentProjectPath());
                 sandbox.loadCurrentProject();
-                AppendSpriterAnimationPanelMediator.this.viewComponent.setDroppingView();
+                viewComponent.setDroppingView();
+                viewComponent.setAnimations(asset.getCanAppendAnimationsName());
                 facade.sendNotification(ProjectManager.PROJECT_DATA_UPDATED);
             });
         }

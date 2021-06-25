@@ -24,12 +24,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisDialog;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -81,13 +83,13 @@ public class ImportPanel extends UIDraggablePanel {
 
         errorLabel = new VisLabel("File you selected was too sexy to import");
         errorLabel.setColor(Color.RED);
-        errorLabel.setWidth(260);
+        errorLabel.setWidth(250);
         errorLabel.setWrap(true);
         errorLabel.getColor().a = 0;
         errorLabel.setTouchable(Touchable.disabled);
 
-        mainTable.add(errorLabel).width(260).pad(6);
-        mainTable.row().pad(5);
+        mainTable.add(errorLabel).width(250).padTop(6);
+        mainTable.row().padTop(5);
     }
 
     private void fillTypeNames() {
@@ -120,7 +122,7 @@ public class ImportPanel extends UIDraggablePanel {
     public boolean checkDropRegionHit(Vector2 mousePos) {
         Vector2 pos = Sandbox.getInstance().getUIStage().getViewport().unproject(mousePos);
         pos = dropRegion.stageToLocalCoordinates(pos);
-        if (dropRegion.hit(pos.x, pos.y, false) != null) {
+        if (dropRegion.hit(pos.x, pos.y, true) != null) {
             return true;
         }
 
@@ -142,26 +144,39 @@ public class ImportPanel extends UIDraggablePanel {
         mainTable.clear();
 
         VisLabel helpLbl = new VisLabel("Supported file types: images, sprite animations (atlas or img sequence), spine animations, spriter scml, particle effects");
-        helpLbl.setWidth(260);
+        helpLbl.setWidth(250);
         helpLbl.setWrap(true);
-        mainTable.add(helpLbl).width(260).padLeft(5);
+        mainTable.add(helpLbl).width(250);
         mainTable.row().padBottom(5);
 
         dropRegion = new Image(VisUI.getSkin().getDrawable("dropHere"));
-        mainTable.add(dropRegion).padRight(6).padBottom(6).padTop(10);
-        mainTable.row().pad(5);
+        dropRegion.setTouchable(Touchable.disabled);
+        mainTable.add(dropRegion).padRight(10).padBottom(6).padTop(10);
+        mainTable.row().padTop(5);
 
         mainTable.add(new VisLabel("or browse files on file system"));
-        mainTable.row().pad(5);
+        mainTable.row().padTop(5);
 
         VisTextButton showFileSelectBtn = new VisTextButton("Browse");
-        mainTable.add(showFileSelectBtn).width(88);
-        mainTable.row().pad(5);
+        mainTable.add(showFileSelectBtn).width(88).padRight(5);
+        mainTable.row().padTop(5);
 
         initDropListeners(showFileSelectBtn);
 
         dragExit();
         pack();
+    }
+
+    @Override
+    public VisDialog show(Stage stage) {
+        dropRegion.setTouchable(Touchable.enabled);
+        return super.show(stage);
+    }
+
+    @Override
+    public void cancel() {
+        dropRegion.setTouchable(Touchable.disabled);
+        super.cancel();
     }
 
     public void setImportingView(int type, int count) {

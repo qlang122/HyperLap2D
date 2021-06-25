@@ -20,6 +20,7 @@ package games.rednblack.editor.data;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * @author Created by qlang on 5/27/2021.
@@ -27,5 +28,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 public class SpriterAnimData {
     public TextureAtlas atlas;
     public FileHandle scmlFile;
+    public Array<FileHandle> extraScmlFiles = new Array<>();
     public String animName;
 }

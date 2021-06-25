@@ -40,8 +40,8 @@ public class SpriterResource extends BoxItemResource {
     public SpriterResource(String animationName) {
         facade = HyperLap2DFacade.getInstance();
 
-        SpriterVO vo = new SpriterVO();
-        vo.animationName = animationName;
+//        SpriterVO vo = new SpriterVO();
+//        vo.animationName = animationName;
         SpriterActor animThumb = new SpriterActor(animationName, sandbox.getSceneControl().sceneLoader.getRm());
 
         if (animThumb.getWidth() > thumbnailSize || animThumb.getHeight() > thumbnailSize) {

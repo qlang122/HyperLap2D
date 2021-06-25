@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.VisUI;
 import com.talosvfx.talos.runtime.ParticleEffectDescriptor;
@@ -70,7 +71,6 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     private final HashMap<String, TextureAtlas> spriteAnimAtlases = new HashMap<>();
     private final HashMap<String, SpriterAnimData> spriterAnimAtlases = new HashMap<>();
     private final HashMap<String, TextureAtlas> atlasImageAtlases = new HashMap<>();
-    private final HashMap<String, BitmapFont> freeTypeTempBitmapFonts = new HashMap<>();
     private final HashMap<FontSizePair, BitmapFont> bitmapFonts = new HashMap<>();
     private final HashMap<String, ShaderProgram> shaderPrograms = new HashMap<>(1);
 
@@ -225,6 +225,12 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     public FileHandle getSpriterSCML(String name) {
         SpriterAnimData animData = spriterAnimAtlases.get(name);
         return animData.scmlFile;
+    }
+
+    @Override
+    public Array<FileHandle> getSpriterExtraSCML(String name) {
+        SpriterAnimData animData = spriterAnimAtlases.get(name);
+        return animData.extraScmlFiles;
     }
 
     @Override
@@ -387,15 +393,39 @@ public class ResourceManager extends Proxy implements IResourceRetriever {
     private void loadCurrentProjectSpriterAnimations(String path, String curResolution) {
         spriterAnimAtlases.clear();
         FileHandle sourceDir = new FileHandle(path + "orig" + "/spriter-animations");
+        FileHandle extraConfigFile = new FileHandle(sourceDir.path() + File.separator + "anim-relation.dt");
+        SpriterRelationVO rVO = null;
+        if (extraConfigFile.exists()) {
+            try {
+                Json json = new Json();
+                json.setIgnoreUnknownFields(true);
+                String jsonString = FileUtils.readFileToString(extraConfigFile.file(), "utf-8");
+                rVO = json.fromJson(SpriterRelationVO.class, jsonString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         for (FileHandle entry : sourceDir.list()) {
             if (entry.file().isDirectory()) {
                 String animName = entry.file().getName();
-                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/spriter-animations/" + animName + File.separator + animName + ".atlas"));
+                if ("extra".equals(animName)) continue;
+                TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path + curResolution + "/spriter-animations/"
+                        + animName + File.separator + animName + ".atlas"));
                 FileHandle scmlFile = new FileHandle(path + "orig" + "/spriter-animations/" + animName + "/" + animName + ".scml");
                 SpriterAnimData data = new SpriterAnimData();
                 data.scmlFile = scmlFile;
                 data.atlas = atlas;
                 data.animName = animName;
+                if (rVO != null && rVO.animations != null && rVO.animations.containsKey(animName)) {
+                    SpriterVO vo = rVO.animations.get(animName);
+                    if (vo != null) {
+                        for (String s : vo.animations) {
+                            FileHandle f = new FileHandle(path + "orig" + "/spriter-animations/extra" + "/" + s + ".scml");
+                            data.extraScmlFiles.add(f);
+                        }
+                    }
+                }
                 spriterAnimAtlases.put(animName, data);
             }
         }

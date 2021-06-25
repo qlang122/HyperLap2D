@@ -61,9 +61,15 @@ public class SpriterActor extends Actor {
 
     private void initSpriterAnimation() {
         FileHandle scmlFile = irr.getSpriterSCML(animationName);
+        Array<FileHandle> extraScmlFile = irr.getSpriterExtraSCML(animationName);
         TextureAtlas atlas = irr.getSpriterAtlas(animationName);
+
         SCMLLoader loader = new SCMLLoader(new InternalFileHandleResolver());
         SCMLProject scmlProject = loader.load(atlas, scmlFile);
+        Array<SCMLProject> extras = new Array<>();
+        for (FileHandle handle : extraScmlFile) {
+            extras.add(loader.load(atlas, handle));
+        }
 
         currentAnimationIndex = 0;
         currentEntityIndex = 0;
@@ -78,6 +84,13 @@ public class SpriterActor extends Actor {
             Array<Animation> array = entity.getAnimations();
             for (Animation animation : array) {
                 animations.add(animation);
+            }
+
+            for (SCMLProject project : extras) {
+                Array<me.winter.gdx.animation.Entity> entities = project.getSourceEntities();
+                for (Animation anim : entities.get(0).getAnimations()) {
+                    animations.add(anim);
+                }
             }
         }
         Array<Entity> array = scmlProject.getSourceEntities();

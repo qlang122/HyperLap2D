@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.renderer.data.SpriterRelationVO;
@@ -19,19 +21,45 @@ import games.rednblack.editor.utils.HyperLap2DUtils;
 import games.rednblack.h2d.common.ProgressHandler;
 
 public class SpriterAppendAsset extends SpriterAsset {
+    private ArrayList<String> animationNames = new ArrayList<>();
     private String beAppendToAnimation;
 
     @Override
-    public void importAsset(Array<FileHandle> files, ProgressHandler progressHandler, boolean skipRepack) {
-        ArrayList<String> list = new ArrayList<>();
-        for (FileHandle handle : new Array.ArrayIterator<>(files)) {
-            File file = importExternalAnimation(handle, progressHandler);
-            if (file != null) list.add(FilenameUtils.removeExtension(file.getName()));
+    public boolean checkExistence(Array<FileHandle> files) {
+        for (FileHandle file : new Array.ArrayIterator<>(files)) {
+            FileHandle fileHandle = new FileHandle(projectManager.getCurrentProjectPath() + File.separator
+                    + ProjectManager.SPRITER_DIR_PATH + File.separator + "extra" + File.separator +
+                    file.nameWithoutExtension() + ".scml");
+            if (fileHandle.exists())
+                return true;
         }
-        saveConfigFile(list);
+        return false;
     }
 
-    private void saveConfigFile(ArrayList<String> names) {
+    @Override
+    public void importAsset(Array<FileHandle> files, ProgressHandler progressHandler, boolean skipRepack) {
+        animationNames.clear();
+
+        for (FileHandle handle : new Array.ArrayIterator<>(files)) {
+            File file = importExternalAnimation(handle, progressHandler);
+            if (file != null) animationNames.add(FilenameUtils.removeExtension(file.getName()));
+        }
+
+        if (saveToConfigFile(animationNames)) {
+        }
+    }
+
+    public void importAsset(ArrayList<String> names, ProgressHandler progressHandler) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            if (saveToConfigFile(names)) {
+            }
+            progressHandler.progressComplete();
+        });
+        executor.shutdown();
+    }
+
+    private boolean saveToConfigFile(ArrayList<String> names) {
         String targetPath = projectManager.getCurrentProjectPath() + File.separator
                 + ProjectManager.SPRITER_DIR_PATH + File.separator + "anim-relation.dt";
 
@@ -59,9 +87,11 @@ public class SpriterAppendAsset extends SpriterAsset {
             rVO.animations.put(beAppendToAnimation, vo);
 
             FileUtils.writeStringToFile(file, rVO.constructJsonString(), "utf-8");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public void setNeedAppendAnimation(String animation) {
@@ -90,11 +120,17 @@ public class SpriterAppendAsset extends SpriterAsset {
         return null;
     }
 
-    private Array<String> getCanAppendAnimationsName() {
+    public Array<String> getCanAppendAnimationsName() {
         Array<String> list = new Array<>();
 
         String targetPath = projectManager.getCurrentProjectPath() + File.separator
                 + ProjectManager.SPRITER_DIR_PATH + File.separator + "extra";
+
+        try {
+            FileUtils.forceMkdir(new File(targetPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         File files = new File(targetPath);
         for (File file : files.listFiles()) {
