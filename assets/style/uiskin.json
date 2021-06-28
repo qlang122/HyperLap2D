@@ -257,6 +257,13 @@
       selection: list-selection,
       fontColorSelected: white,
       font: default-font
+    },
+    with-box: {
+      background: button-resource,
+      fontColorUnselected: white,
+      selection: list-selection,
+      fontColorSelected: white,
+      font: default-font
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {

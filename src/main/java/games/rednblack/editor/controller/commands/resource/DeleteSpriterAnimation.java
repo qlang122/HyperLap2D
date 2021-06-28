@@ -13,6 +13,7 @@ import games.rednblack.editor.renderer.data.SceneVO;
 import games.rednblack.editor.renderer.data.SpriterVO;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.utils.runtime.EntityUtils;
+import games.rednblack.h2d.common.MsgAPI;
 
 /**
  * Created by Sasun Poghosyan on 5/12/2016.
@@ -26,7 +27,7 @@ public class DeleteSpriterAnimation extends DeleteResourceCommand {
 
     @Override
     protected String confirmDialogTitle() {
-        return "Delete Spriter Animation";
+        return "Delete Animation";
     }
 
     @Override
@@ -36,6 +37,7 @@ public class DeleteSpriterAnimation extends DeleteResourceCommand {
             deleteEntitiesWithSpriterAnimation(sandbox.getRootEntity(), spriterAnimName);
             deleteAllItemsSpriterAnimations(spriterAnimName);
             projectManager.loadProjectData(projectManager.getCurrentProjectPath());
+            facade.sendNotification(MsgAPI.SPRITER_REMOVE_ANIMATION_BACKGROUND, spriterAnimName);
             facade.sendNotification(DONE, spriterAnimName);
             SceneVO vo = sandbox.sceneVoFromItems();
             projectManager.saveCurrentProject(vo);

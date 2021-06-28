@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisDialog;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisList;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
-import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
@@ -26,14 +26,18 @@ import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.utils.ImportUtils;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.UIDraggablePanel;
-import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 
-public class AppendSpriterAnimationPanel extends UIDraggablePanel {
+/**
+ * @author Created by qlang on 6/25/2021.
+ */
+public class EditSpriterAnimationPanel extends UIDraggablePanel {
     public static final String CLASS_NAME = "games.rednblack.editor.view.ui.panel.AppendSpriterAnimationPanel";
 
     public static final String BROWSE_BTN_CLICKED = CLASS_NAME + ".BROWSE_BTN_CLICKED";
-    public static final String CHOICE_BTN_CLICKED = CLASS_NAME + ".CHOICE_BTN_CLICKED";
+    public static final String ADD_BTN_CLICKED = CLASS_NAME + ".ADD_BTN_CLICKED";
+    public static final String REMOVE_BTN_CLICKED = CLASS_NAME + ".REMOVE_BTN_CLICKED";
 
+    public static final String REMOVE_FAILED = CLASS_NAME + ".REMOVE_FAILED";
     public static final String IMPORT_FAILED = CLASS_NAME + ".IMPORT_FAILED";
 
     private HyperLap2DFacade facade;
@@ -41,14 +45,16 @@ public class AppendSpriterAnimationPanel extends UIDraggablePanel {
     private VisTable mainTable;
     private Image dropRegion;
     private VisLabel errorLabel;
-    private VisTextButton choiceBtn;
-    private VisSelectBox<String> animationsSb;
+    private VisTextButton addBtn;
+    private VisTextButton removeBtn;
+    private VisList<String> sourceList;
+    private VisList<String> appendedList;
 
     private VisProgressBar progressBar;
 
     private HashMap<Integer, String> typeNames = new HashMap<>();
 
-    public AppendSpriterAnimationPanel() {
+    public EditSpriterAnimationPanel() {
         super("Import Animation");
         setMovable(true);
         setModal(false);
@@ -56,7 +62,7 @@ public class AppendSpriterAnimationPanel extends UIDraggablePanel {
         setStyle(VisUI.getSkin().get("box", WindowStyle.class));
         getTitleLabel().setAlignment(Align.left);
 
-        setWidth(250);
+        setWidth(440);
         setHeight(100);
 
         facade = HyperLap2DFacade.getInstance();
@@ -72,13 +78,13 @@ public class AppendSpriterAnimationPanel extends UIDraggablePanel {
 
         errorLabel = new VisLabel("File you selected was too sexy to import");
         errorLabel.setColor(Color.RED);
-        errorLabel.setWidth(250);
+        errorLabel.setWidth(400);
         errorLabel.setWrap(true);
         errorLabel.getColor().a = 0;
         errorLabel.setTouchable(Touchable.disabled);
 
-        mainTable.add(errorLabel).width(250).padTop(6);
-        mainTable.row().padTop(5);
+        mainTable.add(errorLabel).width(400).padTop(6);
+        mainTable.row().padTop(5).padBottom(5);
     }
 
     private void fillTypeNames() {
@@ -114,10 +120,11 @@ public class AppendSpriterAnimationPanel extends UIDraggablePanel {
     public void setDroppingView() {
         mainTable.clear();
 
-        VisLabel helpLbl = new VisLabel("Choose one already exists, or import new spriter animation(*.scml file)");
-        helpLbl.setWidth(250);
+        VisLabel helpLbl = new VisLabel("Append a new animation into current or remove existence.\n\n" +
+                "Choose one already exists, or import new spriter animation(*.scml file)");
+        helpLbl.setWidth(400);
         helpLbl.setWrap(true);
-        mainTable.add(helpLbl).width(250);
+        mainTable.add(helpLbl).width(400);
         mainTable.row().padBottom(5);
 
         dropRegion = new Image(VisUI.getSkin().getDrawable("dropHere"));
@@ -130,15 +137,25 @@ public class AppendSpriterAnimationPanel extends UIDraggablePanel {
 
         VisTextButton showFileSelectBtn = new VisTextButton("Browse");
         mainTable.add(showFileSelectBtn).width(88).padRight(5);
-        mainTable.row().padTop(5);
+        mainTable.row().padTop(10);
 
-        animationsSb = StandardWidgetsFactory.createSelectBox(String.class);
+        sourceList = new VisList<>(VisUI.getSkin().get("with-box", List.ListStyle.class));
+        appendedList = new VisList<>(VisUI.getSkin().get("with-box", List.ListStyle.class));
+
+        addBtn = new VisTextButton("> >");
+        removeBtn = new VisTextButton("< <");
+
+        VisTable btns = new VisTable();
+        btns.add(addBtn).width(30);
+        btns.row().padTop(30);
+        btns.add(removeBtn).width(30);
+
         Table table = new Table();
-        choiceBtn = new VisTextButton("Choice");
-        table.add(animationsSb).fill().expandX().padRight(5);
-        table.add(choiceBtn).width(70);
-        mainTable.add(table).width(240).padRight(10);
-        mainTable.row().padTop(5).padBottom(20);
+        table.add(sourceList).fill().width(170).minHeight(180).maxHeight(240);
+        table.add(btns).padLeft(5).padRight(5);
+        table.add(appendedList).fill().width(170).minHeight(180).maxHeight(240);
+        mainTable.add(table).width(240).padRight(10).padBottom(10);
+        mainTable.row().padTop(5).padBottom(5);
 
         initDropListeners(showFileSelectBtn);
 
@@ -183,17 +200,35 @@ public class AppendSpriterAnimationPanel extends UIDraggablePanel {
                 facade.sendNotification(BROWSE_BTN_CLICKED);
             }
         });
-        choiceBtn.addListener(new ClickListener() {
+        addBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                String selected = animationsSb.getSelected();
-                if (!selected.isEmpty()) facade.sendNotification(CHOICE_BTN_CLICKED, selected);
+                String selected = sourceList.getSelected();
+                if (!selected.isEmpty()) facade.sendNotification(ADD_BTN_CLICKED, selected);
+            }
+        });
+        removeBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String selected = appendedList.getSelected();
+                facade.sendNotification(REMOVE_BTN_CLICKED, selected);
             }
         });
     }
 
+    public void setAppendedAnimations(Array<String> names) {
+        if (appendedList != null) appendedList.setItems(names);
+    }
+
     public void setAnimations(Array<String> names) {
-        if (animationsSb != null) animationsSb.setItems(names);
+        if (sourceList != null) sourceList.setItems(names);
+    }
+
+    public void showError(String msg) {
+        if (msg == null || msg.isEmpty()) msg = "Remove extra animation failed";
+        errorLabel.setText(msg);
+
+        errorLabel.addAction(Actions.fadeIn(0.3f));
     }
 
     public void showError(int type) {

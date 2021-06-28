@@ -39,26 +39,28 @@ import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.proxy.SettingsManager;
 import games.rednblack.editor.utils.ImportUtils;
-import games.rednblack.editor.utils.asset.Asset;
-import games.rednblack.editor.utils.asset.impl.SpriterAppendAsset;
+import games.rednblack.editor.utils.asset.impl.SpriterEditAsset;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.stage.UIStage;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.h2d.common.ProgressHandler;
 
-public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterAnimationPanel> {
-    private static final String TAG = AppendSpriterAnimationPanelMediator.class.getCanonicalName();
+/**
+ * @author Created by qlang on 6/25/2021.
+ */
+public class EditSpriterAnimationPanelMediator extends Mediator<EditSpriterAnimationPanel> {
+    private static final String TAG = EditSpriterAnimationPanelMediator.class.getCanonicalName();
     private static final String NAME = TAG;
 
     private ProgressHandler progressHandler;
 
-    private final SpriterAppendAsset asset;
+    private final SpriterEditAsset asset;
 
-    private String beAppendToAnimation;
+    private String beEditToAnimation;
 
-    public AppendSpriterAnimationPanelMediator() {
-        super(NAME, new AppendSpriterAnimationPanel());
-        asset = new SpriterAppendAsset();
+    public EditSpriterAnimationPanelMediator() {
+        super(NAME, new EditSpriterAnimationPanel());
+        asset = new SpriterEditAsset();
     }
 
     @Override
@@ -72,10 +74,13 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
     @Override
     public String[] listNotificationInterests() {
         return new String[]{
-                MsgAPI.SPRITER_APPEND_ANIMATION,
-                AppendSpriterAnimationPanel.BROWSE_BTN_CLICKED,
-                AppendSpriterAnimationPanel.CHOICE_BTN_CLICKED,
-                AppendSpriterAnimationPanel.IMPORT_FAILED,
+                MsgAPI.SPRITER_EDIT_ANIMATION,
+                EditSpriterAnimationPanel.BROWSE_BTN_CLICKED,
+                EditSpriterAnimationPanel.ADD_BTN_CLICKED,
+                EditSpriterAnimationPanel.REMOVE_BTN_CLICKED,
+                EditSpriterAnimationPanel.IMPORT_FAILED,
+                EditSpriterAnimationPanel.REMOVE_FAILED,
+                MsgAPI.SPRITER_REMOVE_ANIMATION_BACKGROUND,
                 MsgAPI.ACTION_FILES_DROPPED,
         };
     }
@@ -86,20 +91,23 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
         Sandbox sandbox = Sandbox.getInstance();
         UIStage uiStage = sandbox.getUIStage();
         switch (notification.getName()) {
-            case MsgAPI.SPRITER_APPEND_ANIMATION:
-                beAppendToAnimation = notification.getBody();
-                asset.setNeedAppendAnimation(beAppendToAnimation);
+            case MsgAPI.SPRITER_EDIT_ANIMATION:
+                beEditToAnimation = notification.getBody();
+                asset.setCurrentAnimation(beEditToAnimation);
                 viewComponent.show(uiStage);
                 viewComponent.setAnimations(asset.getCanAppendAnimationsName());
+                viewComponent.setAppendedAnimations(asset.getExtraAnimations());
                 break;
-            case AppendSpriterAnimationPanel.BROWSE_BTN_CLICKED:
+            case EditSpriterAnimationPanel.BROWSE_BTN_CLICKED:
                 showFileChoose();
                 break;
-            case AppendSpriterAnimationPanel.CHOICE_BTN_CLICKED:
+            case EditSpriterAnimationPanel.ADD_BTN_CLICKED:
                 String name = notification.getBody();
-                ArrayList<String> names = new ArrayList<>(1);
-                names.add(name);
-                asset.importAsset(names, progressHandler);
+                if (!asset.getExtraAnimations().contains(name, false)) {
+                    ArrayList<String> names = new ArrayList<>(1);
+                    names.add(name);
+                    asset.importAsset(names, progressHandler);
+                }
                 break;
             case MsgAPI.ACTION_FILES_DROPPED:
                 ImportPanel.DropBundle bundle = notification.getBody();
@@ -107,8 +115,30 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
                     postPathObtainAction(bundle.paths);
                 }
                 break;
-            case AppendSpriterAnimationPanel.IMPORT_FAILED:
+            case EditSpriterAnimationPanel.IMPORT_FAILED:
                 viewComponent.showError(ImportUtils.TYPE_FAILED);
+                break;
+            case EditSpriterAnimationPanel.REMOVE_BTN_CLICKED:
+                String anim = notification.getBody();
+                Dialogs.showConfirmDialog(Sandbox.getInstance().getUIStage(),
+                        "Delete animation", "The source file will not be delete, only delete the references.\nwould you like to remove it? ",
+                        new String[]{"Ok", "Cancel"}, new Integer[]{0, 1}, result -> {
+                            if (result == 0) {
+                                doDelete(anim);
+                            }
+                        }).padBottom(20).pack();
+                break;
+            case EditSpriterAnimationPanel.REMOVE_FAILED:
+                viewComponent.showError(null);
+                break;
+            case MsgAPI.SPRITER_REMOVE_ANIMATION_BACKGROUND:
+                beEditToAnimation = notification.getBody();
+                asset.setCurrentAnimation(beEditToAnimation);
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    asset.deleteExtraAnimations(beEditToAnimation);
+                });
+                executor.shutdown();
                 break;
         }
     }
@@ -171,6 +201,18 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
         }
     }
 
+    private void doDelete(String animation) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            boolean isOk = asset.deleteExtraAnimation(animation);
+
+            if (isOk) {
+                reloadAsset();
+            } else facade.sendNotification(EditSpriterAnimationPanel.REMOVE_FAILED);
+        });
+        executor.shutdown();
+    }
+
     private void initImportUI(int type, Array<FileHandle> files) {
         SettingsManager settingsManager = HyperLap2DFacade.getInstance().retrieveProxy(SettingsManager.NAME);
         settingsManager.setLastImportedPath(files.get(0).parent().path());
@@ -187,6 +229,19 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
         return files;
     }
 
+    private void reloadAsset() {
+        Gdx.app.postRunnable(() -> {
+            Sandbox sandbox = Sandbox.getInstance();
+            ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+            projectManager.openProjectAndLoadAllData(projectManager.getCurrentProjectPath());
+            sandbox.loadCurrentProject();
+            viewComponent.setDroppingView();
+            viewComponent.setAnimations(asset.getCanAppendAnimationsName());
+            viewComponent.setAppendedAnimations(asset.getExtraAnimations());
+            facade.sendNotification(ProjectManager.PROJECT_DATA_UPDATED);
+        });
+    }
+
     public class AssetsImportProgressHandler implements ProgressHandler {
 
         @Override
@@ -201,21 +256,13 @@ public class AppendSpriterAnimationPanelMediator extends Mediator<AppendSpriterA
 
         @Override
         public void progressComplete() {
-            Gdx.app.postRunnable(() -> {
-                Sandbox sandbox = Sandbox.getInstance();
-                ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-                projectManager.openProjectAndLoadAllData(projectManager.getCurrentProjectPath());
-                sandbox.loadCurrentProject();
-                viewComponent.setDroppingView();
-                viewComponent.setAnimations(asset.getCanAppendAnimationsName());
-                facade.sendNotification(ProjectManager.PROJECT_DATA_UPDATED);
-            });
+            reloadAsset();
         }
 
         @Override
         public void progressFailed() {
             Gdx.app.postRunnable(() -> {
-                facade.sendNotification(AppendSpriterAnimationPanel.IMPORT_FAILED);
+                facade.sendNotification(EditSpriterAnimationPanel.IMPORT_FAILED);
             });
         }
     }
