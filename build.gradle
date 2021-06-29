@@ -152,17 +152,25 @@ runtime {
                'jdk.unsupported']
     distDir = file(buildDir)
 
+    //"C:\Program Files (x86)\WiX Toolset v3.11\bin\light.exe" -nologo -spdb -cultures:zh-CN -ext WixUtilExtension -out F:\gdx\HyperLap2D\build\jpackage\HyperLap2D
+    //-0.0.7.msi -ext WixUIExtension -loc F:\gdx\HyperLap2D\build\tempDir\config\MsiInstallerStrings_zh_CN.wxl -b F:\gdx\HyperLap2D\build\tempDir\config F:\gdx\HyperLap2D\build\tempDir\wixobj\main.wixobj F:\gdx\HyperLap2D\build
+    //\tempDir\wixobj\bundle.wixobj
+    task clearTmpDir(type: Delete) {
+        delete "$buildDir/tempDir"
+    }
+
     jpackage {
         setVersion(getBuildVersion())
         mainJar = dist.archiveFileName.get()
         imageOptions += ['--app-version', getBuildVersion(), '--vendor', 'Red & Black Games', '--description', 'HyperLap2D Editor', '--name', 'HyperLap2D']
         installerOptions += ['--license-file', 'LICENSE']
         if (osName.contains('windows')) {
-            imageOptions += ["--icon", file("icons/icon.ico")]
+            imageOptions += ["--icon", file("icons/icon.ico"), '--copyright', '(c) 2021, Red &amp; Black Games']
             installerType = 'msi'
             installerOptions += ['--win-dir-chooser', '--win-menu',
                                  '--win-shortcut', '--vendor', 'Red & Black Games',
                                  '--description', 'HyperLap2D Editor',
+                                 '--temp', "${buildDir}/tempDir",
                                  '--win-upgrade-uuid', 'e5f64fb6-111f-41f3-8f33-03b90e1a3a32']
             resourceDir = file("resources-windows")
         } else if (osName.contains('linux')) {
@@ -187,4 +195,6 @@ runtime {
 tasks.withType(JavaCompile) {
     sourceCompatibility = "1.8"
     targetCompatibility = "1.8"
+
+    options.encoding = "UTF-8"
 }
