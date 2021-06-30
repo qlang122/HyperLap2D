@@ -152,13 +152,26 @@ runtime {
                'jdk.unsupported']
     distDir = file(buildDir)
 
-    //"C:\Program Files (x86)\WiX Toolset v3.11\bin\light.exe" -nologo -spdb -cultures:zh-CN -ext WixUtilExtension -out F:\gdx\HyperLap2D\build\jpackage\HyperLap2D
-    //-0.0.7.msi -ext WixUIExtension -loc F:\gdx\HyperLap2D\build\tempDir\config\MsiInstallerStrings_zh_CN.wxl -b F:\gdx\HyperLap2D\build\tempDir\config F:\gdx\HyperLap2D\build\tempDir\wixobj\main.wixobj F:\gdx\HyperLap2D\build
-    //\tempDir\wixobj\bundle.wixobj
     task clearTmpDir(type: Delete) {
         delete "$buildDir/tempDir"
     }
 
+    //"C:\Program Files (x86)\WiX Toolset v3.11\bin\light.exe" -nologo -spdb -cultures:zh-CN -ext WixUtilExtension
+    // -out F:\gdx\HyperLap2D\build\jpackage\HyperLap2D-0.0.7.msi -ext WixUIExtension
+    // -loc F:\gdx\HyperLap2D\build\tempDir\config\MsiInstallerStrings_zh_CN.wxl -b F:\gdx\HyperLap2D\build\tempDir\config
+    // F:\gdx\HyperLap2D\build\tempDir\wixobj\main.wixobj F:\gdx\HyperLap2D\build\tempDir\wixobj\bundle.wixobj
+    task execFinalCmd(type: Exec) {
+        workingDir "$buildDir/tempDir"
+        def cmd_ = [
+                'light.exe', '-nologo', '-spdb', '-cultures:zh-CN', '-ext', 'WixUtilExtension',
+                '-out', "$buildDir/jpackage/HyperLap2D-${getBuildVersion()}.msi", '-ext', 'WixUIExtension', '-loc',
+                "$workingDir/config/MsiInstallerStrings_zh_CN.wxl", '-b', "$workingDir/config",
+                "$workingDir/wixobj/main.wixobj", "$workingDir/wixobj/bundle.wixobj"
+        ]
+        commandLine cmd_
+    }
+    //Because of jpackage issues. before use this task. should clear tempDir(clearTmpDir task).
+    //then run this task(it will be failed), and be use final cmd task(execFinalCmd task) build exe file.
     jpackage {
         setVersion(getBuildVersion())
         mainJar = dist.archiveFileName.get()
