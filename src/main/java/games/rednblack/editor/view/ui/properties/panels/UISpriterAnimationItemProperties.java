@@ -49,9 +49,10 @@ public class UISpriterAnimationItemProperties extends UIItemCollapsiblePropertie
     public UISpriterAnimationItemProperties() {
         super("Spriter Animations");
         animationsSelectBox = StandardWidgetsFactory.createSelectBox(String.class);
+        animationsSelectBox.setMaxListCount(15);
 
         mainTable.add(StandardWidgetsFactory.createLabel("Animations:", Align.left)).padRight(5);
-        mainTable.add(animationsSelectBox).colspan(2).fillX();
+        mainTable.add(animationsSelectBox).colspan(2).width(150);
 
         btnStart = StandardWidgetsFactory.createImageButton("spriter-playbtn-start");
         btnFirst = StandardWidgetsFactory.createImageButton("spriter-playbtn-first");

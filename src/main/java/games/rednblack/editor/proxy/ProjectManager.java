@@ -596,9 +596,10 @@ public class ProjectManager extends Proxy {
 
     private void exportSpineAnimationForResolution(String res, String targetPath) {
         String spineSrcPath = currentProjectPath + "/assets/" + res + File.separator + "spine-animations";
+        File fileSrc = new File(spineSrcPath);
+        if (!fileSrc.exists()) return;
         try {
             FileUtils.forceMkdir(new File(targetPath + File.separator + res + File.separator + "spine_animations"));
-            File fileSrc = new File(spineSrcPath);
             String finalTarget = targetPath + File.separator + res + File.separator + "spine_animations";
 
             File fileTargetSpine = new File(finalTarget);
@@ -611,9 +612,10 @@ public class ProjectManager extends Proxy {
 
     private void exportSpriteAnimationForResolution(String res, String targetPath) {
         String spineSrcPath = currentProjectPath + "/assets/" + res + File.separator + "sprite-animations";
+        File fileSrc = new File(spineSrcPath);
+        if (!fileSrc.exists()) return;
         try {
             FileUtils.forceMkdir(new File(targetPath + File.separator + res + File.separator + "sprite_animations"));
-            File fileSrc = new File(spineSrcPath);
             String finalTarget = targetPath + File.separator + res + File.separator + "sprite_animations";
 
             File fileTargetSprite = new File(finalTarget);
@@ -626,10 +628,11 @@ public class ProjectManager extends Proxy {
 
     private void exportSpriterAnimationForResolution(String res, String targetPath) {
         String srcPath = currentProjectPath + "/assets/" + res + File.separator + "spriter-animations";
+        File fileSrc = new File(srcPath);
+        if (!fileSrc.exists()) return;
         try {
             String expPath = targetPath + File.separator + res + File.separator + "spriter_animations";
             FileUtils.forceMkdir(new File(expPath));
-            File fileSrc = new File(srcPath);
 
             File fileTargetSprite = new File(expPath);
 
@@ -641,12 +644,14 @@ public class ProjectManager extends Proxy {
 
     private void exportAtlasImage(String targetPath) {
         String srcPath = currentProjectPath + File.separator + ATLAS_IMAGE_DIR_PATH;
+        File srcFile = new File(srcPath);
+        if (!srcFile.exists()) return;
         try {
             String expPath = targetPath + File.separator + "orig" + File.separator + "atlas_images";
             FileUtils.forceMkdir(new File(expPath));
 
-            File srcFile = new File(srcPath);
-            for (File file : srcFile.listFiles()) {
+            File[] files = srcFile.listFiles();
+            if (files != null) for (File file : files) {
                 String name = file.getName().toLowerCase();
                 if (name.endsWith(".atlas") || name.endsWith(".png")) {
                     FileUtils.copyFile(file, new File(expPath + File.separator + name));
