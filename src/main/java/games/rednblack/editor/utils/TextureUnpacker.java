@@ -12,6 +12,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Unpacks a texture atlas into individual image files.
+ *
+ * @author Geert Konijnendijk
+ * @author Nathan Sweet
+ * @author Michael Bazos
+ */
 public class TextureUnpacker {
     private static final String DEFAULT_OUTPUT_PATH = "output";
     private static final int NINEPATCH_PADDING = 1;
@@ -54,7 +61,7 @@ public class TextureUnpacker {
     /**
      * Splits an atlas into seperate image and ninepatch files.
      */
-    public void splitAtlas(TextureAtlas.TextureAtlasData atlas, String outputDir) {
+    public void splitAtlas(TextureAtlas.TextureAtlasData atlas, String prefix, String outputDir) {
         // create the output directory if it did not exist yet
         File outputDirFile = new File(outputDir);
         if (!outputDirFile.exists()) {
@@ -103,12 +110,17 @@ public class TextureUnpacker {
                     }
 
                     // check if the parent directories of this image file exist and create them if not
-                    File imgOutput = new File(outputDirFile,
-                            String.format("%s.%s", region.index == -1 ? region.name : region.name + "_" + region.index, extension));
+                    File imgOutput;
+                    if (prefix != null) {
+                        imgOutput = new File(outputDirFile,
+                                String.format("%s%s.%s", prefix, region.index == -1 ? region.name : region.name + "_" + region.index, extension));
+                    } else {
+                        imgOutput = new File(outputDirFile,
+                                String.format("%s.%s", region.index == -1 ? region.name : region.name + "_" + region.index, extension));
+                    }
                     File imgDir = imgOutput.getParentFile();
                     if (!imgDir.exists()) {
-                        if (!quiet)
-                            System.out.println(String.format("Creating directory: %s", imgDir.getPath()));
+                        if (!quiet) System.out.printf("Creating directory: %s%n", imgDir.getPath());
                         imgDir.mkdirs();
                     }
 

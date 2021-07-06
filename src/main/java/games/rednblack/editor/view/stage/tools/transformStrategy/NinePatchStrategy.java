@@ -2,6 +2,7 @@ package games.rednblack.editor.view.stage.tools.transformStrategy;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
+
 import games.rednblack.editor.renderer.components.DimensionsComponent;
 import games.rednblack.editor.renderer.components.NinePatchComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
@@ -120,6 +121,12 @@ public class NinePatchStrategy extends AbstractTransformStrategy {
         transformComponent.y = newY;
         dimensionsComponent.width = newWidth;
         dimensionsComponent.height = newHeight;
+
+        // Origin
+        origin(mouseDx, mouseDy, anchor, transformComponent, transformCommandBuilder);
+
+        // Rotating
+        rotating(anchor, transformCommandBuilder, mousePointStage, lastTransformAngle, lastEntityAngle, transformComponent);
     }
 
 }

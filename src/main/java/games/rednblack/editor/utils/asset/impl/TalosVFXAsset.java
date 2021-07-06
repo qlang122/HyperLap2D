@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.talosvfx.talos.runtime.ParticleEmitterDescriptor;
+
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.proxy.ResolutionManager;
 import games.rednblack.editor.utils.ImportUtils;
@@ -12,6 +13,7 @@ import games.rednblack.editor.utils.asset.Asset;
 import games.rednblack.editor.utils.runtime.TalosResources;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.ProgressHandler;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -51,7 +53,7 @@ public class TalosVFXAsset extends Asset {
         Json json = new Json();
         json.setIgnoreUnknownFields(true);
         ParticleEmitterDescriptor.registerModules();
-        for (Class clazz: ParticleEmitterDescriptor.registeredModules) {
+        for (Class clazz : ParticleEmitterDescriptor.registeredModules) {
             json.addClassTag(clazz.getSimpleName(), TalosResources.Module.class);
         }
 
@@ -84,6 +86,10 @@ public class TalosVFXAsset extends Asset {
         }
         if (images.size > 0) {
             projectManager.copyImageFilesForAllResolutionsIntoProject(images, false, progressHandler);
+
+            for (FileHandle handle : new Array.ArrayIterator<>(images)) {
+                projectManager.getCurrentProjectInfoVO().imagesPacks.get("main").regions.add(handle.nameWithoutExtension());
+            }
         }
         if (assetsRes.size > 0) {
             for (FileHandle fileHandle : assetsRes) {

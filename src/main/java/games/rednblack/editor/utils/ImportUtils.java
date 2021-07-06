@@ -192,6 +192,13 @@ public class ImportUtils {
         return name;
     }
 
+    public static void unpackAtlasIntoTmpFolder(File atlasFile, String prefix, String tmpDir) {
+        FileHandle atlasFileHandle = new FileHandle(atlasFile);
+        TextureAtlas.TextureAtlasData atlasData = new TextureAtlas.TextureAtlasData(atlasFileHandle, atlasFileHandle.parent(), false);
+        TextureUnpacker unpacker = new TextureUnpacker();
+        unpacker.splitAtlas(atlasData, prefix, tmpDir);
+    }
+
     public static Array<FileHandle> getAtlasPageHandles(FileHandle fileHandle) {
         Array<File> imgs = getAtlasPages(fileHandle);
 

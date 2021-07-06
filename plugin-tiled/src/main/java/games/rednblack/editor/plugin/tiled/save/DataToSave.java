@@ -1,12 +1,12 @@
 package games.rednblack.editor.plugin.tiled.save;
 
+import java.util.stream.StreamSupport;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import games.rednblack.editor.plugin.tiled.data.ParameterVO;
 import games.rednblack.editor.plugin.tiled.data.TileVO;
-
-import java.util.stream.StreamSupport;
 
 /**
  * Created by mariam on 3/23/16.
@@ -37,6 +37,13 @@ public class DataToSave {
                 tiles.removeValue(tile, false);
             }
         });
+    }
+    
+    /**
+     * Removes all tiles.
+     */
+    public void removeAllTiles() {
+    	tiles.clear();
     }
 
     public void setTileGridOffset(TileVO tileVO) {

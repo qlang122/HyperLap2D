@@ -2,6 +2,7 @@ package games.rednblack.editor.utils.asset;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.proxy.ResolutionManager;
@@ -10,6 +11,7 @@ import games.rednblack.editor.renderer.data.SceneVO;
 import games.rednblack.editor.utils.ImportUtils;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.ProgressHandler;
+
 import org.puremvc.java.patterns.facade.Facade;
 
 import java.util.concurrent.ExecutorService;
@@ -57,6 +59,7 @@ public abstract class Asset implements IAsset {
         executor.execute(() -> importAsset(files, progressHandler, skipRepack));
         executor.execute(() -> {
             progressHandler.progressChanged(100);
+            projectManager.saveCurrentProject();
             try {
                 Thread.sleep(300);
             } catch (InterruptedException e) {

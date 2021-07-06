@@ -20,9 +20,6 @@ package games.rednblack.editor.plugin.tiled;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -168,6 +165,12 @@ public class TiledPanel extends UIDraggablePanel {
         tilesTab.removeTile();
         reInitTabTable();
         tilesTab.scrollTiles();
+    }
+
+    public void removeAllTiles() {
+    	tilesTab.removeAllTiles();
+    	reInitTabTable();
+    	tilesTab.scrollTiles();
     }
 
     private void initTabs() {

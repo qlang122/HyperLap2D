@@ -1,6 +1,7 @@
 package games.rednblack.editor.view.ui.panel;
 
 import com.badlogic.ashley.core.Entity;
+
 import games.rednblack.editor.view.menu.WindowMenu;
 import games.rednblack.h2d.common.MsgAPI;
 import games.rednblack.editor.HyperLap2DFacade;
@@ -9,6 +10,7 @@ import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.editor.view.stage.UIStage;
 import games.rednblack.editor.view.ui.properties.panels.UIBasicItemProperties;
+
 import org.puremvc.java.interfaces.INotification;
 import org.puremvc.java.patterns.mediator.Mediator;
 
@@ -95,7 +97,7 @@ public class TagsPanelMediator extends Mediator<TagsPanel> {
     }
 
     private void updateView() {
-        if(observables.size() == 0) {
+        if (observables.size() == 0) {
             viewComponent.setEmpty();
         } else {
             Iterator<Entity> iterator = observables.iterator();
@@ -104,12 +106,19 @@ public class TagsPanelMediator extends Mediator<TagsPanel> {
             MainItemComponent mainItemComponent = ComponentRetriever.get(entity, MainItemComponent.class);
             if (mainItemComponent == null)
                 return;
-            Set<String> common = new LinkedHashSet<>(mainItemComponent.tags);
+            Set<String> common = new LinkedHashSet<>();
+            Set<String> toRetain = new LinkedHashSet<>();
+
+            for (String tag : mainItemComponent.tags)
+                common.add(tag);
 
             while (iterator.hasNext()) {
                 entity = iterator.next();
                 mainItemComponent = ComponentRetriever.get(entity, MainItemComponent.class);
-                common.retainAll(mainItemComponent.tags);
+                toRetain.clear();
+                for (String tag : mainItemComponent.tags)
+                    toRetain.add(tag);
+                common.retainAll(toRetain);
             }
 
             viewComponent.setTags(common);

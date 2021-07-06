@@ -18,6 +18,10 @@
 
 package games.rednblack.editor.view.ui.box;
 
+import java.util.stream.Stream;
+
+import org.puremvc.java.interfaces.INotification;
+
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.utils.Array;
 
@@ -41,6 +45,15 @@ public class UIResourcesBoxMediator extends PanelMediator<UIResourcesBox> {
 
     private static final String PREFIX = "games.rednblack.editor.view.ui.box.UIResourcesBoxMediator";
 
+    public static final String IMAGE_LEFT_CLICK = PREFIX + ".IMAGE_LEFT_CLICK";
+
+    public static final String SHIFT_CTRL_EVENT_TYPE = PREFIX + ".SHIFT_CTRL_EVENT_TYPE";
+    public static final String SHIFT_EVENT_TYPE = PREFIX + ".SHIFT_EVENT_TYPE";
+    public static final String CTRL_EVENT_TYPE = PREFIX + ".CTRL_EVENT_TYPE";
+    public static final String NORMAL_CLICK_EVENT_TYPE = PREFIX + ".NORMAL_CLICK_EVENT_TYPE";
+
+    public static final String IMAGE_TABLE_UPDATED = PREFIX + ".IMAGE_TABLE_UPDATED";
+
     public static final String IMAGE_RIGHT_CLICK = PREFIX + ".IMAGE_RIGHT_CLICK";
     public static final String ATLAS_IMAGE_RIGHT_CLICK = PREFIX + ".ATLAS_IMAGE_RIGHT_CLICK";
     public static final String SPINE_ANIMATION_RIGHT_CLICK = PREFIX + ".SPINE_ANIMATION_RIGHT_CLICK";
@@ -50,6 +63,9 @@ public class UIResourcesBoxMediator extends PanelMediator<UIResourcesBox> {
     public static final String PARTICLE_EFFECT_RIGHT_CLICK = PREFIX + ".PARTICLE_EFFECT_RIGHT_CLICK";
     public static final String TALOS_VFX_RIGHT_CLICK = PREFIX + ".TALOS_VFX_RIGHT_CLICK";
     public static final String LIBRARY_ACTION_RIGHT_CLICK = PREFIX + ".LIBRARY_ACTION_RIGHT_CLICK";
+
+    public static final String SANDBOX_DRAG_IMAGE_ENTER = PREFIX + ".SANDBOX_DRAG_IMAGE_ENTER";
+    public static final String SANDBOX_DRAG_IMAGE_EXIT = PREFIX + ".SANDBOX_DRAG_IMAGE_EXIT";
 
     public Array<DragAndDrop.Target> customTargets = new Array<>();
 
