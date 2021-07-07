@@ -18,6 +18,7 @@
 
 package games.rednblack.editor.view.ui.box.resourcespanel;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
@@ -82,7 +83,9 @@ public class UIAtlasImagesTabMediator extends UIResourcesTabMediator<UIAtlasImag
             for (TextureAtlas.AtlasRegion region : new Array.ArrayIterator<>(atlasRegions)) {
                 if (!region.name.contains(searchText)) continue;
                 boolean is9patch = region.findValue("split") != null;
-                DraggableResource draggableResource = new DraggableResource(new AtlasImageResource(atlasName, region));
+                AtlasImageResource imageResource = new AtlasImageResource(atlasName, region, new Color(1, 1, 1, 0.2f), new Color(1, 1, 1, 0.4f),
+                        new Color(200f / 255f, 200f / 255f, 200f / 255f, 0.2f), new Color(255f / 255f, 94f / 255f, 0f / 255f, 1f), true);
+                DraggableResource draggableResource = new DraggableResource(imageResource);
                 if (is9patch) {
                     draggableResource.setFactoryFunction(ItemFactory.get()::createAtlas9Patch);
                 } else {

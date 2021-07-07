@@ -56,10 +56,11 @@
     },
     grey: {
       a: 1,
-      b: 0.32,
-      g: 0.32,
-      r: 0.32
+      b: 0.36,
+      g: 0.36,
+      r: 0.36
     },
+    light-grey: { a: 1.0, b: 0.5, g: 0.5, r: 0.5 },
     menuitem-grey: {
       a: 1,
       b: 0.65,
@@ -136,7 +137,9 @@
     }
   },
   com.kotcrab.vis.ui.util.adapter.SimpleListAdapter$SimpleListAdapterStyle: {
-    default: {selection: list-selection }
+    default: {
+      selection: list-selection
+    }
   }
   com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
     default: {
@@ -292,7 +295,7 @@
       errorBorder: border-error,
       font: default-font,
       fontColor: white,
-      disabledFontColor: grey,
+      disabledFontColor: light-grey,
       cursor: cursor
     },
     light: {
@@ -303,7 +306,7 @@
       errorBorder: border-error,
       font: default-font,
       fontColor: white,
-      disabledFontColor: grey,
+      disabledFontColor: light-grey,
       cursor: cursor
     },
     transparent: {
@@ -324,7 +327,7 @@
       errorBorder: border-error,
       font: default-mono-font,
       fontColor: white,
-      disabledFontColor: grey,
+      disabledFontColor: light-grey,
       selection: selection,
       background: textfield,
       cursor: cursor
@@ -945,7 +948,7 @@
     default: {
       draggable: false,
       vertical: false,
-      tabPadding: 6,
+      tabPadding: 2,
       singleLine: true,
       font: default-font,
       buttonStyle: {

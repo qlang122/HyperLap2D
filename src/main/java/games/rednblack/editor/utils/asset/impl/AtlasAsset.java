@@ -174,6 +174,6 @@ public class AtlasAsset extends Asset {
         FileHandle atlasFileHandle = new FileHandle(atlasFile);
         TextureAtlas.TextureAtlasData atlasData = new TextureAtlas.TextureAtlasData(atlasFileHandle, atlasFileHandle.parent(), false);
         TextureUnpacker unpacker = new TextureUnpacker();
-        unpacker.splitAtlas(atlasData, dir);
+        unpacker.splitAtlas(atlasData, null, dir);
     }
 }

@@ -29,6 +29,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 
 import games.rednblack.editor.plugin.tiled.view.SpineDrawable;
 import games.rednblack.editor.renderer.factory.EntityFactory;

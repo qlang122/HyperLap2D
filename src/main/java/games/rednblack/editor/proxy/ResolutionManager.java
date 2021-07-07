@@ -29,11 +29,13 @@ import java.util.concurrent.Executors;
 import javax.imageio.ImageIO;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
 import games.rednblack.editor.renderer.data.TexturePackVO;
 import games.rednblack.editor.utils.ImportUtils;
+import games.rednblack.editor.utils.TextureUnpacker;
 import games.rednblack.h2d.common.MsgAPI;
 
 import org.apache.commons.io.FileUtils;
@@ -179,6 +181,61 @@ public class ResolutionManager extends Proxy {
     private void changePercentBy(float value) {
         currentPercent += value;
         //handler.progressChanged(currentPercent);
+    }
+
+    public void unpackAtlasIntoTmpFolder(File atlasFile, String tmpDir) {
+        FileHandle atlasFileHandle = new FileHandle(atlasFile);
+        TextureAtlas.TextureAtlasData atlasData = new TextureAtlas.TextureAtlasData(atlasFileHandle, atlasFileHandle.parent(), false);
+        TextureUnpacker unpacker = new TextureUnpacker();
+        unpacker.splitAtlas(atlasData, null, tmpDir);
+    }
+
+    public void resizeSpriterAnimationForAllResolutions(File atlasFile, ProjectInfoVO currentProjectInfoVO) {
+        String fileNameWithOutExt = FilenameUtils.removeExtension(atlasFile.getName());
+        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+        String tmpDir = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.SPRITER_DIR_PATH
+                + File.separator + fileNameWithOutExt + File.separator + "tmp";
+        File sourceFolder = new File(tmpDir);
+
+        unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
+        try {
+            for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
+                FileUtils.forceMkdir(new File(projectManager.getCurrentProjectPath() + File.separator +
+                        "assets" + File.separator + resolutionEntryVO.name + File.separator + "spriter-animations"));
+                String targetPath = projectManager.getCurrentProjectPath() + File.separator + "assets" +
+                        File.separator + resolutionEntryVO.name + File.separator + "spriter-animations" + File.separator + fileNameWithOutExt;
+                FileUtils.forceMkdir(new File(targetPath));
+                File targetFolder = new File(targetPath);
+                resizeImagesTmpDirToResolution(atlasFile.getName(), sourceFolder, resolutionEntryVO, targetFolder);
+            }
+            FileUtils.deleteDirectory(sourceFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resizeAtlasForAllResolutions(File atlasFile, ProjectInfoVO currentProjectInfoVO) {
+        String fileNameWithOutExt = FilenameUtils.removeExtension(atlasFile.getName());
+        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
+        String tmpDir = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.ATLAS_IMAGE_DIR_PATH
+                + File.separator + fileNameWithOutExt + File.separator + "tmp";
+        File sourceFolder = new File(tmpDir);
+
+        unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
+        try {
+            for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
+                FileUtils.forceMkdir(new File(projectManager.getCurrentProjectPath() + File.separator +
+                        "assets" + File.separator + resolutionEntryVO.name + File.separator + "atlas-images"));
+                String targetPath = projectManager.getCurrentProjectPath() + File.separator + "assets" +
+                        File.separator + resolutionEntryVO.name + File.separator + "atlas-images" + File.separator + fileNameWithOutExt;
+                FileUtils.forceMkdir(new File(targetPath));
+                File targetFolder = new File(targetPath);
+                resizeImagesTmpDirToResolution(atlasFile.getName(), sourceFolder, resolutionEntryVO, targetFolder);
+            }
+            FileUtils.deleteDirectory(sourceFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void rePackProjectImages(ResolutionEntryVO resEntry) {
