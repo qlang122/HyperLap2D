@@ -18,6 +18,8 @@
 
 package games.rednblack.editor.plugin.tiled;
 
+import java.util.Set;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -47,8 +49,6 @@ import games.rednblack.h2d.common.plugins.H2DPluginAdapter;
 
 import net.mountainblade.modular.annotations.Implementation;
 
-import java.util.Set;
-
 /**
  * Created by mariam on 2/2/2016.
  */
@@ -63,6 +63,7 @@ public class TiledPlugin extends H2DPluginAdapter {
     public static final String GRID_CHANGED = CLASS_NAME + ".GRID_CHANGED";
     public static final String IMPORT_TILESET_PANEL_OPEN = CLASS_NAME + ".IMPORT_TILESET_PANEL_OPEN";
     public static final String ACTION_DELETE_TILE = CLASS_NAME + ".ACTION_DELETE_TILE";
+    public static final String ACTION_DELETE_TILE_ALL = CLASS_NAME + ".ACTION_DELETE_TILE_ALL";
     public static final String ACTION_SET_OFFSET = CLASS_NAME + ".ACTION_SET_OFFSET";
     public static final String ACTION_OPEN_OFFSET_PANEL = CLASS_NAME + ".ACTION_OPEN_OFFSET_PANEL";
     public static final String TILE_GRID_OFFSET_ADDED = CLASS_NAME + ".TILE_GRID_OFFSET_ADDED";

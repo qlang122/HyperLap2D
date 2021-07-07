@@ -209,13 +209,18 @@ public class MainPanelMediator extends Mediator<MainPanel> {
     }
 
     private void loadRegion(String atlasName, String name, int regionIndex) {
-        TextureAtlas atlas;
+        TextureAtlas.AtlasRegion region = null;
         if (atlasName.isEmpty()) {
-            atlas = plugin.getAPI().getProjectTextureAtlas();
-        } else atlas = plugin.getAPI().getAtlasImageAtlas(atlasName);
+            region = plugin.getAPI().getProjectTextureRegion(name, regionIndex);
+        } else {
+            TextureAtlas atlas = plugin.getAPI().getAtlasImageAtlas(atlasName);
+            region = atlas.findRegion(name, regionIndex);
+        }
 
-        validateNinePatchTextureRegion(atlas.findRegion(name));
-        viewComponent.setTexture(atlas.findRegion(name, regionIndex));
+        if (region != null) {
+            validateNinePatchTextureRegion(region);
+            viewComponent.setTexture(region);
+        }
 
         viewComponent.setListeners(plugin.getAPI().getUIStage());
     }

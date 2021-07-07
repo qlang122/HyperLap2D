@@ -18,6 +18,14 @@
 
 package games.rednblack.editor.view.ui.properties.panels;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.puremvc.java.interfaces.INotification;
+
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
@@ -38,6 +46,7 @@ import games.rednblack.editor.controller.commands.AddComponentToItemCommand;
 import games.rednblack.editor.controller.commands.AddToLibraryCommand;
 import games.rednblack.editor.renderer.components.*;
 import games.rednblack.editor.renderer.components.physics.PhysicsBodyComponent;
+import games.rednblack.editor.renderer.components.physics.SensorComponent;
 import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.utils.runtime.ComponentCloner;
@@ -67,6 +76,7 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
 
     public static final String POLYGON_COMPONENT_KEY = "Polygon";
     public static final String PHYSICS_COMPONENT_KEY = "Physics";
+    public static final String SENSOR_COMPONENT_KEY = "Physics Sensors";
     public static final String SHADER_COMPONENT_KEY = "Shader";
     public static final String LIGHT_COMPONENT_KEY = "Light";
     public static final String TYPING_LABEL_COMPONENT_KEY = "Typing Label";
@@ -81,6 +91,7 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
     public void onRegister() {
         componentClassMap.put(POLYGON_COMPONENT_KEY, PolygonComponent.class);
         componentClassMap.put(PHYSICS_COMPONENT_KEY, PhysicsBodyComponent.class);
+        componentClassMap.put(SENSOR_COMPONENT_KEY, SensorComponent.class);
         componentClassMap.put(SHADER_COMPONENT_KEY, ShaderComponent.class);
         componentClassMap.put(LIGHT_COMPONENT_KEY, LightBodyComponent.class);
         componentClassMap.put(TYPING_LABEL_COMPONENT_KEY, TypingLabelComponent.class);
@@ -221,6 +232,7 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
                 componentsToAddList.add(componentName);
             }
         }
+        componentsToAddList.sort();
         viewComponent.setNonExistentComponents(componentsToAddList);
     }
 

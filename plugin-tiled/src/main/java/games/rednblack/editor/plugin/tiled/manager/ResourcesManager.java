@@ -15,6 +15,7 @@ import com.google.common.io.ByteStreams;
 import games.rednblack.editor.plugin.tiled.TiledPlugin;
 import games.rednblack.editor.plugin.tiled.view.SpineDrawable;
 import games.rednblack.editor.renderer.factory.EntityFactory;
+import games.rednblack.h2d.extention.spine.ResourceRetrieverAttachmentLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -90,7 +91,7 @@ public class ResourcesManager {
                     region = tiledPlugin.getAPI().getSceneLoader().getRm().getAtlasImagesTextureRegion(atlasName, name, regionIndex);
                     break;
                 case EntityFactory.SPRITE_TYPE:
-                    region = tiledPlugin.getAPI().getSceneLoader().getRm().getSpriteAnimation(name).getRegions().get(0);
+                    region = tiledPlugin.getAPI().getSceneLoader().getRm().getSpriteAnimation(name).get(0);
                     break;
             }
         }
@@ -99,7 +100,8 @@ public class ResourcesManager {
 
     public SpineDrawable getSpineDrawable(String name) {
         if (spineDrawableCache.get(name) == null) {
-            SkeletonJson skeletonJson = new SkeletonJson(tiledPlugin.getAPI().getSceneLoader().getRm().getSkeletonAtlas(name));
+            ResourceRetrieverAttachmentLoader atlasAttachmentLoader = new ResourceRetrieverAttachmentLoader(name, tiledPlugin.getAPI().getSceneLoader().getRm());
+            SkeletonJson skeletonJson = new SkeletonJson(atlasAttachmentLoader);
             SkeletonData skeletonData = skeletonJson.readSkeletonData(tiledPlugin.getAPI().getSceneLoader().getRm().getSkeletonJSON(name));
             Skeleton skeleton = new Skeleton(skeletonData);
 

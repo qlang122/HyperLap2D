@@ -20,11 +20,17 @@ package games.rednblack.editor.controller;
 
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.splash.SplashScreenAdapter;
-import games.rednblack.editor.view.ui.*;
-import games.rednblack.editor.view.menu.HyperLap2DMenuBarMediator;
 import games.rednblack.editor.view.HyperLap2DScreenMediator;
+import games.rednblack.editor.view.menu.HyperLap2DMenuBarMediator;
 import games.rednblack.editor.view.stage.SandboxMediator;
 import games.rednblack.editor.view.stage.UIStageMediator;
+import games.rednblack.editor.view.ui.FollowersUIMediator;
+import games.rednblack.editor.view.ui.ImageResourceSelectionUIMediator;
+import games.rednblack.editor.view.ui.RulersUIMediator;
+import games.rednblack.editor.view.ui.StickyNotesUIMediator;
+import games.rednblack.editor.view.ui.UIDropDownMenuMediator;
+import games.rednblack.editor.view.ui.UIWindowActionMediator;
+import games.rednblack.editor.view.ui.UIWindowTitleMediator;
 import games.rednblack.editor.view.ui.box.*;
 import games.rednblack.editor.view.ui.box.bottom.*;
 import games.rednblack.editor.view.ui.dialog.*;
@@ -69,6 +75,9 @@ public class BootstrapViewCommand extends SimpleCommand {
         facade.registerMediator(new SandboxMediator());
         facade.registerMediator(new UIDropDownMenuMediator());
 
+        // improved selection behavior for the image panel
+        facade.registerMediator(new ImageResourceSelectionUIMediator());
+
         //Panels
         facade.registerMediator(new ImportPanelMediator());
         facade.registerMediator(new CustomVariablesPanelMediator());
@@ -89,6 +98,8 @@ public class BootstrapViewCommand extends SimpleCommand {
         facade.registerMediator(new CreatePlaceholderDialogMediator());
         facade.registerMediator(new CreateNoiseDialogMediator());
         facade.registerMediator(new ConsoleDialogMediator());
+        facade.registerMediator(new ImagesPackDialogMediator());
+        facade.registerMediator(new AnimationsPackDialogMediator());
 
         facade.registerMediator(new SaveProjectDialogMediator());
     }

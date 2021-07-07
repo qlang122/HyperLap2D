@@ -33,7 +33,8 @@ import org.puremvc.java.patterns.command.SimpleCommand;
  */
 public class BootstrapCommand extends SimpleCommand {
 
-    public void execute(INotification notification) {
+    @Override
+	public void execute(INotification notification) {
         super.execute(notification);
         facade = HyperLap2DFacade.getInstance();
         facade.sendNotification(SplashScreenAdapter.UPDATE_SPLASH, "Loading Commands...");
@@ -91,6 +92,7 @@ public class BootstrapCommand extends SimpleCommand {
         facade.registerCommand(MsgAPI.ACTION_UPDATE_TALOS_DATA, UpdateTalosDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_BODY_LIGHT_DATA, UpdateLightBodyDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_PHYSICS_BODY_DATA, UpdatePhysicsDataCommand::new);
+        facade.registerCommand(MsgAPI.ACTION_UPDATE_SENSOR_DATA, UpdateSensorDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_SHADER_DATA, UpdateShaderDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_IMAGE_ITEM_DATA, UpdateImageItemDataCommand::new);
         facade.registerCommand(MsgAPI.ACTION_UPDATE_SPRITE_ANIMATION_DATA, UpdateSpriteAnimationDataCommand::new);

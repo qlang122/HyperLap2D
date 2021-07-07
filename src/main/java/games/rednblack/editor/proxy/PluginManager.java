@@ -20,10 +20,8 @@ package games.rednblack.editor.proxy;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
@@ -113,9 +111,9 @@ public class PluginManager extends Proxy implements PluginAPI {
     }
 
     @Override
-    public TextureAtlas getProjectTextureAtlas() {
+    public TextureAtlas.AtlasRegion getProjectTextureRegion(String regionName, int regionIndex) {
         ResourceManager resourceManager = facade.retrieveProxy(ResourceManager.NAME);
-        return resourceManager.getTextureAtlas();
+        return (TextureAtlas.AtlasRegion) resourceManager.getTextureRegion(regionName, regionIndex);
     }
 
     @Override

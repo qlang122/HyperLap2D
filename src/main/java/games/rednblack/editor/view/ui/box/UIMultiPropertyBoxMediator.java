@@ -18,6 +18,14 @@
 
 package games.rednblack.editor.view.ui.box;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import org.puremvc.java.interfaces.IMediator;
+import org.puremvc.java.interfaces.INotification;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -30,7 +38,10 @@ import games.rednblack.editor.controller.commands.AddComponentToItemCommand;
 import games.rednblack.editor.controller.commands.RemoveComponentFromItemCommand;
 import games.rednblack.editor.renderer.components.PolygonComponent;
 import games.rednblack.editor.renderer.components.ShaderComponent;
+import games.rednblack.editor.renderer.components.label.TypingLabelComponent;
+import games.rednblack.editor.renderer.components.light.LightBodyComponent;
 import games.rednblack.editor.renderer.components.physics.PhysicsBodyComponent;
+import games.rednblack.editor.renderer.components.physics.SensorComponent;
 import games.rednblack.editor.renderer.data.SceneVO;
 import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.utils.ComponentRetriever;
@@ -196,6 +207,7 @@ public class UIMultiPropertyBoxMediator extends PanelMediator<UIMultiPropertyBox
         // optional panels based on components
         PolygonComponent polygonComponent = ComponentRetriever.get(entity, PolygonComponent.class);
         PhysicsBodyComponent physicsComponent = ComponentRetriever.get(entity, PhysicsBodyComponent.class);
+        SensorComponent sensorComponent = ComponentRetriever.get(entity, SensorComponent.class);
         ShaderComponent shaderComponent = ComponentRetriever.get(entity, ShaderComponent.class);
         LightBodyComponent lightComponent = ComponentRetriever.get(entity, LightBodyComponent.class);
         TypingLabelComponent typingLabelComponent = ComponentRetriever.get(entity, TypingLabelComponent.class);
@@ -205,6 +217,9 @@ public class UIMultiPropertyBoxMediator extends PanelMediator<UIMultiPropertyBox
         }
         if (physicsComponent != null) {
             mediatorNames.add(UIPhysicsPropertiesMediator.NAME);
+        }
+        if (sensorComponent != null) {
+            mediatorNames.add(UISensorPropertiesMediator.NAME);
         }
         if (shaderComponent != null) {
             mediatorNames.add(UIShaderPropertiesMediator.NAME);

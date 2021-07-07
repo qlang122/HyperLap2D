@@ -42,12 +42,12 @@ public abstract class UIResourcesTab extends ImageTab {
     public UIResourcesTab() {
         super(false, false);
         contentTable = new VisTable();
-        contentTable.add(StandardWidgetsFactory.createLabel("Search:")).padLeft(1).padBottom(6);
+        contentTable.add(StandardWidgetsFactory.createLabel("Search:")).padBottom(6);
         contentTable.add(createTextField()).padLeft(0).padRight(7).fillX().padBottom(4);
         contentTable.row();
 
         VisScrollPane scrollPane = crateScrollPane();
-        contentTable.add(scrollPane).padLeft(7).colspan(2).maxHeight(Gdx.graphics.getHeight() * 0.22f).expandX().fillX();
+        contentTable.add(scrollPane).padLeft(4).colspan(2).maxHeight(Gdx.graphics.getHeight() * 0.22f).expandX().fillX();
         contentTable.padTop(4);
     }
 

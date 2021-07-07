@@ -8,11 +8,13 @@ import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.SettingsManager;
 import games.rednblack.editor.utils.AppConfig;
 import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 import games.rednblack.h2d.common.H2DDialog;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -44,7 +46,7 @@ public class AboutDialog extends H2DDialog {
         scrollPane.setFadeScrollBars(false);
 
         mainTable.add(leftTable).top().padLeft(10).left();
-        mainTable.add(scrollPane).maxHeight(300).top().width(550).padLeft(28).expand().left();
+        mainTable.add(scrollPane).maxHeight(300).top().width(580).padLeft(28).expand().left();
 
         leftTable.add(new VisImage(VisUI.getSkin().getDrawable("splash_logo"))).pad(5).row();
         leftTable.add("HyperLap2D").padLeft(5).padRight(5).row();
@@ -95,7 +97,7 @@ public class AboutDialog extends H2DDialog {
                 FileUtils.write(tempFile, "", "utf-8");
             }
 
-            InputStream in = getClass().getResourceAsStream("/"+fileName);
+            InputStream in = getClass().getResourceAsStream("/" + fileName);
             FileOutputStream out = new FileOutputStream(tempFile);
             if (in != null) {
                 ByteStreams.copy(in, out);

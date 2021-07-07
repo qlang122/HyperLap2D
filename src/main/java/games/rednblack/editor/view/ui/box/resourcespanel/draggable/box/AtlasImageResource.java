@@ -18,6 +18,7 @@
 
 package games.rednblack.editor.view.ui.box.resourcespanel.draggable.box;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -32,6 +33,21 @@ public class AtlasImageResource extends BoxItemResource {
     private final ResourcePayloadObject payload;
 
     public AtlasImageResource(String atlasName, AtlasRegion region) {
+        this(atlasName, region, new Color(1, 1, 1, 0.2f), new Color(1, 1, 1, 0.4f), Color.BLACK, Color.BLACK, false);
+    }
+
+    /**
+     * Creates a new image resource from the given {@link AtlasRegion}.
+     *
+     * @param region                 The atlas region for the image resource.
+     * @param fillColor              The color to fill the background of the image.
+     * @param borderColor            The standard color of the border. Also used when the mouse is not hovering over the image.
+     * @param fillMouseOverColor     The color to fill the background of the image when the mouse hovers over the image. Only used if the the parameter <code>highlightWhenMouseOver</code> is set to <code>true</code>.
+     * @param borderMouseOverColor   The color of the border when the mouse hovers over the image. Only used if the the parameter <code>highlightWhenMouseOver</code> is set to <code>true</code>.
+     * @param highlightWhenMouseOver Whether to change the border color when the mouse hovers over the image.
+     */
+    public AtlasImageResource(String atlasName, AtlasRegion region, Color fillColor, Color borderColor, Color fillMouseOverColor, Color borderMouseOverColor, boolean highlightWhenMouseOver) {
+        super(fillColor, borderColor, fillMouseOverColor, borderMouseOverColor, highlightWhenMouseOver);
         Image img = new Image(region);
         if (img.getWidth() > thumbnailSize || img.getHeight() > thumbnailSize) {
             // resizing is needed

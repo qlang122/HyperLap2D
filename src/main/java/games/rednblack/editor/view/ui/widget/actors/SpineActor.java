@@ -18,7 +18,9 @@ import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.MeshAttachment;
 import com.esotericsoftware.spine.attachments.RegionAttachment;
+
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
+import games.rednblack.h2d.extention.spine.ResourceRetrieverAttachmentLoader;
 
 public class SpineActor extends Actor {
 
@@ -58,9 +60,9 @@ public class SpineActor extends Actor {
             if (attachment instanceof RegionAttachment) {
                 verticesLength = 8;
                 vertices = temp.setSize(8);
-                ((RegionAttachment)attachment).computeWorldVertices(slot.getBone(), vertices, 0, 2);
+                ((RegionAttachment) attachment).computeWorldVertices(slot.getBone(), vertices, 0, 2);
             } else if (attachment instanceof MeshAttachment) {
-                MeshAttachment mesh = (MeshAttachment)attachment;
+                MeshAttachment mesh = (MeshAttachment) attachment;
                 verticesLength = mesh.getWorldVerticesLength();
                 vertices = temp.setSize(verticesLength);
                 mesh.computeWorldVertices(slot, 0, verticesLength, vertices, 0, 2);
@@ -80,7 +82,7 @@ public class SpineActor extends Actor {
     }
 
     private void initSkeletonData() {
-        skeletonJson = new SkeletonJson(irr.getSkeletonAtlas(animationName));
+        skeletonJson = new SkeletonJson(new ResourceRetrieverAttachmentLoader(animationName, irr));
         skeletonData = skeletonJson.readSkeletonData((irr.getSkeletonJSON(animationName)));
     }
 
@@ -117,7 +119,7 @@ public class SpineActor extends Actor {
 
         float oldAlpha = color.a;
         skeleton.getColor().a *= parentAlpha;
-        renderer.draw((PolygonSpriteBatch)batch, skeleton);
+        renderer.draw((PolygonSpriteBatch) batch, skeleton);
         color.a = oldAlpha;
 
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

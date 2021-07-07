@@ -29,8 +29,11 @@ import java.util.concurrent.Executors;
 import javax.imageio.ImageIO;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
+import games.rednblack.editor.renderer.data.TexturePackVO;
 import games.rednblack.editor.utils.ImportUtils;
 import games.rednblack.editor.utils.TextureUnpacker;
 import games.rednblack.h2d.common.MsgAPI;
@@ -39,7 +42,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.Array;
 import com.mortennobel.imagescaling.ResampleOp;
@@ -157,7 +159,6 @@ public class ResolutionManager extends Proxy {
             copyTexturesFromTo(sourcePath, targetPath);
             int resizeWarnings = resizeTextures(targetPath, resolutionEntryVO);
             rePackProjectImages(resolutionEntryVO);
-            createResizedAnimations(resolutionEntryVO);
             changePercentBy(5);
             if (resizeWarnings > 0) {
                 Dialogs.showOKDialog(Sandbox.getInstance().getUIStage(), "Warning", resizeWarnings + " images were not resized for smaller resolutions due to already small size ( < 3px )");
@@ -182,137 +183,11 @@ public class ResolutionManager extends Proxy {
         //handler.progressChanged(currentPercent);
     }
 
-    public void createResizedAnimations(ResolutionEntryVO resolution) {
-        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String currProjectPath = projectManager.getCurrentProjectPath();
-
-        // Unpack spine orig
-        File spineSourceDir = new File(currProjectPath + File.separator + ProjectManager.SPINE_DIR_PATH);
-        if (spineSourceDir.exists()) {
-            for (File entry : spineSourceDir.listFiles()) {
-                if (entry.isDirectory()) {
-                    String animName = FilenameUtils.removeExtension(entry.getName());
-                    createResizedSpineAnimation(animName, resolution);
-                }
-            }
-        }
-
-        //Unpack sprite orig
-        File spriteSourceDir = new File(currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH);
-        if (spriteSourceDir.exists()) {
-            for (File entry : spriteSourceDir.listFiles()) {
-                if (entry.isDirectory()) {
-                    String animName = FilenameUtils.removeExtension(entry.getName());
-                    createResizedSpriteAnimation(animName, resolution);
-                }
-            }
-        }
-    }
-
-    public void createResizedSpriteAnimation(String animName, ResolutionEntryVO resolution) {
-        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String currProjectPath = projectManager.getCurrentProjectPath();
-        File animAtlasFile = new File(currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + animName + "/" + animName + ".atlas");
-
-        String tmpPath = currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + animName + "/tmp";
-        File tmpFolder = new File(tmpPath);
-        try {
-            FileUtils.forceMkdir(new File(currProjectPath + File.separator + "assets/" + resolution.name + "/sprite-animations/"));
-            FileUtils.forceMkdir(new File(currProjectPath + File.separator + "assets/" + resolution.name + "/spine-animations/" + animName));
-
-            String targetPath = currProjectPath + File.separator + "assets/" + resolution.name + "/sprite-animations/" + animName;
-            File targetFolder = new File(targetPath);
-
-            unpackAtlasIntoTmpFolder(animAtlasFile, tmpPath);
-            resizeImagesTmpDirToResolution(animName, tmpFolder, resolution, targetFolder);
-
-
-            FileUtils.deleteDirectory(tmpFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void unpackAtlasIntoTmpFolder(File atlasFile, String tmpDir) {
         FileHandle atlasFileHandle = new FileHandle(atlasFile);
         TextureAtlas.TextureAtlasData atlasData = new TextureAtlas.TextureAtlasData(atlasFileHandle, atlasFileHandle.parent(), false);
         TextureUnpacker unpacker = new TextureUnpacker();
-        unpacker.splitAtlas(atlasData, tmpDir);
-    }
-
-    public void createResizedSpineAnimation(String animName, ResolutionEntryVO resolution) {
-        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String currProjectPath = projectManager.getCurrentProjectPath();
-
-        File animAtlasFile = new File(currProjectPath + File.separator + ProjectManager.SPINE_DIR_PATH + animName + "/" + animName + ".atlas");
-
-        String tmpPath = currProjectPath + File.separator + ProjectManager.SPINE_DIR_PATH + animName + "/tmp";
-        File tmpFolder = new File(tmpPath);
-        try {
-            FileUtils.forceMkdir(new File(currProjectPath + File.separator + "assets/" + resolution.name + "/spine-animations/"));
-            FileUtils.forceMkdir(new File(currProjectPath + File.separator + "assets/" + resolution.name + "/spine-animations/" + animName));
-
-            String targetPath = currProjectPath + File.separator + "assets/" + resolution.name + "/spine-animations/" + animName;
-            File targetFolder = new File(targetPath);
-
-            unpackAtlasIntoTmpFolder(animAtlasFile, tmpPath);
-            resizeImagesTmpDirToResolution(animName, tmpFolder, resolution, targetFolder);
-
-            FileUtils.deleteDirectory(tmpFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void resizeSpriteAnimationForAllResolutions(String animName, ProjectInfoVO currentProjectInfoVO) {
-        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String currProjectPath = projectManager.getCurrentProjectPath();
-
-        File atlasFile = new File(currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + File.separator + animName + File.separator + animName + ".atlas");
-
-        String tmpDir = currProjectPath + File.separator + ProjectManager.SPRITE_DIR_PATH + File.separator + animName + File.separator + "tmp";
-        File sourceFolder = new File(tmpDir);
-
-        unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
-        try {
-            for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
-                String spriteAnimationsRoot = currProjectPath + File.separator + "assets" + File.separator + resolutionEntryVO.name + File.separator + "sprite-animations";
-                FileUtils.forceMkdir(new File(spriteAnimationsRoot));
-                String targetPath = spriteAnimationsRoot + File.separator + animName;
-                File targetFolder = new File(targetPath);
-
-                resizeImagesTmpDirToResolution(animName, sourceFolder, resolutionEntryVO, targetFolder);
-            }
-
-            FileUtils.deleteDirectory(sourceFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void resizeSpineAnimationForAllResolutions(File atlasFile, ProjectInfoVO currentProjectInfoVO) {
-
-        String fileNameWithOutExt = FilenameUtils.removeExtension(atlasFile.getName());
-        ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
-        String tmpDir = projectManager.getCurrentProjectPath() + File.separator + ProjectManager.SPINE_DIR_PATH
-                + File.separator + fileNameWithOutExt + File.separator + "tmp";
-        File sourceFolder = new File(tmpDir);
-
-        unpackAtlasIntoTmpFolder(atlasFile, tmpDir);
-        try {
-            for (ResolutionEntryVO resolutionEntryVO : currentProjectInfoVO.resolutions) {
-                FileUtils.forceMkdir(new File(projectManager.getCurrentProjectPath() + File.separator +
-                        "assets" + File.separator + resolutionEntryVO.name + File.separator + "spine-animations"));
-                String targetPath = projectManager.getCurrentProjectPath() + File.separator + "assets" +
-                        File.separator + resolutionEntryVO.name + File.separator + "spine-animations" + File.separator + fileNameWithOutExt;
-                FileUtils.forceMkdir(new File(targetPath));
-                File targetFolder = new File(targetPath);
-                resizeImagesTmpDirToResolution(atlasFile.getName(), sourceFolder, resolutionEntryVO, targetFolder);
-            }
-            FileUtils.deleteDirectory(sourceFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        unpacker.splitAtlas(atlasData, null, tmpDir);
     }
 
     public void resizeSpriterAnimationForAllResolutions(File atlasFile, ProjectInfoVO currentProjectInfoVO) {
@@ -367,8 +242,6 @@ public class ResolutionManager extends Proxy {
         ProjectManager projectManager = facade.retrieveProxy(ProjectManager.NAME);
         TexturePacker.Settings settings = projectManager.getTexturePackerSettings();
 
-        TexturePacker tp = new TexturePacker(settings);
-
         String sourcePath = projectManager.getCurrentProjectPath() + "/assets/" + resEntry.name + "/images";
         String outputPath = projectManager.getCurrentProjectPath() + "/assets/" + resEntry.name + "/pack";
 
@@ -382,15 +255,35 @@ public class ResolutionManager extends Proxy {
             e.printStackTrace();
         }
 
+        ObjectMap<String, TexturePacker> packerMap = new ObjectMap<>();
+        ObjectMap<String, String> regionsReverse = new ObjectMap<>();
+        for (TexturePackVO packVO : projectManager.currentProjectInfoVO.imagesPacks.values()) {
+            String name = packVO.name.equals("main") ? "pack" : packVO.name;
+            packerMap.put(name, new TexturePacker(settings));
+            for (String region : packVO.regions)
+                regionsReverse.put(region, name);
+        }
+        for (TexturePackVO packVO : projectManager.currentProjectInfoVO.animationsPacks.values()) {
+            String name = packVO.name.equals("main") ? "pack" : packVO.name;
+            if (packerMap.get(name) == null)
+                packerMap.put(name, new TexturePacker(settings));
+            for (String region : packVO.regions)
+                regionsReverse.put(region, name);
+        }
+
         for (FileHandle entry : sourceDir.list()) {
-            String filename = entry.file().getName();
-            String extension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
-            if (extension.equals("png")) {
+            if (entry.extension().equals("png")) {
+                String name = regionsReverse.get(entry.nameWithoutExtension().replace(".9", "").replaceAll("_[0-9]+", ""));
+                name = name == null ? "pack" : name;
+                TexturePacker tp = packerMap.get(name);
                 tp.addImage(entry.file());
             }
         }
 
-        tp.pack(outputDir, "pack");
+        for (String name : packerMap.keys()) {
+            TexturePacker tp = packerMap.get(name);
+            tp.pack(outputDir, name);
+        }
     }
 
     public void rePackProjectAtlasImages(ResolutionEntryVO resEntry, String atlasName) {
