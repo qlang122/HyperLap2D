@@ -205,7 +205,6 @@ public class UIBasicItemPropertiesMediator extends UIItemPropertiesMediator<Enti
         if (entityType != EntityFactory.LABEL_TYPE) {
             componentClassMap.remove(TYPING_LABEL_COMPONENT_KEY);
         }
-        System.out.println("------->" + mainItemComponent.id + " " + transformComponent.x + " " + transformComponent.y + " " + dimensionComponent.width);
 
         viewComponent.setItemType(EntityUtils.getType(entity), mainItemComponent.uniqueId);
         viewComponent.setIdBoxValue(mainItemComponent.id);

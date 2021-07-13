@@ -173,7 +173,6 @@ public class EntityUtils {
 
     public static TransformComponent setPosition(Entity entity, Vector2 position) {
         TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class);
-        System.out.println("--10-->>" + position.x + " " + position.y);
         transformComponent.x = position.x;
         transformComponent.y = position.y;
         return transformComponent;
