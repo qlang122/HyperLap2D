@@ -22,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.file.FileTypeFilter;
+
 import games.rednblack.editor.proxy.SettingsManager;
 import games.rednblack.editor.utils.AssetImporter;
 import games.rednblack.editor.utils.ImportUtils;
@@ -32,6 +33,7 @@ import games.rednblack.h2d.common.ProgressHandler;
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.proxy.ProjectManager;
 import games.rednblack.editor.view.stage.UIStage;
+
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -113,7 +115,7 @@ public class ImportPanelMediator extends Mediator<ImportPanel> {
                     facade.sendNotification(MsgAPI.HIDE_BLACK_OVERLAY);
                     if (files != null) {
                         String[] paths = files.split("\\|");
-                        if(paths.length > 0) {
+                        if (paths.length > 0) {
                             AssetImporter.getInstance().setProgressHandler(new AssetsImportProgressHandler());
                             AssetImporter.getInstance().postPathObtainAction(paths);
                         }

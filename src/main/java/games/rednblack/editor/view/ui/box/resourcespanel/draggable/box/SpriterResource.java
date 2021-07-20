@@ -117,7 +117,7 @@ public class SpriterResource extends BoxItemResource {
 
         setRightClickEvent(UIResourcesBoxMediator.SPRITER_ANIMATION_RIGHT_CLICK, payload.name);
 
-        if (animThumb.animation != null) animThumb.animation.setPlay(true);
+        if (animThumb.animation != null) animThumb.animation.first();
     }
 
 

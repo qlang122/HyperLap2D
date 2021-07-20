@@ -26,6 +26,7 @@ import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.utils.ImportUtils;
 import games.rednblack.editor.view.stage.Sandbox;
 import games.rednblack.h2d.common.UIDraggablePanel;
+import games.rednblack.h2d.common.view.ui.StandardWidgetsFactory;
 
 /**
  * @author Created by qlang on 6/25/2021.
@@ -63,7 +64,7 @@ public class EditSpriterAnimationPanel extends UIDraggablePanel {
         getTitleLabel().setAlignment(Align.left);
 
         setWidth(440);
-        setHeight(100);
+        setHeight(300);
 
         facade = HyperLap2DFacade.getInstance();
 
@@ -99,8 +100,14 @@ public class EditSpriterAnimationPanel extends UIDraggablePanel {
 
     public boolean checkDropRegionHit(Vector2 mousePos) {
         Vector2 pos = Sandbox.getInstance().getUIStage().getViewport().unproject(mousePos);
-        pos = dropRegion.stageToLocalCoordinates(pos);
-        if (dropRegion.hit(pos.x, pos.y, true) != null) {
+//        pos = dropRegion.stageToLocalCoordinates(pos);
+//        if (dropRegion.hit(pos.x, pos.y, true) != null) {
+//            return true;
+//        }
+        if (dropRegion.isTouchable() && pos.x >= (getX() + dropRegion.getX()) &&
+                pos.x <= (getX() + dropRegion.getX() + dropRegion.getWidth()) &&
+                pos.y >= (getY() + getHeight() - dropRegion.getY() - dropRegion.getHeight() + 50) &&
+                pos.y <= getY() + getHeight() - dropRegion.getY() + 50) {
             return true;
         }
 
@@ -151,9 +158,9 @@ public class EditSpriterAnimationPanel extends UIDraggablePanel {
         btns.add(removeBtn).width(30);
 
         Table table = new Table();
-        table.add(sourceList).fill().width(170).minHeight(180).maxHeight(240);
+        table.add(StandardWidgetsFactory.createScrollPane(sourceList)).fill().width(170).height(240);
         table.add(btns).padLeft(5).padRight(5);
-        table.add(appendedList).fill().width(170).minHeight(180).maxHeight(240);
+        table.add(StandardWidgetsFactory.createScrollPane(appendedList)).fill().width(170).height(240);
         mainTable.add(table).width(240).padRight(10).padBottom(10);
         mainTable.row().padTop(5).padBottom(5);
 
