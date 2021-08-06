@@ -100,11 +100,11 @@ public class GridTilesTab extends DefaultTab {
     }
 
     public void removeAllTiles() {
-    	if (pane != null) isBottomEdge = pane.isBottomEdge();
-    	tileIndex = 0;
-    	tilesCount = 19;
-    	tiles.clear();
-    	initView();
+        if (pane != null) isBottomEdge = pane.isBottomEdge();
+        tileIndex = 0;
+        tilesCount = 19;
+        tiles.clear();
+        initView();
     }
 
     public void scrollTiles() {
@@ -181,19 +181,19 @@ public class GridTilesTab extends DefaultTab {
             imageBoxStyle.imageOver = tileDrawable;
             ct = new VisImageButton(imageBoxStyle);
             if (i < savedTiles.size) {
-            	ct.setUserObject(savedTiles.get(i).regionName);
+                ct.setUserObject(savedTiles.get(i).regionName);
             }
 
             int index = i;
             ct.addListener(new InputListener() {
-            	private boolean isDragging = false;
-            	private Actor draggingSource;
+                private boolean isDragging = false;
+                private Actor draggingSource;
 
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                	if (button == Input.Buttons.LEFT) {
-                		draggingSource = event.getListenerActor();
-                	}
+                    if (button == Input.Buttons.LEFT) {
+                        draggingSource = event.getListenerActor();
+                    }
 
                     if (index >= savedTiles.size) return true;
 
@@ -210,31 +210,31 @@ public class GridTilesTab extends DefaultTab {
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                     super.touchUp(event, x, y, pointer, button);
                     if (isDragging && button == Input.Buttons.LEFT && draggingSource != null) {
-                    	// finished dragging
-                    	isDragging = false;
+                        // finished dragging
+                        isDragging = false;
 
-                    	handleDrop(x, y);
+                        handleDrop(x, y);
                     } else {
-                    	if(button == Input.Buttons.RIGHT && index < savedTiles.size) {
-                    		tiledPlugin.facade.sendNotification(TiledPlugin.OPEN_DROP_DOWN, savedTiles.get(index).regionName);
-                    		return;
-                    	}
+                        if (button == Input.Buttons.RIGHT && index < savedTiles.size) {
+                            tiledPlugin.facade.sendNotification(TiledPlugin.OPEN_DROP_DOWN, savedTiles.get(index));
+                            return;
+                        }
 
-                    	if (index >= savedTiles.size) {
-                    		tiles.get(index).setChecked(false);
-                    		return;
-                    	}
+                        if (index >= savedTiles.size) {
+                            tiles.get(index).setChecked(false);
+                            return;
+                        }
 
-                    	tiledPlugin.facade.sendNotification(TiledPlugin.TILE_SELECTED, savedTiles.get(index));
+                        tiledPlugin.facade.sendNotification(TiledPlugin.TILE_SELECTED, savedTiles.get(index));
                     }
                 }
 
                 @Override
-				public void touchDragged (InputEvent event, float x, float y, int pointer) {
-                	isDragging = true;
-                	if (draggingSource != null)
-                	    draggingSource.setColor(new Color(0 / 255f, 0 / 255f, 0f / 255f, 0.5f));
-            	}
+                public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                    isDragging = true;
+                    if (draggingSource != null)
+                        draggingSource.setColor(new Color(0 / 255f, 0 / 255f, 0f / 255f, 0.5f));
+                }
 
                 /**
                  * Handles the drop of a VisImageButton.
@@ -243,41 +243,41 @@ public class GridTilesTab extends DefaultTab {
                  * @param y The coordinates relative to the source. Comes from the touchUp event.
                  */
                 private void handleDrop(float x, float y) {
-                	VisTable t = (VisTable) pane.getActor();
-                	Actor draggingTarget = t.hit(draggingSource.getX() + x, draggingSource.getY() + y, false);
-                	if (draggingTarget instanceof Image) {
-                		for (VisImageButton imgButton : tiles) {
-                			if (imgButton.getImage() == draggingTarget) {
-                				draggingTarget = imgButton;
-                				break;
-                			}
-                		}
-                	}
-                	if (draggingTarget != null && !draggingTarget.equals(draggingSource)) {
-                		String sourceRegionName = String.valueOf(draggingSource.getUserObject());
-                		String targetRegionName = String.valueOf(draggingTarget.getUserObject());
-                		int sourceIndex = -1;
-                		int targetIndex = -1;
-                		for (int i = 0; i < savedTiles.size; i++) {
-                			if (sourceRegionName.equals(savedTiles.get(i).regionName)) {
-                				sourceIndex = i;
-                			}
-                			if (targetRegionName.equals(savedTiles.get(i).regionName)) {
-                				targetIndex = i;
-                			}
-                		}
-                		// if targetIndex < 0 we dropped at the end
-                		// we already know that we hit another VisImageButton but could not find the name
-                		// thus, an empty button, which are always after the ones with an image
-                		if (targetIndex < 0) {
-                			targetIndex = savedTiles.size - 1;
-                		}
-                		if (sourceIndex >= 0) {
-                			TileVO sourceTileVO = savedTiles.removeIndex(sourceIndex);
-                			savedTiles.insert(targetIndex, sourceTileVO);
-                			initTiles();
-                		}
-                	}
+                    VisTable t = (VisTable) pane.getActor();
+                    Actor draggingTarget = t.hit(draggingSource.getX() + x, draggingSource.getY() + y, false);
+                    if (draggingTarget instanceof Image) {
+                        for (VisImageButton imgButton : tiles) {
+                            if (imgButton.getImage() == draggingTarget) {
+                                draggingTarget = imgButton;
+                                break;
+                            }
+                        }
+                    }
+                    if (draggingTarget != null && !draggingTarget.equals(draggingSource)) {
+                        String sourceRegionName = String.valueOf(draggingSource.getUserObject());
+                        String targetRegionName = String.valueOf(draggingTarget.getUserObject());
+                        int sourceIndex = -1;
+                        int targetIndex = -1;
+                        for (int i = 0; i < savedTiles.size; i++) {
+                            if (sourceRegionName.equals(savedTiles.get(i).regionName)) {
+                                sourceIndex = i;
+                            }
+                            if (targetRegionName.equals(savedTiles.get(i).regionName)) {
+                                targetIndex = i;
+                            }
+                        }
+                        // if targetIndex < 0 we dropped at the end
+                        // we already know that we hit another VisImageButton but could not find the name
+                        // thus, an empty button, which are always after the ones with an image
+                        if (targetIndex < 0) {
+                            targetIndex = savedTiles.size - 1;
+                        }
+                        if (sourceIndex >= 0) {
+                            TileVO sourceTileVO = savedTiles.removeIndex(sourceIndex);
+                            savedTiles.insert(targetIndex, sourceTileVO);
+                            initTiles();
+                        }
+                    }
                 }
 
             });
