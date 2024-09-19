@@ -184,6 +184,11 @@ public class SandboxInputAdapter implements InputProcessor {
 		return false;
 	}
 
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
 		rootEntity = sandbox.getCurrentViewingEntity();
@@ -212,10 +217,10 @@ public class SandboxInputAdapter implements InputProcessor {
 	}
 
 	Vector2 tmpVector2 = new Vector2();
-	
+
 	public Entity hit(Entity root, float x, float y){
 		Vector2 localCoordinates  = tmpVector2.set(x, y);
-		
+
 		TransformMathUtils.parentToLocalCoordinates(root, localCoordinates);
 
 		NodeComponent nodeComponent = ComponentRetriever.get(root, NodeComponent.class);
@@ -236,7 +241,7 @@ public class SandboxInputAdapter implements InputProcessor {
 		}
 		return null;
 	}
-	
+
 	public Vector2 screenToSceneCoordinates (Entity root, Vector2 screenCoords) {
 		ViewPortComponent viewPortComponent = ComponentRetriever.get(root, ViewPortComponent.class);
 		viewPortComponent.viewPort.unproject(screenCoords);

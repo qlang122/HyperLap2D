@@ -22,7 +22,9 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
 import games.rednblack.editor.proxy.SettingsManager;
+
 import org.apache.commons.lang3.SystemUtils;
 
 import java.io.*;
@@ -47,7 +49,7 @@ public class Main {
         SettingsManager settingsManager = new SettingsManager();
 
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setWindowedMode(467,415);
+        config.setWindowedMode(467, 415);
         config.setResizable(false);
         config.setDecorated(false);
         config.setInitialVisible(false);
@@ -59,8 +61,8 @@ public class Main {
         ShaderProgram.prependFragmentCode = "#version 100\n";
         ShaderProgram.prependVertexCode = "#version 100\n";
         if (settingsManager.editorConfigVO.useOpenGL3)
-            config.useOpenGL3(true, 3, 2);
-        config.setBackBufferConfig(8,8,8,8,16,8, settingsManager.editorConfigVO.msaaSamples);
+            config.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 3, 2);
+        config.setBackBufferConfig(8, 8, 8, 8, 16, 8, settingsManager.editorConfigVO.msaaSamples);
 
         Thread.currentThread().setUncaughtExceptionHandler(new CustomExceptionHandler());
 
@@ -79,8 +81,7 @@ public class Main {
                 e.printStackTrace();
                 return "";
             }
-        }
-        else {
+        } else {
             String path = aclass.getResource(aclass.getSimpleName() + ".class").getPath();
             String jarFilePath = path.substring(path.indexOf(":") + 1, path.indexOf("!"));
             try {
