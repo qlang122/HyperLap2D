@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.widget.VisLabel;
+
 import games.rednblack.editor.HyperLap2DFacade;
 import games.rednblack.editor.utils.Guide;
 import games.rednblack.editor.view.stage.Sandbox;
@@ -272,6 +273,9 @@ public class RulersUI extends Actor {
     }
 
     public void drawBg(float parentAlpha) {
+        if (shapeRenderer.getCurrentType() != null) {
+            shapeRenderer.end();
+        }
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         tmpColor.set(BG_COLOR);
