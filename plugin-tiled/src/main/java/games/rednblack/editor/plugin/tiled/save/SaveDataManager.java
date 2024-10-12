@@ -32,7 +32,7 @@ public class SaveDataManager {
     }
 
     public void save() {
-        String dataString = json.toJson(dataToSave);
+        String dataString = json.prettyPrint(dataToSave).replace("\t", "  ");
         fileHandle.writeString(dataString, false);
     }
 }
