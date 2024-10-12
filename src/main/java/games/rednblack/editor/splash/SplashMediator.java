@@ -52,24 +52,24 @@ public class SplashMediator extends Mediator<Object> {
                 ExecutorService executor = Executors.newSingleThreadExecutor();
                 executor.execute(() -> {
                     splash.setProgressStatus("Checking for updates...");
-                    try {
-                        String data = HttpDownloadUtility.downloadToString("https://api.github.com/repos/rednblackgames/HyperLap2D/releases/latest");
-                        Json json = new Json();
-                        json.setIgnoreUnknownFields(true);
-                        GithubReleaseData jsonData = json.fromJson(GithubReleaseData.class, data);
-                        Version latestVer = new Version(jsonData.tag_name.replace("v", ""));
-                        Version currVer = AppConfig.getInstance().version;
-                        if (latestVer.compareTo(currVer) > 0) {
-                            boolean result = TinyFileDialogs.tinyfd_messageBox("New update found!",
-                                    "A new version of HyperLap2D has found '" + latestVer.get() + "' (current: '" + currVer.get() + "'), would you like to download it?",
-                                    "yesno", "info", true);
-                            if (result) {
-                                Gdx.net.openURI("https://github.com/rednblackgames/HyperLap2D/releases");
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        String data = HttpDownloadUtility.downloadToString("https://api.github.com/repos/rednblackgames/HyperLap2D/releases/latest");
+//                        Json json = new Json();
+//                        json.setIgnoreUnknownFields(true);
+//                        GithubReleaseData jsonData = json.fromJson(GithubReleaseData.class, data);
+//                        Version latestVer = new Version(jsonData.tag_name.replace("v", ""));
+//                        Version currVer = AppConfig.getInstance().version;
+//                        if (latestVer.compareTo(currVer) > 0) {
+//                            boolean result = TinyFileDialogs.tinyfd_messageBox("New update found!",
+//                                    "A new version of HyperLap2D has found '" + latestVer.get() + "' (current: '" + currVer.get() + "'), would you like to download it?",
+//                                    "yesno", "info", true);
+//                            if (result) {
+//                                Gdx.net.openURI("https://github.com/rednblackgames/HyperLap2D/releases");
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
 
                     splash.loadedData();
                     HyperLap2DApp.getInstance().mainWindow.setVisible(true);
