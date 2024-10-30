@@ -1,6 +1,7 @@
 package games.rednblack.editor.controller.commands.resource;
 
 import games.rednblack.editor.controller.commands.NonRevertibleCommand;
+import games.rednblack.h2d.common.vo.ResourceExtraData;
 
 public abstract class DeleteResourceCommand extends NonRevertibleCommand {
 
@@ -14,8 +15,9 @@ public abstract class DeleteResourceCommand extends NonRevertibleCommand {
 
     @Override
     protected String confirmDialogMessage() {
-        String resourceName = notification.getBody();
-        return "Are you sure you want to delete '" + resourceName +"'?";
+        ResourceExtraData data = notification.getBody();
+        String imageName = data == null ? "" : (String) data.value1;
+        return "Are you sure you want to delete '" + imageName +"'?";
     }
 
     @Override
